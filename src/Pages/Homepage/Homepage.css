@@ -1,0 +1,9 @@
+h1{
+    font-family: 'Railway', sans-serif;
+    font-size: 5rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 5%;
+    color: rgb(35, 35, 110);
+}

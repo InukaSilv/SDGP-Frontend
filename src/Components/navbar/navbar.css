@@ -1,0 +1,51 @@
+nav {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  width: 100vw;
+}   
+
+nav h1{
+    font-family: 'Railway', sans-serif;
+    font-size: 2.5rem;
+    margin-left:10%;
+    margin-top: 20px;
+}
+
+nav ul{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    float: left;
+    margin-left: 10%;
+}
+nav ul a{
+    text-decoration: none;
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 10px;
+}
+.navbar-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-button{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    float: right;
+    margin-left: 40%;
+}
+button{
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #110d8e;
+    color: #fff;
+    font-weight: bold;
+}
