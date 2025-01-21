@@ -1,38 +1,47 @@
-import { Component } from "react";
+import React, { useState } from "react";
 import "./navbar.css";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
-class Navbar extends Component {
-state={clicked:false};
+function Navbar() {
+  const [mobileState, setMobileState] = useState(false);
 
-handleClick = () =>{
-  this.setState({clicked:!this.state.clicked});
-}
-render(){
-return (
+  const toggleMobileMenu = () => {
+    setMobileState(!mobileState);
+  };
+
+  return (
     <>
-      <nav className="nav-bar">
-        <section className="nav-left">
-          <h1>RiVVE</h1>
-          <ul id="navbar" className="">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Hostels</a></li>
-            <li><a href="#">Contact</a></li>
+      <nav>
+        <h1>RiVVE</h1>
+        <section className={!mobileState?"navbar-main":"navbar-main-mobile"}>
+        <div className="main-options">
+          <ul className="nav-opt-ul">
+            <li>Home</li>
+            <li>About</li>
+            <li>Hostels</li>
+            <li>Contact</li>
           </ul>
-        </section>
-        <section className="nav-right">
-          <p>Already a member?</p>
-          <button>LOGIN</button>
-          <button>SIGNUP</button>
+        </div>
 
-          <PersonIcon fontSize="large" className="person-icon"/>
+        <div className="main-logins">
+            <p>Already a member ? </p>
+            <button>LOGIN</button>
+            <button>SIGNUP</button>
+            <div className="person-icon">
+                <PersonIcon fontSize="large"/>
+            </div>
+        </div>
         </section>
+        {!mobileState?
+        <div className="menu-icon">
+          <MenuIcon fontSize="large" onClick={toggleMobileMenu}/>
+        </div>
+        :<CloseIcon fontSize="large" onClick={toggleMobileMenu}/>}
       </nav>
     </>
   );
-}
-  
 }
 
 export default Navbar;
