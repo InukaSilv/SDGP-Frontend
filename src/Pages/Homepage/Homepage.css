@@ -1,0 +1,27 @@
+.homepage-welcome-search{
+    display: flex;
+    flex-direction: row;
+    margin-top: 80px;
+}
+
+.hostel-image img{
+    width: 40vw;
+    height: 40vh;
+    padding: 50px;
+    border-radius: 100px;
+}
+
+.homepage-welcome-search h1{
+    color: #27374D;
+    margin-left: -10px;
+    margin-top: 90px;
+}
+
+.homepage-welcome-search h2{
+    margin-top: -4%;
+    margin-left: -10px;
+}
+
+.searchbar{
+    margin-left: -10px;
+}
