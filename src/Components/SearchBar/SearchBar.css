@@ -46,3 +46,9 @@
   background-color: #1614769c;
 }
 
+@media (max-width:1169px) {
+  .search-bar-container{
+    transform: scale(0.9);
+    margin-left: -30px;
+  }
+}
