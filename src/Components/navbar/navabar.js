@@ -3,6 +3,7 @@ import "./navbar.css";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   const [mobileState, setMobileState] = useState(false);
@@ -18,7 +19,7 @@ function Navbar() {
         <section className={!mobileState?"navbar-main":"navbar-main-mobile"}>
         <div className="main-options">
           <ul className="nav-opt-ul">
-            <li>Home</li>
+            <li><NavLink to="/"> Home</NavLink></li>
             <li>About</li>
             <li>Hostels</li>
             <li>Contact</li>
@@ -27,8 +28,8 @@ function Navbar() {
 
         <div className="main-logins">
             <p>Already a member ? </p>
-            <button>LOGIN</button>
-            <button>SIGNUP</button>
+            <button>LOGIN </button>
+            <button><NavLink to="signup">SIGNUP</NavLink></button>
             <div className="person-icon">
                 <PersonIcon fontSize="large"/>
             </div>
