@@ -44,7 +44,12 @@ h1{
   position: relative;
 }
 
-.nav-opt-ul li:hover{
+.nav-opt-ul li a{
+  text-decoration: none;
+  color: black;
+}
+
+.nav-opt-ul li a:hover{
   color: #e6e6e99f;
   cursor: pointer;
   transform: scale(1.2);
@@ -78,6 +83,11 @@ h1{
   background-color: #094ec6;
 }
 
+.main-logins button a{
+  text-decoration: none;
+  color: white;
+}
+
 .person-icon{
   border: 2px solid;
   border-radius: 29px;
@@ -97,6 +107,8 @@ h1{
 .menu-icon:hover{
   cursor: pointer;
 }
+
+
 
 
 
@@ -144,7 +156,7 @@ nav{
     flex-direction: column;
     margin-top: 20px;
   }
-  .navbar-main-mobile .nav-opt-ul li{
+  .navbar-main-mobile .nav-opt-ul li a{
     margin-top: 30px;
     color: white;
     font-size: 30px;
