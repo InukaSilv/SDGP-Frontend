@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [mobileView, setMobileView] = useState<boolean>(false);
@@ -30,10 +31,10 @@ function Navbar() {
                 : "hover:text-gray-400 cursor-pointer transition"
             }
           >
-            Home
+            <Link to="/"> Home </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-            About
+            <Link to="/about"> About </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
             Hostels
