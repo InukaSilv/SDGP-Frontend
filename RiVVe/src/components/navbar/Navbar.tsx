@@ -51,7 +51,7 @@ function Navbar() {
           Login
         </button>
         <button className="w-20 sm:w-32 md:w-36 bg-gradient-to-r from-green-500 to-green-700 px-4 md:py-2 sm:px-5 py-2 rounded-full text-white font-medium hover:scale-105 cursor-pointer transition">
-          Signup
+          <Link to="/Signup1"> Signup </Link>
         </button>
         <div className="hidden sm:block p-2 text-5xl bg-gray-700 rounded-full hover:bg-gray-600 transition cursor-pointer">
           <IoPersonCircleOutline />
