@@ -12,7 +12,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-gray-700 text-white shadow-lg">
+    <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-gray-700 text-white shadow-lg z-999">
       <div className="flex items-center space-x-10">
         <h1 className="text-4xl ml-3 sm:text-3xl font-semibold hover:scale-105 transition-transform cursor-pointer">
           RiVVE

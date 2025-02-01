@@ -1,9 +1,15 @@
 import Navbar from "../components/navbar/navbar";
 import { PiStudent } from "react-icons/pi";
 import { LuHouse } from "react-icons/lu";
-import { easeIn, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 function Signup1() {
+  const navigate = useNavigate();
+
+  const handleNavigate = (role: string, number: number) => {
+    navigate("/signup2", { state: { role, id: number } });
+  };
   return (
     <>
       <Navbar />
@@ -32,6 +38,7 @@ function Signup1() {
               initial={{ opacity: 0.2, x: -1000 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeIn" }}
+              onClick={() => handleNavigate("Student", 1)}
             >
               <PiStudent className="text-7xl text-blue-300 mb-4" />
               <h2 className="font-bold text-3xl">Student</h2>
@@ -45,6 +52,7 @@ function Signup1() {
               initial={{ opacity: 0.2, x: 1000 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeIn" }}
+              onClick={() => handleNavigate("Landlord", 2)}
             >
               <LuHouse className="text-7xl text-green-300 mb-4" />
               <h2 className="font-bold text-3xl">Landlord</h2>
