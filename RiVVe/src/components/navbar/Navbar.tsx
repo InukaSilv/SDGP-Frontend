@@ -48,7 +48,7 @@ function Navbar() {
       <div className="flex items-center space-x-3 sm:ml-7 md:space-x-6">
         <p className="hidden md:block text-gray-300">Already a member?</p>
         <button className="w-20 sm:w-32 md:w-36 bg-gradient-to-r from-blue-600 to-blue-800 px-4 md:py-2 sm:px-5 py-2 rounded-full text-white font-medium hover:scale-105 cursor-pointer transition">
-          Login
+          <Link to="/login"> Login </Link>
         </button>
         <button className="w-20 sm:w-32 md:w-36 bg-gradient-to-r from-green-500 to-green-700 px-4 md:py-2 sm:px-5 py-2 rounded-full text-white font-medium hover:scale-105 cursor-pointer transition">
           <Link to="/Signup1"> Signup </Link>

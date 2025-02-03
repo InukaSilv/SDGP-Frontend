@@ -1,8 +1,9 @@
 import { ChangeEvent, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { EyeOff, Eye } from "lucide-react";
 
 interface FormData {
   fname: string;
@@ -29,10 +30,22 @@ function Signupform() {
     confirmpassword: "",
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
+
+    if (id === "password") {
+      const passpattern = /^[A-Za-z0-9@#$%^&+=*!()-_]*$/;
+      if (!passpattern.test(value)) {
+        setPasswordError(
+          "Password can only contain letters, numbers, and special characters (@#$%^&+=*!()-_)"
+        );
+      } else {
+        setPasswordError("");
+      }
+    }
 
     if (id === "confirmpassword") {
       if (formData.password !== value) {
@@ -136,9 +149,10 @@ function Signupform() {
               className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
               onClick={() => setShowpass(!showpass)}
             >
-              {showpass ? "👁️" : "👁️‍🗨️"}
+              {showpass ? <Eye /> : <EyeOff />}
             </button>
           </div>
+          <p className="text-red-600 mt-1">{passwordError}</p>
         </div>
 
         <div>
@@ -158,7 +172,7 @@ function Signupform() {
               className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
               onClick={() => setShowpass2(!showpass2)}
             >
-              {showpass2 ? "👁️" : "👁️‍🗨️"}
+              {showpass2 ? <Eye /> : <EyeOff />}
             </button>
           </div>
           {passwordMismatch && (
@@ -180,7 +194,10 @@ function Signupform() {
           </p>
         </div>
         <p>
-          Already have an account ? <Link to="/login">Login</Link>
+          Already have an account ?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
         </p>
         <button
           className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"

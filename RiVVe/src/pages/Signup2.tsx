@@ -4,14 +4,14 @@ import Signupform from "../components/forms/Signupform";
 
 function Signup2() {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const { role, id } = location.state || {};
 
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-blue-900 to-gray-900 mt-20 flex items-center justify-center">
-        <div className="max-w-5xl mx-auto px-8 py-12 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl">
+        <div className="max-w-5xl mx-auto px-8 py-12 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl scale-90">
           <h1 className="text-6xl font-extrabold text-white mb-8 text-center tracking-wide">
             Welcome, {role}!
           </h1>
