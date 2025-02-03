@@ -37,7 +37,7 @@ function Navbar() {
             <Link to="/about"> About </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-            Hostels
+            <Link to="/hostel"> Hostels </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
             Contact
