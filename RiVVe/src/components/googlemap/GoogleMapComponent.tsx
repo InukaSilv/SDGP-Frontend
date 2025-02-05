@@ -93,7 +93,7 @@ function GoogleMapComponent() {
   });
 
   return (
-    <div className="mt-30 m-20 bg-blue-200 p-5 rounded-2xl w-180 items-center">
+    <div className="bg-blue-200 p-5 rounded-2xl w-full">
       <div className="w-100 flex">
         <label className="mr-10">Radius</label>
         <Slider
@@ -104,7 +104,7 @@ function GoogleMapComponent() {
           max={10}
         />
       </div>
-      <div className="h-180">
+      <div className="h-150">
         <APIProvider
           apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
           onLoad={() => console.log("Maps API has loaded.")}
