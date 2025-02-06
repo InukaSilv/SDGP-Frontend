@@ -4,84 +4,57 @@ import {
   APIProvider,
   ControlPosition,
   Map,
-  MapCameraChangedEvent,
   MapControl,
   Pin,
-  useMap,
-  useMapsLibrary,
   useAdvancedMarkerRef,
-  AdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { Circle } from "../circle/Circles";
-
-// interface MapHandlerProps {
-//   place: google.maps.place.PlaceResult | null;
-// }
+import SearchBar from "./SearchBar";
 
 function GoogleMapComponent() {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
   const [error, setError] = useState<string | null>(null);
   const [radius, setRadius] = useState<number>(5);
-
-  // For AutoCompleteSearch
-  const [selectedPlace, setSelectedPlace] =
-    useState<google.maps.places.PlaceResult | null>(null);
-  const [markerRef, marker] = useAdvancedMarkerRef();
+  const [markerRef] = useAdvancedMarkerRef();
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
+    lat: 0,
+    lng: 0,
+  });
 
   type Poi = { key: string; location: google.maps.LatLngLiteral };
   const locations: Poi[] = [
     { key: "galleFaceGreen", location: { lat: 6.9271, lng: 79.8424 } },
     { key: "lotusTower", location: { lat: 6.927079, lng: 79.861244 } },
     { key: "gangaramayaTemple", location: { lat: 6.9155, lng: 79.8561 } },
-    { key: "viharamahadeviPark", location: { lat: 6.9136, lng: 79.8608 } },
-    { key: "pettahMarket", location: { lat: 6.9375, lng: 79.8507 } },
-    { key: "colomboFort", location: { lat: 6.9335, lng: 79.8438 } },
-    { key: "nationalMuseum", location: { lat: 6.9185, lng: 79.8591 } },
-    { key: "independenceSquare", location: { lat: 6.9063, lng: 79.8611 } },
-    { key: "oldParliament", location: { lat: 6.9319, lng: 79.8411 } },
-    { key: "dutchHospital", location: { lat: 6.9332, lng: 79.8422 } },
-    { key: "beiraLake", location: { lat: 6.9216, lng: 79.8551 } },
-    { key: "arcadeIndependence", location: { lat: 6.9047, lng: 79.8617 } },
-    { key: "ballysCasino", location: { lat: 6.9253, lng: 79.8578 } },
-    { key: "colomboCityCentre", location: { lat: 6.9187, lng: 79.8579 } },
-    { key: "marineDrive", location: { lat: 6.9042, lng: 79.8506 } },
   ];
 
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
+        (position) =>
+          setMapCenter({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          setError(error.message);
-        }
+          }),
+        (error) => setError(error.message)
       );
     } else {
       setError("Geolocation is not supported by this browser.");
     }
   }, []);
 
-  // filter the results so that it will be inside the selected radius
   const filteredLocations = locations.filter((poi) => {
     if (
-      location &&
+      mapCenter &&
       typeof google !== "undefined" &&
       google.maps &&
       google.maps.geometry
     ) {
-      const userLatLng = new google.maps.LatLng(location.lat, location.lng);
+      const userLatLng = new google.maps.LatLng(mapCenter.lat, mapCenter.lng);
       const propLatLng = new google.maps.LatLng(
         poi.location.lat,
         poi.location.lng
       );
-
       const distance =
         google.maps.geometry.spherical.computeDistanceBetween(
           userLatLng,
@@ -92,52 +65,37 @@ function GoogleMapComponent() {
     return false;
   });
 
+  const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+    if (place?.geometry?.location) {
+      setMapCenter({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+    }
+  };
+
   return (
-    <div className="bg-blue-200 p-5 rounded-2xl w-full">
-      <div className="w-100 flex">
-        <label className="mr-10">Radius</label>
+    <div className="bg-gradient-to-r from-indigo-900 via-blue-800 to-blue-600 p-8 rounded-3xl shadow-lg w-full">
+      <div className="flex items-center justify-between mb-6">
+        <div className="text-white text-xl font-semibold">Map Radius</div>
         <Slider
           defaultValue={5}
-          aria-label="Small"
+          aria-label="Radius"
           valueLabelDisplay="auto"
           onChange={(_, value) => setRadius(value as number)}
           max={10}
+          sx={{
+            color: "#3b82f6",
+            height: 6,
+            width: "80%",
+            borderRadius: "10px",
+          }}
         />
       </div>
-      <div className="h-150">
-        <APIProvider
-          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-          onLoad={() => console.log("Maps API has loaded.")}
-        >
-          <Map
-            defaultZoom={13}
-            defaultCenter={
-              location
-                ? { lat: location.lat, lng: location.lng }
-                : { lat: 0, lng: 0 }
-            }
-            mapId="DEMO_MAP_ID"
-            onCameraChanged={(ev: MapCameraChangedEvent) =>
-              console.log(
-                "camera changed:",
-                ev.detail.center,
-                "zoom:",
-                ev.detail.zoom
-              )
-            }
-          >
-            {location && (
-              <Circle
-                radius={radius * 1000}
-                center={location}
-                strokeColor={"#0c4cb3"}
-                strokeOpacity={1}
-                strokeWeight={3}
-                fillColor={"#3b82f6"}
-                fillOpacity={0.3}
-              />
-            )}
 
+      <div className="h-80 relative">
+        <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+          <Map defaultZoom={13} center={mapCenter} mapId="DEMO_MAP_ID">
             {filteredLocations.map((poi) => (
               <AdvancedMarker key={poi.key} position={poi.location}>
                 <Pin
@@ -147,16 +105,32 @@ function GoogleMapComponent() {
                 />
               </AdvancedMarker>
             ))}
-            {/* <AdvancedMarker ref={markerRef} position={null} /> */}
+
+            <Circle
+              radius={radius * 1000}
+              center={mapCenter}
+              strokeColor={"#3b82f6"}
+              strokeOpacity={1}
+              strokeWeight={3}
+              fillColor={"#3b82f6"}
+              fillOpacity={0.3}
+            />
+            <AdvancedMarker ref={markerRef} position={null} />
           </Map>
-          {/* <MapControl position={ControlPosition.TOP}>
-            <div className="autocomplete-conmtrol">
-              <PlaceAutocomplete onPlaceSelect={selectedPlace} />
+
+          <MapControl position={ControlPosition.TOP}>
+            <div className="w-90 text-center mt-2">
+              <SearchBar onPlaceSelect={onPlaceSelect} />
             </div>
-          </MapControl> */}
+          </MapControl>
         </APIProvider>
       </div>
-      {error && <p className="text-red-500">{error}</p>}
+
+      {error && (
+        <div className="text-red-500 mt-4 text-center text-sm font-medium">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

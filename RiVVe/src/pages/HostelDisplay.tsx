@@ -8,7 +8,7 @@ function HostelDisplay() {
       <Navbar />
       <div className="flex flex-col md:flex-row justify-between px-5 md:px-10 py-10 gap-10 mt-15">
         <div className="flex flex-col gap-8 w-full md:w-1/2 order-2 md:order-none">
-          {[...Array(4)].map((index) => (
+          {[...Array(4)].map((_, index) => (
             <AdDisplayer key={index} />
           ))}
         </div>
