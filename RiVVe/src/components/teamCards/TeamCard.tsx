@@ -1,33 +1,25 @@
-const TeamCard = () => {
+type TeamMember = {
+  name: string;
+  role: string;
+  imageUrl: string;
+};
+
+const TeamCard: React.FC<TeamMember> = ({ name, role, imageUrl }) => {
   return (
-    <><div className="w-40 h-60 border-2 flex flex-col items-center">
-      <h1>Lasal Rathnayake</h1>
-      <p>Front end developer</p>
-    </div><div className="w-40 h-60 border-2 flex flex-col items-center">
-        <h1>Ishara Dharmapriya</h1>
-        <p>Front end developer</p>
-    </div><div className="w-40 h-60 border-2 flex flex-col items-center">
-        <h1>Inuka </h1>
-        <p>Team Leader</p>
-        </div>
-        <div className="w-40 h-60 border-2 flex flex-col items-center">
-        <h1>Dulen Eragoda </h1>
-        <p>Back End Developer</p>
-        </div>
-        <div className="w-40 h-60 border-2 flex flex-col items-center">
-        <h1>Dulen Perera </h1>
-        <p>Back End Developer</p>
-        </div>
-        <div className="w-40 h-60 border-2 flex flex-col items-center">
-        <h1>Hasindu Perera</h1>
-        <p>AI Developer</p>
-        
+    <div className="w-64 bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+      {/* Team Member Image */}
+      <img
+        src={imageUrl}
+        alt={name}
+        className="w-full h-64 object-cover"
+      />
+      {/* Team Member Details */}
+      <div className="p-4 bg-gradient-to-r from-gray-900 to-gray-700 text-white text-center">
+        <h2 className="text-xl font-semibold">{name}</h2>
+        <p className="text-sm font-light text-gray-300">{role}</p>
+      </div>
+    </div>
+  );
+};
 
-
-
-      </div></>
-      
-  )
-}
-
-export default TeamCard
+export default TeamCard;
