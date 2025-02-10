@@ -36,7 +36,7 @@ const SearchBar = ({ onPlaceSelect }: SearchBarProps) => {
         ref={inputRef}
         type="text"
         placeholder="🔎  Search for a place..."
-        className="w-full p-7 rounded-lg h-10 text-2xl bg-gray-800 text-white border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-7 rounded-lg h-10 text-2xl scale-70 bg-gray-800 text-white border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
   );

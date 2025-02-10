@@ -75,9 +75,9 @@ function GoogleMapComponent() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-indigo-900 via-blue-800 to-blue-600 p-8 rounded-3xl shadow-lg w-full">
+    <div className="bg-gradient-to-b from-blue-100 to-white-20 p-8 rounded-3xl shadow-lg h-90/100">
       <div className="flex items-center justify-between mb-6">
-        <div className="text-white text-xl font-semibold">Map Radius</div>
+        <div className=" text-xl font-semibold">Map Radius</div>
         <Slider
           defaultValue={5}
           aria-label="Radius"
@@ -93,9 +93,17 @@ function GoogleMapComponent() {
         />
       </div>
 
-      <div className="h-80 relative">
+      <div className="h-90/100 relative">
         <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
           <Map defaultZoom={13} center={mapCenter} mapId="DEMO_MAP_ID">
+            <AdvancedMarker position={mapCenter}>
+              <Pin
+                background={"#FF0000"}
+                glyphColor={"#FFF"}
+                borderColor={"#000"}
+              />
+            </AdvancedMarker>
+
             {filteredLocations.map((poi) => (
               <AdvancedMarker key={poi.key} position={poi.location}>
                 <Pin
@@ -119,7 +127,7 @@ function GoogleMapComponent() {
           </Map>
 
           <MapControl position={ControlPosition.TOP}>
-            <div className="w-90 text-center mt-2">
+            <div className="w-90 text-center mt-1">
               <SearchBar onPlaceSelect={onPlaceSelect} />
             </div>
           </MapControl>
