@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import Homesearchbutton from "../components/homesearchbutton/Homesearchbutton";
 
 function HomePage() {
