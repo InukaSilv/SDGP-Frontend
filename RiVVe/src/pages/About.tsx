@@ -22,7 +22,7 @@ const About = () => {
       <Navbar />
 
       {/* About Section */}
-      <section className="flex flex-col items-center gap-6 mt-20 text-center">
+      <section className="flex flex-col items-center gap-6 mt-20 text-center -z-10">
         <h1 className="text-4xl font-bold text-gray-800">About Us</h1>
         <p className="text-gray-600 max-w-2xl">
           RiVVE is a student-focused hostel booking platform designed to make accommodation searches easier, safer, and more transparent.
@@ -51,7 +51,7 @@ const About = () => {
       {/* Team Section */}
       <section className="flex flex-col items-center mt-16">
         <h2 className="text-3xl font-semibold text-gray-800">Meet Our Team</h2>
-        <div className="flex flex-wrap justify-center gap-8 mt-8 px-4">
+        <div className="grid grid-cols-3 gap-8 mt-8 px-4">
           {teamMembers.map((member, index) => (
             <TeamCard key={index} name={member.name} role={member.role} imageUrl={member.imageUrl} />
           ))}

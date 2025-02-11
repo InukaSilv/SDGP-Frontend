@@ -6,7 +6,7 @@ type TeamMember = {
 
 const TeamCard: React.FC<TeamMember> = ({ name, role, imageUrl }) => {
   return (
-    <div className="w-64 bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+    <div className="w-64 bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 -z-10">
       {/* Team Member Image */}
       <img
         src={imageUrl}
