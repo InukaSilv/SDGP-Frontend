@@ -2,9 +2,7 @@ import Slider from "@mui/material/Slider";
 import {
   AdvancedMarker,
   APIProvider,
-  ControlPosition,
   Map,
-  MapControl,
   Pin,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
@@ -12,14 +10,17 @@ import { useEffect, useState } from "react";
 import { Circle } from "../circle/Circles";
 import SearchBar from "./SearchBar";
 
-function GoogleMapComponent() {
+type GoogleMapComponentProps = { mapCenter: { lat: number; lng: number } };
+
+function GoogleMapComponent({ mapCenter }: GoogleMapComponentProps) {
   const [error, setError] = useState<string | null>(null);
   const [radius, setRadius] = useState<number>(5);
   const [markerRef] = useAdvancedMarkerRef();
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
-    lat: 0,
-    lng: 0,
+  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
+    lat: mapCenter.lat,
+    lng: mapCenter.lng,
   });
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   type Poi = { key: string; location: google.maps.LatLngLiteral };
   const locations: Poi[] = [
@@ -32,7 +33,7 @@ function GoogleMapComponent() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) =>
-          setMapCenter({
+          setMapPosition({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           }),
@@ -41,16 +42,26 @@ function GoogleMapComponent() {
     } else {
       setError("Geolocation is not supported by this browser.");
     }
+
+    // Force re-render to fix Google Maps not showing correctly
+    setTimeout(() => setMapLoaded(true), 500);
   }, []);
+
+  useEffect(() => {
+    setMapPosition(mapCenter);
+  }, [mapCenter]);
 
   const filteredLocations = locations.filter((poi) => {
     if (
-      mapCenter &&
+      mapPosition &&
       typeof google !== "undefined" &&
       google.maps &&
       google.maps.geometry
     ) {
-      const userLatLng = new google.maps.LatLng(mapCenter.lat, mapCenter.lng);
+      const userLatLng = new google.maps.LatLng(
+        mapPosition.lat,
+        mapPosition.lng
+      );
       const propLatLng = new google.maps.LatLng(
         poi.location.lat,
         poi.location.lng
@@ -67,7 +78,7 @@ function GoogleMapComponent() {
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     if (place?.geometry?.location) {
-      setMapCenter({
+      setMapPosition({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
@@ -75,9 +86,9 @@ function GoogleMapComponent() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-white-20 p-8 rounded-3xl shadow-lg h-90/100">
-      <div className="flex items-center justify-between mb-6">
-        <div className=" text-xl font-semibold">Map Radius</div>
+    <div className="bg-gradient-to-b from-blue-100 to-white-20 p-4 rounded-3xl shadow-lg min-h-[400px] w-full">
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-lg font-semibold">Map Radius</div>
         <Slider
           defaultValue={5}
           aria-label="Radius"
@@ -93,45 +104,40 @@ function GoogleMapComponent() {
         />
       </div>
 
-      <div className="h-90/100 relative">
-        <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-          <Map defaultZoom={13} center={mapCenter} mapId="DEMO_MAP_ID">
-            <AdvancedMarker position={mapCenter}>
-              <Pin
-                background={"#FF0000"}
-                glyphColor={"#FFF"}
-                borderColor={"#000"}
-              />
-            </AdvancedMarker>
-
-            {filteredLocations.map((poi) => (
-              <AdvancedMarker key={poi.key} position={poi.location}>
+      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px]">
+        {mapLoaded && (
+          <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+            <Map defaultZoom={13} center={mapPosition} mapId="DEMO_MAP_ID">
+              <AdvancedMarker position={mapPosition}>
                 <Pin
-                  background={"#FBBC04"}
-                  glyphColor={"#000"}
+                  background={"#FF0000"}
+                  glyphColor={"#FFF"}
                   borderColor={"#000"}
                 />
               </AdvancedMarker>
-            ))}
 
-            <Circle
-              radius={radius * 1000}
-              center={mapCenter}
-              strokeColor={"#3b82f6"}
-              strokeOpacity={1}
-              strokeWeight={3}
-              fillColor={"#3b82f6"}
-              fillOpacity={0.3}
-            />
-            <AdvancedMarker ref={markerRef} position={null} />
-          </Map>
+              {filteredLocations.map((poi) => (
+                <AdvancedMarker key={poi.key} position={poi.location}>
+                  <Pin
+                    background={"#FBBC04"}
+                    glyphColor={"#000"}
+                    borderColor={"#000"}
+                  />
+                </AdvancedMarker>
+              ))}
 
-          <MapControl position={ControlPosition.TOP}>
-            <div className="w-90 text-center mt-1">
-              <SearchBar onPlaceSelect={onPlaceSelect} />
-            </div>
-          </MapControl>
-        </APIProvider>
+              <Circle
+                radius={radius * 1000}
+                center={mapPosition}
+                strokeColor={"#3b82f6"}
+                strokeOpacity={1}
+                strokeWeight={3}
+                fillColor={"#3b82f6"}
+                fillOpacity={0.3}
+              />
+            </Map>
+          </APIProvider>
+        )}
       </div>
 
       {error && (
