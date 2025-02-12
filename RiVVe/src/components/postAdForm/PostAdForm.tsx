@@ -8,17 +8,16 @@ const PostAdForm: React.FC = () => {
     price: string;
     location: string;
     contact: string;
-    image: File | null;
+    images: File[];
   }>({
     title: "",
     description: "",
     price: "",
     location: "",
     contact: "",
-    image: null,
+    images: [],
   });
 
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
   const handleInputChange = (
@@ -26,24 +25,14 @@ const PostAdForm: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
-    if (name === "location") {
-      // Example logic to fetch coordinates from a location (replace with actual geocoding API)
-      if (value.toLowerCase() === "colombo") {
-        setCoordinates({ lat: 6.9271, lng: 79.8612 });
-      } else if (value.toLowerCase() === "kandy") {
-        setCoordinates({ lat: 7.2906, lng: 80.6337 });
-      } else {
-        setCoordinates(null);
-      }
-    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file));
+    if (e.target.files) {
+      setFormData({
+        ...formData,
+        images: [...formData.images, ...Array.from(e.target.files)], // Append new files
+      });
     }
   };
 
@@ -53,12 +42,31 @@ const PostAdForm: React.FC = () => {
     // Add logic to send data to the backend (e.g., API call)
   };
 
+  const handleLocationChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const location = e.target.value;
+    setFormData({ ...formData, location });
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          location
+        )}&key=YOUR_GOOGLE_MAPS_API_KEY`
+      );
+      const data = await response.json();
+      if (data.results.length > 0) {
+        const { lat, lng } = data.results[0].geometry.location;
+        setCoordinates({ lat, lng });
+      }
+    } catch (error) {
+      console.error("Error fetching coordinates: ", error);
+    }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto mt-10 p-6 grid grid-cols-3 gap-6">
-      {/* Form Section */}
-      <div className="col-span-2 bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-6">Post Your Ad</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="flex flex-col md:flex-row max-w-6xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-2xl">
+      <div className="w-full md:w-2/3">
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">Post Your Ad</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="title" className="block text-gray-700 font-medium">
               Ad Title
@@ -116,7 +124,7 @@ const PostAdForm: React.FC = () => {
               id="location"
               name="location"
               value={formData.location}
-              onChange={handleInputChange}
+              onChange={handleLocationChange}
               required
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter the location of the property"
@@ -138,17 +146,18 @@ const PostAdForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="image" className="block text-gray-700 font-medium">
-              Upload Image
+            <label htmlFor="images" className="block text-gray-700 font-medium">
+              Upload Images
             </label>
             <input
               type="file"
-              id="image"
-              name="image"
+              id="images"
+              name="images"
               onChange={handleFileChange}
               required
-              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               accept="image/*"
+              multiple
             />
           </div>
           <div>
@@ -162,24 +171,24 @@ const PostAdForm: React.FC = () => {
         </form>
       </div>
 
-      {/* Preview Section */}
-      <div className="col-span-1 flex flex-col items-center space-y-4">
-        {previewImage && (
-          <div className="w-full">
-            <h3 className="text-lg font-bold mb-2">Image Preview</h3>
-            <img
-              src={previewImage}
-              alt="Preview"
-              className="w-full h-64 object-cover rounded-lg border"
-            />
+      <div className="w-full md:w-1/3 mt-6 md:mt-0 md:ml-6 flex flex-col items-center">
+        {formData.images.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-blue-600 mb-4">Uploaded Images</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {formData.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(image)}
+                  alt={`Uploaded ${index}`}
+                  className="w-32 h-32 object-cover rounded-lg border shadow-lg"
+                />
+              ))}
+            </div>
           </div>
         )}
 
-        {coordinates && (
-          <div className="w-full h-64 border rounded-lg overflow-hidden">
-           
-          </div>
-        )}
+       
       </div>
     </div>
   );
