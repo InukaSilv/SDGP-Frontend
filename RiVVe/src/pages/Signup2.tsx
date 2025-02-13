@@ -20,7 +20,7 @@ function Signup2() {
             accommodations or tenants.
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <Signupform />
+            <Signupform role={role} />
             <div className="bg-white/20 p-8 rounded-2xl shadow-xl text-white">
               <h2 className="text-4xl font-bold text-indigo-300 mb-6 text-center">
                 Unlock Premium Features

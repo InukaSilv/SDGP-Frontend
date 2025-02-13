@@ -1,9 +1,14 @@
 import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye } from "lucide-react";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithPopup,
+  googleProvider,
+} from "../../firebase";
 
 interface FormData {
   fname: string;
@@ -15,9 +20,8 @@ interface FormData {
   confirmpassword: string;
 }
 
-function Signupform() {
+function Signupform({ role }: { role: string }) {
   const navigate = useNavigate();
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
@@ -35,7 +39,6 @@ function Signupform() {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
-
     if (id === "password") {
       const passpattern = /^[A-Za-z0-9@#$%^&+=*!()-_]*$/;
       if (!passpattern.test(value)) {
@@ -46,7 +49,6 @@ function Signupform() {
         setPasswordError("");
       }
     }
-
     if (id === "confirmpassword") {
       if (formData.password !== value) {
         setpassWordMismatch("Passwords do not match");
@@ -56,12 +58,44 @@ function Signupform() {
     }
   };
 
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordMismatch || passwordError) return;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = userCredential.user;
+      await sendEmailVerification(user);
+
+      navigate("/verifyWaiting", {
+        state: { formData: { ...formData, role } },
+      });
+    } catch (error: any) {
+      console.error("signup error", error.message);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      console.log("Google User:", user);
+      navigate("/user");
+    } catch (error: any) {
+      console.error("Google Sign-In Error", error.message);
+    }
+  };
+
   return (
     <div className="bg-white/80 p-8 rounded-2xl shadow-xl w-120">
       <h2 className="text-3xl font-bold text-blue-600 mb-6">
         Create Your Account
       </h2>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSignup}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -199,29 +233,18 @@ function Signupform() {
             Login
           </Link>
         </p>
-        <button
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-          onClick={() => navigate("/user")}
-        >
+        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
           Sign Up
         </button>
 
         <div className="w-full">
-          <GoogleOAuthProvider clientId={CLIENT_ID}>
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log("Credential Response:", credentialResponse);
-                if (credentialResponse.credential) {
-                  const decoded = jwtDecode(credentialResponse.credential);
-                  console.log("Decoded Token:", decoded);
-                  navigate("/user");
-                } else {
-                  console.error("No credential received");
-                }
-              }}
-              onError={() => console.log("Login failed")}
-            />
-          </GoogleOAuthProvider>
+          <button
+            type="button"
+            onClick={handleGoogleSignUp}
+            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+          >
+            Sign up with google
+          </button>
         </div>
       </form>
     </div>
