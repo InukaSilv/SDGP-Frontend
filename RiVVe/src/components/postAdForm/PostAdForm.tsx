@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import GoogleMapReact from "google-map-react";
 
 const PostAdForm: React.FC = () => {
   const [formData, setFormData] = useState<{
@@ -31,7 +30,7 @@ const PostAdForm: React.FC = () => {
     if (e.target.files) {
       setFormData({
         ...formData,
-        images: [...formData.images, ...Array.from(e.target.files)], // Append new files
+        images: [...formData.images, ...Array.from(e.target.files)],
       });
     }
   };
@@ -63,12 +62,12 @@ const PostAdForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row max-w-6xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-2xl">
+    <div className="flex flex-col md:flex-row max-w-6xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-2xl">
       <div className="w-full md:w-2/3">
-        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">Post Your Ad</h2>
+        <h2 className="text-4xl font-bold text-center mb-6 text-blue-600">Post Your Ad</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-gray-700 font-medium">
+            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
               Ad Title
             </label>
             <input
@@ -83,10 +82,7 @@ const PostAdForm: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="description"
-              className="block text-gray-700 font-medium"
-            >
+            <label htmlFor="description" className="block text-gray-700 font-medium mb-2">
               Description
             </label>
             <textarea
@@ -101,7 +97,7 @@ const PostAdForm: React.FC = () => {
             ></textarea>
           </div>
           <div>
-            <label htmlFor="price" className="block text-gray-700 font-medium">
+            <label htmlFor="price" className="block text-gray-700 font-medium mb-2">
               Price (LKR)
             </label>
             <input
@@ -116,7 +112,7 @@ const PostAdForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="location" className="block text-gray-700 font-medium">
+            <label htmlFor="location" className="block text-gray-700 font-medium mb-2">
               Location
             </label>
             <input
@@ -131,7 +127,7 @@ const PostAdForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="contact" className="block text-gray-700 font-medium">
+            <label htmlFor="contact" className="block text-gray-700 font-medium mb-2">
               Contact Number
             </label>
             <input
@@ -146,7 +142,7 @@ const PostAdForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="images" className="block text-gray-700 font-medium">
+            <label htmlFor="images" className="block text-gray-700 font-medium mb-2">
               Upload Images
             </label>
             <input
@@ -163,7 +159,7 @@ const PostAdForm: React.FC = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Submit Ad
             </button>
@@ -187,8 +183,6 @@ const PostAdForm: React.FC = () => {
             </div>
           </div>
         )}
-
-       
       </div>
     </div>
   );
