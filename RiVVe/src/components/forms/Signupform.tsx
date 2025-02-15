@@ -9,6 +9,7 @@ import {
   signInWithPopup,
   googleProvider,
 } from "../../firebase";
+import { getAdditionalUserInfo } from "firebase/auth";
 
 interface FormData {
   fname: string;
@@ -35,6 +36,9 @@ function Signupform({ role }: { role: string }) {
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+  const [existingError, setExistingError] = useState<string>("");
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -56,6 +60,16 @@ function Signupform({ role }: { role: string }) {
         setpassWordMismatch("");
       }
     }
+
+    if (id === "phone") {
+      const cleanedPhone = value.replace(/\D/g, "");
+      setFormData((record) => ({ ...record, phone: cleanedPhone }));
+      if (!/^0\d{9}$/.test(cleanedPhone)) {
+        setPhoneError("Phone number should be in the correct format");
+      } else {
+        setPhoneError("");
+      }
+    }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -75,7 +89,11 @@ function Signupform({ role }: { role: string }) {
         state: { formData: { ...formData, role } },
       });
     } catch (error: any) {
-      console.error("signup error", error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setEmailError("Email already exists, try again with another email");
+      } else {
+        console.error("signup error", error.message);
+      }
     }
   };
 
@@ -83,7 +101,14 @@ function Signupform({ role }: { role: string }) {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log("Google User:", user);
+      const additionalInfo = getAdditionalUserInfo(result);
+      if (additionalInfo?.isNewUser === false) {
+        setExistingError(
+          "User already exists, use another account or login using existing account"
+        );
+        return;
+      }
+
       navigate("/user");
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);
@@ -137,6 +162,7 @@ function Signupform({ role }: { role: string }) {
             onChange={handleInput}
             value={formData.email}
           />
+          {emailError && <p className="text-red-500">{emailError}</p>}
         </div>
 
         <div>
@@ -150,7 +176,10 @@ function Signupform({ role }: { role: string }) {
             className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleInput}
             value={formData.phone}
+            maxLength={10}
+            minLength={10}
           />
+          {phoneError && <p className="text-red-500">{phoneError}</p>}
         </div>
 
         <div>
@@ -233,6 +262,7 @@ function Signupform({ role }: { role: string }) {
             Login
           </Link>
         </p>
+        {existingError && <p className="text-red-500">{existingError}</p>}
         <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
           Sign Up
         </button>

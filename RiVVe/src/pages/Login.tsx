@@ -1,9 +1,15 @@
 import { useState, ChangeEvent } from "react";
 import Navbar from "../components/navbar/navbar";
 import { EyeOff, Eye } from "lucide-react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
+import { sign } from "crypto";
+import {
+  auth,
+  signInWithPopup,
+  googleProvider,
+  signInWithEmailAndPassword,
+} from "../firebase";
+import { getIdToken } from "firebase/auth";
 
 interface FormData {
   email: string;
@@ -18,10 +24,72 @@ function Login() {
     email: "",
     password: "",
   });
+  const [loginError, setLoginError] = useState<string>("");
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email || !formData.password) {
+      setLoginError("Please enter both email and password");
+      return;
+    }
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+
+      const response = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: token }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        navigate("/user");
+      } else {
+        alert(data.message);
+      }
+      console.log(token);
+    } catch (error) {
+      console.log("loggin error");
+      setLoginError("Email and password does not match");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken();
+
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: token }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        navigate("/user");
+      } else {
+        setLoginError(
+          "User dosent exist, please use other method or Signup if not registered yet"
+        );
+      }
+    } catch (error) {
+      setLoginError(
+        "User dosent exist, please use other method or Signup if not registered yet"
+      );
+    }
   };
 
   return (
@@ -32,9 +100,9 @@ function Login() {
           <h1 className="text-3xl font-bold text-white mb-6 text-center">
             Login
           </h1>
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleEmailLogin}>
             <input
-              type="text"
+              type="email"
               id="email"
               onChange={handleInput}
               placeholder="Email"
@@ -57,10 +125,14 @@ function Login() {
                 {showpass ? <Eye /> : <EyeOff />}
               </button>
             </div>
-
+            {loginError && <p className="text-red-500">{loginError}</p>}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all hover:shadow-blue-500/50 hover:shadow-lg hover:cursor-pointer"
+              className={`w-full bg-blue-600 text-white py-3 rounded-lg font-semibold transition-all hover:shadow-blue-500/50 hover:shadow-lg ${
+                !formData.email || !formData.password
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-blue-700"
+              }`}
             >
               Login
             </button>
@@ -76,21 +148,12 @@ function Login() {
           </p>
 
           <div className="mt-6 flex justify-center hover:scale-105">
-            <GoogleOAuthProvider clientId={CLIENT_ID}>
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log("Credential Response:", credentialResponse);
-                  if (credentialResponse.credential) {
-                    const decoded = jwtDecode(credentialResponse.credential);
-                    console.log("Decoded Token:", decoded);
-                    navigate("/user");
-                  } else {
-                    console.error("No credential received");
-                  }
-                }}
-                onError={() => console.log("Login failed")}
-              />
-            </GoogleOAuthProvider>
+            <button
+              className="bg-white text-black py-2 px-6 rounded-lg font-semibold hover:bg-grey-200 transition-all"
+              onClick={handleGoogleLogin}
+            >
+              Login with google
+            </button>
           </div>
         </div>
       </section>

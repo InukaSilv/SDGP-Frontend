@@ -31,9 +31,9 @@ function VerifyWaiting() {
           phone: formData.phone,
           dob: formData.dob,
           password: formData.password,
-          isPremium: false,
+          isPremium: formData.isPremium || false,
           idToken: idToken,
-          role: formData.role || "student",
+          role: formData.role || "student", // Default to student if not provided
         };
         try {
           await axios.post(
@@ -41,7 +41,7 @@ function VerifyWaiting() {
             requestData
           );
           console.log("User data sent to backend successfully");
-          navigate("/user");
+          navigate("/login");
         } catch (error) {
           console.error(
             "Error saving to MongoDB:",

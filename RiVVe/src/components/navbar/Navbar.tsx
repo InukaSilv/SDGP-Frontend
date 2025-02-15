@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoMenu } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
@@ -6,10 +6,26 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   const [mobileView, setMobileView] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   const changeMobView = () => {
     setMobileView(!mobileView);
   };
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("user");
+
+    if (authToken && storedUser) {
+      setIsLoggedIn(true);
+      const user = json.parse(storedUser);
+      setUserRole(user.role);
+    } else {
+      setIsLoggedIn(false);
+      setUserRole(null);
+    }
+  });
 
   return (
     <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-gray-700 text-white shadow-lg z-999">
