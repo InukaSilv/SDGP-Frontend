@@ -17,7 +17,6 @@ interface FormData {
 }
 
 function Login() {
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const navigate = useNavigate();
   const [showpass, setShowPass] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
@@ -31,6 +30,7 @@ function Login() {
     setFormData((record) => ({ ...record, [id]: value }));
   };
 
+  // normal email password handler
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -46,14 +46,18 @@ function Login() {
       const user = userCredential.user;
       const token = await user.getIdToken();
 
+      console.log("Token from firebase", token);
+
       const response = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken: token }),
       });
       const data = await response.json();
+      console.log("Backend response", data);
       if (data.success) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/user");
       } else {
         alert(data.message);
@@ -65,20 +69,24 @@ function Login() {
     }
   };
 
+  // google Login handler
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
+      console.log("Token from firebase", token);
 
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken: token }),
       });
 
       const data = await response.json();
+      console.log("Backend response", data);
       if (data.success) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", JSON.stringify(data.data));
         navigate("/user");
       } else {
         setLoginError(

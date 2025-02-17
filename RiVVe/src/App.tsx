@@ -6,6 +6,7 @@ import Signup2 from "./pages/Signup2";
 import User from "./pages/User";
 import Login from "./pages/Login";
 import VerifyWaiting from "./pages/VerifyWaiting";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 function App() {
   return (
@@ -15,9 +16,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/Signup1" element={<Signup1 />} />
         <Route path="/signup2" element={<Signup2 />} />
-        <Route path="/user" element={<User />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verifyWaiting" element={<VerifyWaiting />} />
+
+        <Route path="/user" element={<ProtectedRoute element={<User />} />} />
       </Routes>
     </Router>
   );

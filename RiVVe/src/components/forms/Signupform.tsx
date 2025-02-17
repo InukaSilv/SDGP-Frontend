@@ -9,7 +9,8 @@ import {
   signInWithPopup,
   googleProvider,
 } from "../../firebase";
-import { getAdditionalUserInfo } from "firebase/auth";
+import { getAdditionalUserInfo, updateProfile } from "firebase/auth";
+import axios from "axios";
 
 interface FormData {
   fname: string;
@@ -83,6 +84,9 @@ function Signupform({ role }: { role: string }) {
         formData.password
       );
       const user = userCredential.user;
+      await updateProfile(user, {
+        displayName: `${formData.fname} ${formData.lname}`,
+      });
       await sendEmailVerification(user);
 
       navigate("/verifyWaiting", {
@@ -108,8 +112,25 @@ function Signupform({ role }: { role: string }) {
         );
         return;
       }
+      const idToken = await user.getIdToken();
+      const userData = {
+        fname: user.displayName ? user.displayName.split(" ")[0] : "",
+        lname: user.displayName
+          ? user.displayName.split(" ").slice(1).join(" ")
+          : "",
+        email: user.email,
+        phone: user.phoneNumber || "",
+        dob: "",
+        password: "",
+        registerType: "google",
+        isPremium: false,
+        idToken: idToken,
+        role: role || "Student",
+      };
 
-      navigate("/user");
+      await axios.post("http://localhost:5001/api/auth/signup", userData);
+      console.log("google signup success");
+      navigate("/login");
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);
     }

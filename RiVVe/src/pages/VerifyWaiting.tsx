@@ -31,6 +31,7 @@ function VerifyWaiting() {
           phone: formData.phone,
           dob: formData.dob,
           password: formData.password,
+          registerType: "password",
           isPremium: formData.isPremium || false,
           idToken: idToken,
           role: formData.role || "student", // Default to student if not provided
