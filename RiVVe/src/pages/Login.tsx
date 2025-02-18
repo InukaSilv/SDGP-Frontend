@@ -2,7 +2,6 @@ import { useState, ChangeEvent } from "react";
 import Navbar from "../components/navbar/navbar";
 import { EyeOff, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { sign } from "crypto";
 import {
   auth,
   signInWithPopup,
@@ -57,7 +56,7 @@ function Login() {
       console.log("Backend response", data);
       if (data.success) {
         localStorage.setItem("authToken", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.data));
         navigate("/user");
       } else {
         alert(data.message);
@@ -145,7 +144,7 @@ function Login() {
               Login
             </button>
             <p className="text-blue-400 hover:underline cursor-pointer text-center">
-              Forgot password
+              <Link to="/forgotpassword">Forgot password </Link>
             </p>
           </form>
           <p className="text-gray-400 text-sm mt-4 text-center">

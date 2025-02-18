@@ -23,13 +23,14 @@ function Navbar() {
 
     if (authToken && storedUser) {
       try {
-        const user = storedUser ? JSON.parse(storedUser) : null;
+        const user = JSON.parse(storedUser);
         setIsLoggedIn(true);
         setUserRole(user?.role || null);
       } catch (error) {
         console.error("Error parsing user data:", error);
         setIsLoggedIn(false);
         setUserRole(null);
+        localStorage.removeItem("user");
       }
     } else {
       setIsLoggedIn(false);
@@ -115,7 +116,7 @@ function Navbar() {
             <div className="absolute mt-1 right-0 w-48 bg-gray-700 border-none text-white rounded-lg shadow-lg border">
               <ul className="flex flex-col text-lg text-center">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  Profile
+                  <Link to="/user">Profile </Link>
                 </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
