@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, sendEmailVerification } from "../firebase";
 import axios from "axios";
 
 function VerifyWaiting() {
   const navigate = useNavigate();
   const location = useLocation();
   const { formData } = location.state || {};
+  const [resendCount, setResendCount] = useState<number>(0);
+  const [timer, setTimer] = useState<number>(60);
+  const [processing, setProessing] = useState<boolean>(false);
+  const [errorMessage, setErrorMessge] = useState<string>("");
 
   useEffect(() => {
     if (!formData) {
@@ -30,7 +34,6 @@ function VerifyWaiting() {
           email: formData.email,
           phone: formData.phone,
           dob: formData.dob,
-          password: formData.password,
           registerType: "password",
           isPremium: formData.isPremium || false,
           idToken: idToken,
@@ -55,8 +58,40 @@ function VerifyWaiting() {
     return () => clearInterval(checkVerification);
   }, [navigate, formData]);
 
+  const HandleResend = async () => {
+    if (resendCount >= 2) {
+      setErrorMessge("Limit exceeded, try again later");
+      return;
+    }
+
+    setProessing(true);
+    setErrorMessge("");
+    setTimer(60);
+
+    try {
+      if (auth.currentUser) {
+        await sendEmailVerification(auth.currentUser);
+        setResendCount(resendCount + 1);
+      }
+    } catch (error: any) {
+      if (error.code === "auth/too-many-requests") {
+        setErrorMessge("Too many requests, Please try again later");
+      } else {
+        setErrorMessge("Error sending link, try again later");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (timer > 0) {
+      const timerr = setTimeout(() => setTimer(timer - 1), 1000);
+      return () => clearTimeout(timerr);
+    } else {
+      setProessing(false);
+    }
+  }, [timer]);
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-6">
       <div className="bg-white shadow-lg rounded-xl p-6 text-center">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">
           Check Your Email for Verification
@@ -70,6 +105,27 @@ function VerifyWaiting() {
         <p className="text-md text-gray-600 mt-4">
           Click on the link in the email. You will be redirected shortly.
         </p>
+        <h4 className="text-md text-black font-bold mt-4">
+          Didn't receive any mail ?{" "}
+        </h4>
+        {resendCount < 2 ? (
+          <>
+            <button
+              className={`p-3 text-white font-semibold rounded-3xl px-7 mt-3 ${
+                processing ? "bg-gray-400 cursor-not-allowed" : " bg-gray-800"
+              }`}
+              onClick={HandleResend}
+              disabled={processing}
+            >
+              {processing ? `Resent in ${timer}s` : "Resend email"}
+            </button>
+          </>
+        ) : (
+          <p className="text-red-500">
+            You have reached the limit, please try again later
+          </p>
+        )}
+        {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ import Login from "./pages/Login";
 import VerifyWaiting from "./pages/VerifyWaiting";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
-import ResetPw from "./pages/ResetPw";
 
 function App() {
   return (
@@ -21,7 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/verifyWaiting" element={<VerifyWaiting />} />
         <Route path="/forgotpassword" element={<ForgotPasswordEmail />} />
-        <Route path="reset-password" element={<ResetPw />} />
+
         <Route path="/user" element={<ProtectedRoute element={<User />} />} />
       </Routes>
     </Router>

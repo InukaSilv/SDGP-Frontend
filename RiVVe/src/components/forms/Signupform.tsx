@@ -121,7 +121,6 @@ function Signupform({ role }: { role: string }) {
         email: user.email,
         phone: user.phoneNumber || "",
         dob: "",
-        password: "",
         registerType: "google",
         isPremium: false,
         idToken: idToken,
