@@ -1,5 +1,5 @@
 import React from 'react';
-import PostAdForm from '../components/postAdForm/postAdForm';
+import PostAdForm from '../components/postAdForm/PostAdForm';
 
 
 const PostAdPage: React.FC = () => {
