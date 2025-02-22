@@ -10,11 +10,13 @@ import { useEffect, useState } from "react";
 import { Circle } from "../circle/Circles";
 import SearchBar from "./SearchBar";
 
-type GoogleMapComponentProps = { mapCenter: { lat: number; lng: number } };
+type GoogleMapComponentProps = {
+  mapCenter: { lat: number; lng: number };
+  radius: number;
+};
 
-function GoogleMapComponent({ mapCenter }: GoogleMapComponentProps) {
+function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
   const [error, setError] = useState<string | null>(null);
-  const [radius, setRadius] = useState<number>(5);
   const [markerRef] = useAdvancedMarkerRef();
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
     lat: mapCenter.lat,
@@ -86,25 +88,8 @@ function GoogleMapComponent({ mapCenter }: GoogleMapComponentProps) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-white-20 p-4 rounded-3xl shadow-lg min-h-[400px] w-full">
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-lg font-semibold">Map Radius</div>
-        <Slider
-          defaultValue={5}
-          aria-label="Radius"
-          valueLabelDisplay="auto"
-          onChange={(_, value) => setRadius(value as number)}
-          max={10}
-          sx={{
-            color: "#3b82f6",
-            height: 6,
-            width: "80%",
-            borderRadius: "10px",
-          }}
-        />
-      </div>
-
-      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px]">
+    <div>
+      <div className="h-screen w-full">
         {mapLoaded && (
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <Map defaultZoom={13} center={mapPosition} mapId="DEMO_MAP_ID">

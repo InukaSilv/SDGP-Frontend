@@ -1,25 +1,33 @@
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 function AdDisplayer() {
   return (
-    <div className="w-full shadow-lg bg-gradient-to-b from-blue-100 to-white-20 rounded-4xl justify-between flex">
-      <div className="p-5">
-        <h1 className="text-2xl font-medium">Property Topic</h1>
-        <p className="text-gray-600 text-sm">
-          Spacious modern hostels with 5 rooms
-        </p>
-        <h2>
-          {" "}
-          Available Slots{" "}
-          <span className="bg-red-700 text-white p-3 rounded-3xl py-2">3</span>
-        </h2>
-        <h1 className="text-black font-bold mt-2 text-1xl">Rs 15,000/Month</h1>
-      </div>
-      <div className="w-1/2 p-5">
-        <img
-          src="src/assets/main-background.jpeg"
-          alt="propertyimage"
-          className="rounded-3xl"
+    <div className="flex flex-wrap">
+      <Card sx={{ maxWidth: 365 }}>
+        <CardMedia
+          sx={{ height: 140 }}
+          image="src/assets/main-background.jpeg"
+          title="green iguana"
         />
-      </div>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Lizard
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            Lizards are a widespread group of squamate reptiles, with over 6,000
+            species, ranging across all continents except Antarctica
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small">Share</Button>
+          <Button size="small">Learn More</Button>
+        </CardActions>
+      </Card>
     </div>
   );
 }

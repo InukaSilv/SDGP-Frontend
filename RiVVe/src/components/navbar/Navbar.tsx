@@ -77,7 +77,7 @@ function Navbar() {
             <Link to="/about"> About </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-            <Link to="/hostel"> Hostels </Link>
+            Hostels
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
             Contact

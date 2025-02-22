@@ -4,8 +4,9 @@ import TypeButton from "../buttons/TypeButton";
 import Checkbox from "@mui/material/Checkbox";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
-function FilterContent() {
+function FilterContent({ isExpanded, setIsExpanded }) {
   const [priceRange, setPriceRange] = useState<number[]>([30000, 60000]);
   const [selectedHousingType, setSelectedHousingType] = useState<string[]>([]);
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
@@ -50,23 +51,30 @@ function FilterContent() {
   };
 
   return (
-    <div className="text-black space-y-4">
-      <div className="flex justify-between items-center">
-        <label>Number of Residents</label>
-        <div className="bg-gray-300 p-1 px-2 rounded-2xl w-32 text-center">
-          <select className="bg-transparent outline-none">
-            {[...Array(10)].map((_, i) => (
-              <option key={i} value={i + 1}>
-                {i + 1}
-              </option>
-            ))}
-            <option value="10+">10+</option>
-          </select>
-        </div>
+    <div className="relative w-full h-full p-6 bg-gray-300 text-gray-800 rounded-lg shadow-lg">
+      <button className="absolute top-4 right-4 text-gray-600 hover:text-black">
+        <X
+          size={27}
+          className="font-bold hover:cursor-pointer"
+          onClick={() => setIsExpanded(!isExpanded)}
+        />
+      </button>
+      <div className="w-full mb-4 mt-3">
+        <label className="block text-sm font-semibold mb-2">
+          Number of Residents
+        </label>
+        <select className="w-full p-2 bg-white rounded-md text-gray-800 border border-gray-400">
+          {[...Array(10)].map((_, i) => (
+            <option key={i} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div>
-        <label>Price Range</label>
+      {/* Price Range */}
+      <div className="w-full mb-4">
+        <label className="block text-sm font-semibold mb-2">Price Range</label>
         <Slider
           value={priceRange}
           valueLabelDisplay="auto"
@@ -79,15 +87,15 @@ function FilterContent() {
             height: 6,
           }}
         />
-        <div className="flex justify-between text-sm text-gray-700 font-medium">
+        <div className="flex justify-between text-sm font-medium text-gray-600">
           <span>LKR {priceRange[0].toLocaleString()}</span>
           <span>LKR {priceRange[1].toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="flex">
-        <label>Housing Type</label>
-        <div className="flex space-x-2 ml-5">
+      <div className="w-full mb-4">
+        <label className="block text-sm font-semibold mb-2">Housing Type</label>
+        <div className="flex gap-2">
           {["Hostel", "Houses", "Apartment"].map((type) => (
             <TypeButton
               key={type}
@@ -99,9 +107,9 @@ function FilterContent() {
         </div>
       </div>
 
-      <div className="flex">
-        <label>Room Type</label>
-        <div className="flex space-x-2 ml-5">
+      <div className="w-full mb-4">
+        <label className="block text-sm font-semibold mb-2">Room Type</label>
+        <div className="flex gap-2">
           {["Single", "Shared"].map((type) => (
             <TypeButton
               key={type}
@@ -113,9 +121,9 @@ function FilterContent() {
         </div>
       </div>
 
-      <div className="flex space-y-3">
-        <label className="font-medium text-black">Facilities</label>
-        <div className="grid grid-cols-3 ml-5">
+      <div className="w-full mb-4">
+        <label className="block text-sm font-semibold mb-2">Facilities</label>
+        <div className="grid grid-cols-3 gap-x-4">
           {["A/C", "CCTV", "Study Rooms", "WiFi", "Kitchen", "Food"].map(
             (facility) => (
               <div key={facility} className="flex items-center gap-x-2">
@@ -126,10 +134,9 @@ function FilterContent() {
           )}
         </div>
       </div>
-
-      <div className="flex">
-        <label>Sort by</label>
-        <div className="relative w-64">
+      <div className="w-full mb-6">
+        <label className="block text-sm font-semibold mb-2">Sort by</label>
+        <div className="rrelative w-full">
           <button
             className="flex items-center justify-between w-full px-4 py-2 bg-gray-200 rounded-full text-gray-900 font-medium focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
@@ -143,7 +150,7 @@ function FilterContent() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute w-full bg-white rounded-lg shadow-md border"
+              className="absolute w-full bg-white rounded-md shadow-md border border-gray-400 mt-2"
             >
               {options.map((option) => (
                 <div
@@ -161,8 +168,31 @@ function FilterContent() {
           )}
         </div>
       </div>
+
+      <button
+        type="submit"
+        className="items-center w-full bg-blue-950 text-white p-2 rounded-2xl"
+      >
+        Apply Filters
+      </button>
     </div>
   );
+  // <div className="text-black space-y-4">
+  //   <div className="flex justify-between items-center">
+  //     <label>Number of Residents</label>
+  //     <div className="bg-gray-300 p-1 px-2 rounded-2xl w-32 text-center">
+  //       <select className="bg-transparent outline-none">
+  //         {[...Array(10)].map((_, i) => (
+  //           <option key={i} value={i + 1}>
+  //             {i + 1}
+  //           </option>
+  //         ))}
+  //         <option value="10+">10+</option>
+  //       </select>
+  //     </div>
+  //   </div>
+
+  // </div>
 }
 
 export default FilterContent;

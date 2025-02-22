@@ -31,12 +31,12 @@ const SearchBar = ({ onPlaceSelect }: SearchBarProps) => {
   }, [onPlaceSelect, placeAutocomplete]);
 
   return (
-    <div className="autocomplete-container">
+    <div className="autocomplete-container hover:cursor-text">
       <input
         ref={inputRef}
         type="text"
         placeholder="🔎  Search for a university..."
-        className="w-140 h-10 p-06 py-9 rounded-3xl mr-1 text-1xl  bg-gray-700 text-white border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-70 outline-0 py-1"
       />
     </div>
   );
