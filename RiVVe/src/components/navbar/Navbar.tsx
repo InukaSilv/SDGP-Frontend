@@ -84,7 +84,7 @@ function Navbar() {
           </li>
           {isLoggedIn && userRole === "Landlord" && (
             <li className="hover:text-gray-400 cursor-pointer transition">
-              MyAds
+              <Link to="/MyAds">MyAds</Link>
             </li>
           )}
         </ul>
