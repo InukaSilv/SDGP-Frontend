@@ -51,7 +51,7 @@ function FilterContent({ isExpanded, setIsExpanded }) {
   };
 
   return (
-    <div className="relative w-full h-full p-6 bg-gray-300 text-gray-800 rounded-lg shadow-lg">
+    <div className="relative w-full h-full p-4 sm:p-6 bg-gray-300 text-gray-800 rounded-lg shadow-lg overflow-y-auto max-h-[90vh] mt-20 md:mt-0">
       <button className="absolute top-4 right-4 text-gray-600 hover:text-black">
         <X
           size={27}
@@ -59,8 +59,9 @@ function FilterContent({ isExpanded, setIsExpanded }) {
           onClick={() => setIsExpanded(!isExpanded)}
         />
       </button>
+
       <div className="w-full mb-4 mt-3">
-        <label className="block text-sm font-semibold mb-2">
+        <label className="block text-sm sm:text-base font-semibold mb-2">
           Number of Residents
         </label>
         <select className="w-full p-2 bg-white rounded-md text-gray-800 border border-gray-400">
@@ -74,7 +75,9 @@ function FilterContent({ isExpanded, setIsExpanded }) {
 
       {/* Price Range */}
       <div className="w-full mb-4">
-        <label className="block text-sm font-semibold mb-2">Price Range</label>
+        <label className="block text-sm sm:text-base font-semibold mb-2">
+          Price Range
+        </label>
         <Slider
           value={priceRange}
           valueLabelDisplay="auto"
@@ -87,15 +90,17 @@ function FilterContent({ isExpanded, setIsExpanded }) {
             height: 6,
           }}
         />
-        <div className="flex justify-between text-sm font-medium text-gray-600">
+        <div className="flex justify-between text-sm sm:text-base font-medium text-gray-600">
           <span>LKR {priceRange[0].toLocaleString()}</span>
           <span>LKR {priceRange[1].toLocaleString()}</span>
         </div>
       </div>
 
       <div className="w-full mb-4">
-        <label className="block text-sm font-semibold mb-2">Housing Type</label>
-        <div className="flex gap-2">
+        <label className="block text-sm sm:text-base font-semibold mb-2">
+          Housing Type
+        </label>
+        <div className="flex gap-1 flex-wrap">
           {["Hostel", "Houses", "Apartment"].map((type) => (
             <TypeButton
               key={type}
@@ -108,8 +113,10 @@ function FilterContent({ isExpanded, setIsExpanded }) {
       </div>
 
       <div className="w-full mb-4">
-        <label className="block text-sm font-semibold mb-2">Room Type</label>
-        <div className="flex gap-2">
+        <label className="block text-sm sm:text-base font-semibold mb-2">
+          Room Type
+        </label>
+        <div className="flex  flex-wrap">
           {["Single", "Shared"].map((type) => (
             <TypeButton
               key={type}
@@ -122,8 +129,10 @@ function FilterContent({ isExpanded, setIsExpanded }) {
       </div>
 
       <div className="w-full mb-4">
-        <label className="block text-sm font-semibold mb-2">Facilities</label>
-        <div className="grid grid-cols-3 gap-x-4">
+        <label className="block text-sm sm:text-base font-semibold mb-2">
+          Facilities
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {["A/C", "CCTV", "Study Rooms", "WiFi", "Kitchen", "Food"].map(
             (facility) => (
               <div key={facility} className="flex items-center gap-x-2">
@@ -134,9 +143,12 @@ function FilterContent({ isExpanded, setIsExpanded }) {
           )}
         </div>
       </div>
+
       <div className="w-full mb-6">
-        <label className="block text-sm font-semibold mb-2">Sort by</label>
-        <div className="rrelative w-full">
+        <label className="block text-sm sm:text-base font-semibold mb-2">
+          Sort by
+        </label>
+        <div className="relative w-full">
           <button
             className="flex items-center justify-between w-full px-4 py-2 bg-gray-200 rounded-full text-gray-900 font-medium focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
@@ -177,22 +189,6 @@ function FilterContent({ isExpanded, setIsExpanded }) {
       </button>
     </div>
   );
-  // <div className="text-black space-y-4">
-  //   <div className="flex justify-between items-center">
-  //     <label>Number of Residents</label>
-  //     <div className="bg-gray-300 p-1 px-2 rounded-2xl w-32 text-center">
-  //       <select className="bg-transparent outline-none">
-  //         {[...Array(10)].map((_, i) => (
-  //           <option key={i} value={i + 1}>
-  //             {i + 1}
-  //           </option>
-  //         ))}
-  //         <option value="10+">10+</option>
-  //       </select>
-  //     </div>
-  //   </div>
-
-  // </div>
 }
 
 export default FilterContent;

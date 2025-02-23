@@ -36,7 +36,7 @@ const SearchBar = ({ onPlaceSelect }: SearchBarProps) => {
         ref={inputRef}
         type="text"
         placeholder="🔎  Search for a university..."
-        className="w-70 outline-0 py-1"
+        className=" w-46 md:w-70 outline-0 py-1"
       />
     </div>
   );

@@ -88,8 +88,8 @@ function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
   };
 
   return (
-    <div>
-      <div className="h-screen w-full">
+    <div className="h-screen w-full">
+      <div className="h-180 w-full">
         {mapLoaded && (
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <Map defaultZoom={13} center={mapPosition} mapId="DEMO_MAP_ID">

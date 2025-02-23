@@ -21,7 +21,7 @@ function RadiusSlider({ radius, setRadius }: RadiusSlider) {
       sx={{
         color: "#3b82f6",
         height: 6,
-        width: "80%",
+        width: "90%",
         borderRadius: "10px",
       }}
     />

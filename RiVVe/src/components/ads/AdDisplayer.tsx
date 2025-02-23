@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 function AdDisplayer() {
   return (
     <div className="flex flex-wrap">
-      <Card sx={{ maxWidth: 365 }}>
+      <Card sx={{ maxWidth: 400 }}>
         <CardMedia
           sx={{ height: 140 }}
           image="src/assets/main-background.jpeg"
