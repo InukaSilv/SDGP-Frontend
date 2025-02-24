@@ -1,5 +1,6 @@
 import { Pencil, Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface AdCardProps {
   ad: {
@@ -15,6 +16,7 @@ interface AdCardProps {
 
 function AdCard({ ad }: AdCardProps) {
   const [slots, setSlots] = useState(ad.availableSlots);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col sm:flex-row bg-white shadow-md rounded-xl overflow-hidden p-5 gap-4 sm:gap-6">
@@ -56,7 +58,10 @@ function AdCard({ ad }: AdCardProps) {
         </div>
       </div>
 
-      <button className="self-start sm:self-center p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+      <button
+        className="self-start sm:self-center p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+        onClick={() => navigate(`/edit-ad`, { state: { ad } })}
+      >
         <Pencil size={18} />
       </button>
     </div>
