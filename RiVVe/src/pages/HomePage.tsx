@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Navbar from "../components/navbar/Navbar";
 import Homesearchbutton from "../components/homesearchbutton/Homesearchbutton";
+import About from "./About";
 
 function HomePage() {
   return (
@@ -37,6 +38,7 @@ function HomePage() {
             <Homesearchbutton />
           </motion.div>
         </div>
+        <About/>
       </section>
     </>
   );
