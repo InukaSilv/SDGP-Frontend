@@ -8,12 +8,12 @@ type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "/images/lasal.jpg" },
-  { name: "Ishara Dharmapriya", role: "Front End Developer", imageUrl: "https://via.placeholder.com/150" },
-  { name: "Inuka", role: "Team Leader", imageUrl: "https://via.placeholder.com/150" },
-  { name: "Dulen Eragoda", role: "Back End Developer", imageUrl: "https://via.placeholder.com/150" },
-  { name: "Dulen Perera", role: "Back End Developer", imageUrl: "https://via.placeholder.com/150" },
-  { name: "Hasindu Pieris", role: "AI Developer", imageUrl: "https://via.placeholder.com/150" },
+  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal" },
+  { name: "Ishara Dharmapriya", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/ishara" },
+  { name: "Inuka Silva", role: "Team Leader", imageUrl: "https://storage.googleapis.com/rivve-web-trial/inuka" },
+  { name: "Dulen Eragoda", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera" },
+  { name: "Dulen Perera", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenperera" },
+  { name: "Hasindu Pieris", role: "AI Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/hasindu" },
 ];
 
 const About = () => {
