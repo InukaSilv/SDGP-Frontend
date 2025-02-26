@@ -1,32 +1,58 @@
 import React, { useState } from "react";
+import { Slider } from "@mui/material";
+import {
+  Upload,
+  MapPin,
+  DollarSign,
+  Phone,
+  X,
+  Users,
+  Home,
+  Bed,
+} from "lucide-react";
 
 const PostAdForm: React.FC = () => {
-  const [formData, setFormData] = useState<{
-    title: string;
-    description: string;
-    price: string;
-    location: string;
-    contact: string;
-    images: File[];
-  }>({
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
-    price: "",
+    price: [30000, 60000],
     location: "",
     contact: "",
-    images: [],
+    residents: "1",
+    housingType: "",
+    roomType: "",
+    bedrooms: "",
+    facilities: [] as string[],
+    images: [] as File[],
   });
 
-  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const housingTypes = ["Hostel", "House", "Apartment"];
+  const roomTypes = ["Single", "Shared"];
+  const facilities = ["A/C", "CCTV", "Study Rooms", "WiFi", "Kitchen", "Food"];
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePriceChange = (_event: Event, newValue: number | number[]) => {
+    setFormData({ ...formData, price: newValue as number[] });
+  };
+
+  const handleFacilityToggle = (facility: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      facilities: prev.facilities.includes(facility)
+        ? prev.facilities.filter((f) => f !== facility)
+        : [...prev.facilities, facility],
+    }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({
         ...formData,
@@ -35,155 +61,260 @@ const PostAdForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form Submitted", formData);
-    // Add logic to send data to the backend (e.g., API call)
+  const removeImage = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
-  const handleLocationChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const location = e.target.value;
-    setFormData({ ...formData, location });
-
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          location
-        )}&key=YOUR_GOOGLE_MAPS_API_KEY`
-      );
-      const data = await response.json();
-      if (data.results.length > 0) {
-        const { lat, lng } = data.results[0].geometry.location;
-        setCoordinates({ lat, lng });
-      }
-    } catch (error) {
-      console.error("Error fetching coordinates: ", error);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
   };
 
   return (
-    <div className="flex flex-col md:flex-row max-w-6xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-2xl">
-      <div className="w-full md:w-2/3">
-        <h2 className="text-4xl font-bold text-center mb-6 text-blue-600">Post Your Ad</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
-              Ad Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter a title for your ad"
-            />
+    <div className="max-w-6xl mx-auto p-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-300 rounded-lg shadow-lg p-6"
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Post Your Property Ad
+          </h2>
+          <button type="button" className="text-gray-600 hover:text-gray-800">
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Title */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2">Ad Title</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="w-full p-2 bg-white rounded-md border border-gray-400"
+            placeholder="Enter property title"
+          />
+        </div>
+
+        {/* Number of Residents */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2 flex items-center">
+            <Users size={18} className="mr-2" />
+            Number of Residents
+          </label>
+          <select
+            name="residents"
+            value={formData.residents}
+            onChange={handleInputChange}
+            className="w-full p-2 bg-white rounded-md border border-gray-400"
+          >
+            {[...Array(10)].map((_, i) => (
+              <option key={i} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Price Range */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2 flex items-center">
+            <DollarSign size={18} className="mr-2" />
+            Price Range (LKR)
+          </label>
+          <Slider
+            value={formData.price}
+            onChange={handlePriceChange}
+            valueLabelDisplay="auto"
+            min={0}
+            max={100000}
+            step={5000}
+            sx={{
+              color: "#1f2937",
+              height: 6,
+            }}
+          />
+          <div className="flex justify-between text-sm text-gray-600 mt-2">
+            <span>LKR {formData.price[0].toLocaleString()}</span>
+            <span>LKR {formData.price[1].toLocaleString()}</span>
           </div>
+        </div>
+
+        {/* Housing Type and Room Type */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label htmlFor="description" className="block text-gray-700 font-medium mb-2">
-              Description
+            <label className="block text-sm font-semibold mb-2 flex items-center">
+              <Home size={18} className="mr-2" />
+              Housing Type
             </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              required
-              rows={4}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Provide details about your property"
-            ></textarea>
+            <div className="flex flex-wrap gap-2">
+              {housingTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, housingType: type })
+                  }
+                  className={`px-4 py-2 rounded-full transition-all ${
+                    formData.housingType === type
+                      ? "bg-blue-950 text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
+
           <div>
-            <label htmlFor="price" className="block text-gray-700 font-medium mb-2">
-              Price (LKR)
+            <label className="block text-sm font-semibold mb-2 flex items-center">
+              <Bed size={18} className="mr-2" />
+              Room Type
             </label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter the monthly rent"
-            />
+            <div className="flex flex-wrap gap-2">
+              {roomTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, roomType: type })}
+                  className={`px-4 py-2 rounded-full transition-all ${
+                    formData.roomType === type
+                      ? "bg-blue-950 text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
-          <div>
-            <label htmlFor="location" className="block text-gray-700 font-medium mb-2">
-              Location
-            </label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleLocationChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter the location of the property"
-            />
+        </div>
+
+        {/* Facilities */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2">Facilities</label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {facilities.map((facility) => (
+              <div
+                key={facility}
+                onClick={() => handleFacilityToggle(facility)}
+                className={`cursor-pointer p-3 rounded-lg text-center transition-all ${
+                  formData.facilities.includes(facility)
+                    ? "bg-blue-950 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                }`}
+              >
+                {facility}
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Description */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2">
+            Description
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full p-2 bg-white rounded-md border border-gray-400"
+            placeholder="Describe your property..."
+          />
+        </div>
+
+        {/* Contact and Location */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label htmlFor="contact" className="block text-gray-700 font-medium mb-2">
+            <label className="block text-sm font-semibold mb-2 flex items-center">
+              <Phone size={18} className="mr-2" />
               Contact Number
             </label>
             <input
               type="tel"
-              id="contact"
               name="contact"
               value={formData.contact}
               onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your contact number"
+              className="w-full p-2 bg-white rounded-md border border-gray-400"
+              placeholder="+94 XX XXX XXXX"
             />
           </div>
+
           <div>
-            <label htmlFor="images" className="block text-gray-700 font-medium mb-2">
-              Upload Images
+            <label className="block text-sm font-semibold mb-2 flex items-center">
+              <MapPin size={18} className="mr-2" />
+              Location
             </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              className="w-full p-2 bg-white rounded-md border border-gray-400"
+              placeholder="Enter property location"
+            />
+          </div>
+        </div>
+
+        {/* Image Upload */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-2 flex items-center">
+            <Upload size={18} className="mr-2" />
+            Property Images
+          </label>
+          <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 text-center">
             <input
               type="file"
               id="images"
-              name="images"
-              onChange={handleFileChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              accept="image/*"
               multiple
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
             />
+            <label htmlFor="images" className="cursor-pointer block">
+              <Upload className="mx-auto h-12 w-12 text-gray-600 mb-2" />
+              <p className="text-gray-600">Click to upload or drag and drop</p>
+              <p className="text-sm text-gray-500">PNG, JPG up to 10MB</p>
+            </label>
           </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              Submit Ad
-            </button>
-          </div>
-        </form>
-      </div>
 
-      <div className="w-full md:w-1/3 mt-6 md:mt-0 md:ml-6 flex flex-col items-center">
-        {formData.images.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-lg font-bold text-blue-600 mb-4">Uploaded Images</h3>
-            <div className="grid grid-cols-2 gap-4">
+          {formData.images.length > 0 && (
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
               {formData.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(image)}
-                  alt={`Uploaded ${index}`}
-                  className="w-32 h-32 object-cover rounded-lg border shadow-lg"
-                />
+                <div key={index} className="relative group">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-24 object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               ))}
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-950 text-white py-3 rounded-2xl hover:bg-blue-900 transition-colors"
+        >
+          Post Ad
+        </button>
+      </form>
     </div>
   );
 };
