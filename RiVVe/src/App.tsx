@@ -11,6 +11,9 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
 import MyAds from "./pages/Landlord/MyAds";
 import EditAd from "./pages/Landlord/EditAd";
+import AdDisplayer from "./components/ads/AdDisplayer";
+import TargetPage from "./pages/TargetPage";
+import { HostelDetails } from "./pages/HostelDetails";
 
 function App() {
   return (
@@ -26,6 +29,8 @@ function App() {
         <Route path="/forgotpassword" element={<ForgotPasswordEmail />} />
         <Route path="/user" element={<ProtectedRoute element={<User />} />} />
         <Route path="/MyAds" element={<ProtectedRoute element={<MyAds />} />} />
+        <Route path="/target-page" element={<TargetPage />} />
+        <Route path="/testd" element={<HostelDetails />} />
         <Route
           path="/edit-ad"
           element={<ProtectedRoute element={<EditAd />} />}
