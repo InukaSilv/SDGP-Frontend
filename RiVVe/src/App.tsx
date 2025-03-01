@@ -15,6 +15,7 @@ import AdDisplayer from "./components/ads/AdDisplayer";
 import TargetPage from "./pages/TargetPage";
 import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
+import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
 
 function App() {
   return (
@@ -32,7 +33,10 @@ function App() {
         <Route path="/MyAds" element={<ProtectedRoute element={<MyAds />} />} />
         <Route path="/target-page" element={<TargetPage />} />
         <Route path="/testd" element={<HostelDetails />} />
-        <Route path="/posting" element={<Posting />} />
+        <Route
+          path="/posting"
+          element={<ProtectedLandlordRoute element={<Posting />} />}
+        />
         <Route
           path="/edit-ad"
           element={<ProtectedRoute element={<EditAd />} />}

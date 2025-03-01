@@ -1,5 +1,4 @@
 import { UsersRound } from "lucide-react";
-import { DollarSign } from "lucide-react";
 import TypeButton from "../buttons/TypeButton";
 import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
@@ -221,9 +220,9 @@ function PostAdNew() {
 
         {/* Form data */}
         <form className="w-full">
-          <div className="w-full flex flex-row bg-gray-700 p-6">
+          <div className="w-full flex flex-col md:flex-row  bg-gray-700 p-6">
             {/* left div of the form */}
-            <div className="flex flex-col p-3 w-2/3 space-y-6">
+            <div className="flex flex-col p-3 md:w-2/3 space-y-6">
               {/* title input  */}
               <div className="mb-6 flex flex-col w-full">
                 <label className="block text-gray-100 font-medium mb-2">
@@ -283,7 +282,7 @@ function PostAdNew() {
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   Housing Type
                 </label>
-                <div className="flex gap-1 flex-wrap">
+                <div className="flex gap-4 flex-wrap">
                   {["Hostel", "Houses", "Apartment"].map((type) => (
                     <TypeButton
                       key={type}
@@ -455,7 +454,7 @@ function PostAdNew() {
             </div>
 
             {/* right div of the form */}
-            <div className="w-1/3">
+            <div className="md:w-1/3">
               <div
                 className="bg-white/5 rounded-xl p-6 border border-white/10"
                 onDrop={handleImageDrop}
