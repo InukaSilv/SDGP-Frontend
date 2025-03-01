@@ -5,6 +5,8 @@ import SearchBar from "../components/googlemap/SearchBar";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import About from "./About";
+
 
 function HomePage() {
   const navigate = useNavigate();
@@ -75,6 +77,7 @@ function HomePage() {
             </APIProvider>
           </motion.div>
         </div>
+        <About/>
       </section>
     </>
   );
