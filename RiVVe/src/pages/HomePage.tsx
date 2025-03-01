@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+
 import Navbar from "../components/navbar/navbar";
 import Homesearchbutton from "../components/buttons/Homesearchbutton";
 import SearchBar from "../components/googlemap/SearchBar";

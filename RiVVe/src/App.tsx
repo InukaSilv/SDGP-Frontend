@@ -1,6 +1,12 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from './components/navbar/Navbar';
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
+
+import Listing from "./pages/Listing";
+
+
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
 import Signup1 from "./pages/Signup1";
 import Signup2 from "./pages/Signup2";
@@ -17,12 +23,18 @@ import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
 
+
 function App() {
   return (
     <Router>
+       <div className="min-h-screen bg-gray-100">
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
+
+        <Route path="/listing" element={<Listing/>} />
+
         <Route path="/hostel" element={<HostelDisplay />} /> {/* If needed */}
         <Route path="/Signup1" element={<Signup1 />} />
         <Route path="/signup2" element={<Signup2 />} />
@@ -41,7 +53,9 @@ function App() {
           path="/edit-ad"
           element={<ProtectedRoute element={<EditAd />} />}
         />
+
       </Routes>
+      </div>
     </Router>
   );
 }
