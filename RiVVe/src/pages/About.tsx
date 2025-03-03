@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../components/navbar/Navbar";
+import Navbar from "../components/navbar/navbar";
 
 type TeamMember = {
   name: string;
@@ -191,8 +191,8 @@ const AnimatedCounter: React.FC<{ endValue: number; suffix?: string; title: stri
   );
 };
 
-// Amenities Slideshow Component with enhanced animation
-const AmenitiesSlideshow: React.FC = () => {
+// Amenities Slideshow Component with light theme
+const AmenitiesSlideshow = () => {
   const [position, setPosition] = useState(0);
   
   useEffect(() => {
@@ -213,8 +213,8 @@ const AmenitiesSlideshow: React.FC = () => {
   }
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1e5f8a] to-[#2772A0] py-8 px-4 rounded-lg relative shadow-xl">
-      <h3 className="text-2xl font-semibold text-center text-[#CCDDEA] mb-6">Common Amenities</h3>
+    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#e0ebf3] to-[#f0f7fc] py-8 px-4 rounded-lg relative shadow-md">
+      <h3 className="text-2xl font-semibold text-center text-[#2772A0] mb-6">Common Amenities</h3>
       
       <div className="relative h-24">
         <div 
@@ -225,18 +225,18 @@ const AmenitiesSlideshow: React.FC = () => {
           {[...commonAmenities, ...commonAmenities, ...commonAmenities].map((amenity, index) => (
             <div 
               key={index} 
-              className="bg-gray-800 p-4 rounded-lg shadow-lg flex items-center gap-3 border border-[#3a85b3] min-w-48 transform transition-transform duration-300 hover:scale-105"
+              className="bg-white p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#3a85b3]/20 min-w-48 transform transition-transform duration-300 hover:scale-105"
             >
               <div className="text-2xl">{amenity.icon}</div>
-              <span className="text-[#CCDDEA] whitespace-nowrap font-medium">{amenity.name}</span>
+              <span className="text-gray-700 whitespace-nowrap font-medium">{amenity.name}</span>
             </div>
           ))}
         </div>
       </div>
       
       {/* Add gradient overlays for better visual effect */}
-      <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#1e5f8a] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
-      <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#2772A0] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+      <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+      <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#f0f7fc] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
     </div>
   );
 };
@@ -288,7 +288,7 @@ const About = () => {
       <Navbar />
 
       {/* Hero Section with animated gradient */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden min-h-screen">
+      <section className="relative flex flex-col items-center justify-center text-center px-4 overflow-hidden min-h-screen">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#2772A0]/20 to-gray-900/70 z-0"></div>
         
         {/* Animated circles in background */}
