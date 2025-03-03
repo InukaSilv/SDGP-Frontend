@@ -46,7 +46,7 @@ function App() {
           />
           <Route path="/target-page" element={<TargetPage />} />
           <Route path="/testd" element={<HostelDetails />} />
-          <Route path="message" element={<Chat />} />
+          <Route path="/message" element={<Chat />} />
           <Route
             path="/posting"
             element={<ProtectedLandlordRoute element={<Posting />} />}
