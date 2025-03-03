@@ -181,12 +181,12 @@ const AnimatedCounter: React.FC<{ endValue: number; suffix?: string; title: stri
   }, [isVisible, endValue]);
 
   return (
-    <div ref={counterRef} className="flex flex-col items-center p-6 bg-gray-800 rounded-xl shadow-lg border-t-2 border-purple-500 transform transition-transform duration-500 hover:scale-105">
+    <div ref={counterRef} className="flex flex-col items-center p-6 bg-gray-800 rounded-xl shadow-lg border-t-2 border-[#2772A0] transform transition-transform duration-500 hover:scale-105">
       <span className="text-4xl font-bold text-white mb-2">
         {count}
         {suffix}
       </span>
-      <h3 className="text-lg text-purple-300">{title}</h3>
+      <h3 className="text-lg text-[#CCDDEA]">{title}</h3>
     </div>
   );
 };
@@ -213,8 +213,8 @@ const AmenitiesSlideshow: React.FC = () => {
   }
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-indigo-900 to-purple-900 py-8 px-4 rounded-lg relative shadow-xl">
-      <h3 className="text-2xl font-semibold text-center text-purple-300 mb-6">Common Amenities</h3>
+    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1e5f8a] to-[#2772A0] py-8 px-4 rounded-lg relative shadow-xl">
+      <h3 className="text-2xl font-semibold text-center text-[#CCDDEA] mb-6">Common Amenities</h3>
       
       <div className="relative h-24">
         <div 
@@ -225,18 +225,18 @@ const AmenitiesSlideshow: React.FC = () => {
           {[...commonAmenities, ...commonAmenities, ...commonAmenities].map((amenity, index) => (
             <div 
               key={index} 
-              className="bg-gray-800 p-4 rounded-lg shadow-lg flex items-center gap-3 border border-purple-500 min-w-48 transform transition-transform duration-300 hover:scale-105"
+              className="bg-gray-800 p-4 rounded-lg shadow-lg flex items-center gap-3 border border-[#3a85b3] min-w-48 transform transition-transform duration-300 hover:scale-105"
             >
               <div className="text-2xl">{amenity.icon}</div>
-              <span className="text-purple-300 whitespace-nowrap font-medium">{amenity.name}</span>
+              <span className="text-[#CCDDEA] whitespace-nowrap font-medium">{amenity.name}</span>
             </div>
           ))}
         </div>
       </div>
       
       {/* Add gradient overlays for better visual effect */}
-      <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-indigo-900 to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
-      <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-purple-900 to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+      <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#1e5f8a] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+      <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#2772A0] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
     </div>
   );
 };
@@ -245,9 +245,9 @@ const AmenitiesSlideshow: React.FC = () => {
 const SectionTransition: React.FC = () => (
   <div className="w-full flex justify-center my-16">
     <div className="flex items-center w-full max-w-4xl">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-purple-500"></div>
-      <div className="mx-4 text-purple-500">•</div>
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-purple-500"></div>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#2772A0]"></div>
+      <div className="mx-4 text-[#2772A0]">•</div>
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#2772A0]"></div>
     </div>
   </div>
 );
@@ -272,7 +272,7 @@ const ParallaxBackground: React.FC = () => {
     <div 
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" 
       style={{ 
-        backgroundImage: 'radial-gradient(circle, rgba(76, 29, 149, 0.1) 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(circle, rgba(39, 114, 160, 0.1) 1px, transparent 1px)',
         backgroundSize: '30px 30px',
         transform: `translateY(${offset * 0.3}px)`,
         opacity: 0.5
@@ -289,15 +289,15 @@ const About = () => {
 
       {/* Hero Section with animated gradient */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden min-h-screen">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-purple-900/20 to-gray-900/70 z-0"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#2772A0]/20 to-gray-900/70 z-0"></div>
         
         {/* Animated circles in background */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-700/20 rounded-full filter blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-700/20 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1e5f8a]/20 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         
         <div className="relative z-10 max-w-4xl">
-          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">About RiVVE</h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-8"></div>
+          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">About RiVVE</h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-12">
             RiVVE is a student-focused hostel booking platform designed to make accommodation searches easier, safer, and more transparent.
           </p>
@@ -310,10 +310,10 @@ const About = () => {
           </div>
           
           <div className="mt-16 flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+            <button className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
               Find a Hostel
             </button>
-            <button className="px-8 py-3 bg-transparent border-2 border-purple-500 rounded-full font-medium text-purple-400 hover:bg-purple-900/30 transition-all duration-300">
+            <button className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300">
               List Your Property
             </button>
           </div>
@@ -321,7 +321,7 @@ const About = () => {
         
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg className="w-6 h-6 text-[#CCDDEA]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
           </svg>
         </div>
@@ -331,11 +331,11 @@ const About = () => {
 
       {/* Our Mission & Vision - Redesigned with cards */}
       <section className="relative px-4 py-20 min-h-screen">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-16">Our Mission & Vision</h2>
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-16">Our Mission & Vision</h2>
         
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-purple-500 transform transition-all duration-500 hover:scale-105">
-            <div className="text-3xl text-purple-400 mb-4">🚀</div>
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-[#2772A0] transform transition-all duration-500 hover:scale-105">
+            <div className="text-3xl text-[#3a85b3] mb-4">🚀</div>
             <h3 className="text-2xl font-semibold text-white mb-4">Our Mission</h3>
             <p className="text-gray-300">
               To simplify the hostel booking process for students by providing a reliable, transparent, 
@@ -343,8 +343,8 @@ const About = () => {
             </p>
           </div>
           
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-blue-500 transform transition-all duration-500 hover:scale-105">
-            <div className="text-3xl text-blue-400 mb-4">🔭</div>
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-[#CCDDEA] transform transition-all duration-500 hover:scale-105">
+            <div className="text-3xl text-[#CCDDEA] mb-4">🔭</div>
             <h3 className="text-2xl font-semibold text-white mb-4">Our Vision</h3>
             <p className="text-gray-300">
               To become the leading platform for student accommodation worldwide, 
@@ -359,30 +359,30 @@ const About = () => {
 
       {/* Platform Features with animated hover */}
       <section className="px-4 py-20 relative">
-        <div className="absolute top-1/3 right-0 w-64 h-64 bg-purple-700/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-1/3 left-0 w-64 h-64 bg-blue-700/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute top-1/3 right-0 w-64 h-64 bg-[#2772A0]/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-1/3 left-0 w-64 h-64 bg-[#3a85b3]/10 rounded-full filter blur-3xl"></div>
         
         <div className="relative max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">Platform Features</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-8"></div>
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Platform Features</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto text-center mb-16">
             Everything you need to find, book, and enjoy your perfect hostel stay, all in one place.
           </p>
 
           {/* For Students */}
           <div className="mb-20 min-h-screen">
-            <h3 className="text-3xl font-bold text-center text-purple-400 mb-12 relative">
+            <h3 className="text-3xl font-bold text-center text-[#3a85b3] mb-12 relative">
               For Students
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-purple-500 to-transparent"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#2772A0] to-transparent"></span>
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {studentFeatures.map((feature, index) => (
                 <div 
                   key={index} 
-                  className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-purple-500/20 group"
+                  className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#2772A0] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[#2772A0]/20 group"
                 >
                   <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
-                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-purple-400 transition-colors duration-300">{feature.title}</h4>
+                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#3a85b3] transition-colors duration-300">{feature.title}</h4>
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -391,18 +391,18 @@ const About = () => {
 
           {/* For Hostel Owners */}
           <div className="mb-20 min-h-screen">
-            <h3 className="text-3xl font-bold text-center text-blue-400 mb-12 relative ">
+            <h3 className="text-3xl font-bold text-center text-[#CCDDEA] mb-12 relative ">
               For Hostel Owners
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-blue-500 to-transparent"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#CCDDEA] to-transparent"></span>
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {ownerFeatures.map((feature, index) => (
                 <div 
                   key={index} 
-                  className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-blue-500/20 group"
+                  className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#CCDDEA] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[#CCDDEA]/20 group"
                 >
                   <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
-                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">{feature.title}</h4>
+                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#CCDDEA] transition-colors duration-300">{feature.title}</h4>
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -419,8 +419,8 @@ const About = () => {
       {/* FAQ Section with animated accordion */}
       <section className="px-4 py-20 relative min-h-screen">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">Frequently Asked Questions</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-16"></div>
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Frequently Asked Questions</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
           
           <div className="space-y-6">
             {faqItems.map((item, index) => (
@@ -429,8 +429,8 @@ const About = () => {
                 className="group bg-gray-800/60 backdrop-blur rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
               >
                 <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-                  <h4 className="text-xl font-medium text-white group-hover:text-purple-400 transition-colors duration-300">{item.question}</h4>
-                  <div className="h-8 w-8 rounded-full bg-purple-900/50 flex items-center justify-center text-purple-400 transition-transform duration-300 group-open:rotate-45">+</div>
+                  <h4 className="text-xl font-medium text-white group-hover:text-[#3a85b3] transition-colors duration-300">{item.question}</h4>
+                  <div className="h-8 w-8 rounded-full bg-[#1e5f8a]/50 flex items-center justify-center text-[#CCDDEA] transition-transform duration-300 group-open:rotate-45">+</div>
                 </summary>
                 <div className="p-6 pt-0 border-t border-gray-700">
                   <p className="text-gray-300">{item.answer}</p>
@@ -445,11 +445,11 @@ const About = () => {
 
       {/* Why Choose RiVVE - with floating cards effect */}
       <section className="px-4 py-20 relative overflow-hidden min-h-screen">
-        <div className="absolute top-1/2 left-1/2 w-full h-full max-w-4xl -translate-x-1/2 -translate-y-1/2 bg-purple-900/10 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 w-full h-full max-w-4xl -translate-x-1/2 -translate-y-1/2 bg-[#2772A0]/10 rounded-full filter blur-3xl animate-pulse"></div>
         
         <div className="relative max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">Why Choose RiVVE?</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-16"></div>
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Why Choose RiVVE?</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
           
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard 
@@ -460,7 +460,7 @@ const About = () => {
             <FeatureCard 
               title="Student Chat System" 
               description="Chat with previous tenants to get firsthand insights before booking." 
-              iconColor="text-blue-400"
+              iconColor="text-[#3a85b3]"
             />
             <FeatureCard 
               title="Google Maps Integration" 
@@ -475,8 +475,8 @@ const About = () => {
 
       {/* Team Section with hover effects */}
       <section className="px-4 py-20 relative">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">Meet Our Team</h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-16"></div>
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Meet Our Team</h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
         
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
@@ -489,15 +489,15 @@ const About = () => {
 
       {/* Technologies We Use - with animated hover effects */}
       <section className="px-4 py-20 relative">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">Technologies We Use</h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-16"></div>
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Technologies We Use</h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
         
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 justify-center">
           {/* Frontend Tech Stack */}
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-xl border border-purple-500/50 p-8 w-full lg:w-2/5 transform transition-all duration-500 hover:scale-105 group">
-            <h3 className="text-2xl font-bold text-center text-purple-400 mb-8 relative">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-xl border border-[#2772A0]/50 p-8 w-full lg:w-2/5 transform transition-all duration-500 hover:scale-105 group">
+            <h3 className="text-2xl font-bold text-center text-[#3a85b3] mb-8 relative">
               FRONTEND
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-purple-500 to-transparent"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#2772A0] to-transparent"></span>
             </h3>
             
             <div className="grid grid-cols-3 gap-8">
@@ -506,17 +506,17 @@ const About = () => {
                   <div className="w-16 h-16 flex items-center justify-center mb-3 bg-gray-700/50 rounded-full p-3 shadow-lg">
                     <img src={tech.icon} alt={tech.name} className="h-10 w-10" />
                   </div>
-                  <span className="text-gray-300 font-medium group-hover:text-purple-300 transition-colors duration-300">{tech.name}</span>
+                  <span className="text-gray-300 font-medium group-hover:text-[#CCDDEA] transition-colors duration-300">{tech.name}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Backend Tech Stack */}
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-xl border border-blue-500/50 p-8 w-full lg:w-2/5 transform transition-all duration-500 hover:scale-105 group">
-            <h3 className="text-2xl font-bold text-center text-blue-400 mb-8 relative">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-xl border border-[#CCDDEA]/50 p-8 w-full lg:w-2/5 transform transition-all duration-500 hover:scale-105 group">
+            <h3 className="text-2xl font-bold text-center text-[#CCDDEA] mb-8 relative">
               BACKEND & DATABASE
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-blue-500 to-transparent"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#CCDDEA] to-transparent"></span>
             </h3>
             
             <div className="grid grid-cols-3 gap-8">
@@ -525,7 +525,7 @@ const About = () => {
                   <div className="w-16 h-16 flex items-center justify-center mb-3 bg-gray-700/50 rounded-full p-3 shadow-lg">
                     <img src={tech.icon} alt={tech.name} className="h-10 w-10" />
                   </div>
-                  <span className="text-gray-300 font-medium group-hover:text-blue-300 transition-colors duration-300">{tech.name}</span>
+                  <span className="text-gray-300 font-medium group-hover:text-[#e0ebf3] transition-colors duration-300">{tech.name}</span>
                 </div>
               ))}
             </div>
@@ -534,16 +534,16 @@ const About = () => {
       </section>
 
       {/* Contact & Social Media */}
-      <section className="flex flex-col items-center mt-16 p-10 bg-gray-800 rounded-lg mx-4 mb-16 border-r-4 border-purple-500">
-        <h2 className="text-3xl font-semibold text-purple-300">Get in Touch</h2>
+      <section className="flex flex-col items-center mt-16 p-10 bg-gray-800 rounded-lg mx-4 mb-16 border-r-4 border-[#2772A0]">
+        <h2 className="text-3xl font-semibold text-[#CCDDEA]">Get in Touch</h2>
         <p className="text-gray-300 max-w-2xl text-center mt-4">
           Have questions or feedback? Connect with us on social media or drop us an email.
         </p>
         <div className="flex flex-wrap justify-center gap-6 mt-6">
-          <SocialIcon name="LinkedIn" link="https://linkedin.com" color="bg-blue-600" />
-          <SocialIcon name="Twitter" link="https://twitter.com" color="bg-blue-400" />
-          <SocialIcon name="Facebook" link="https://facebook.com" color="bg-blue-800" />
-          <SocialIcon name="Instagram" link="https://instagram.com" color="bg-pink-600" />
+          <SocialIcon name="LinkedIn" link="https://linkedin.com" color="bg-[#2772A0]" />
+          <SocialIcon name="Twitter" link="https://twitter.com" color="bg-[#3a85b3]" />
+          <SocialIcon name="Facebook" link="https://facebook.com" color="bg-[#1e5f8a]" />
+          <SocialIcon name="Instagram" link="https://instagram.com" color="bg-[#3a85b3]" />
         </div>
       </section>
     </div>
@@ -560,7 +560,7 @@ type FeatureProps = {
 };
 
 const FeatureCard: React.FC<FeatureProps> = ({ title, description, iconColor }) => (
-  <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-center border-t-2 border-gray-700 hover:border-blue-500 transition-all duration-300">
+  <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-center border-t-2 border-gray-700 hover:border-[#CCDDEA] transition-all duration-300">
     <div className={`text-4xl mb-4 ${iconColor}`}>
       {title === "Verified Listings" && "✓"}
       {title === "Student Chat System" && "💬"}
@@ -580,12 +580,12 @@ type TeamCardProps = {
 
 const TeamCard: React.FC<TeamCardProps> = ({ name, role, imageUrl }) => {
   const roleColor = role.includes("Front End") 
-    ? "text-purple-300" 
+    ? "text-[#CCDDEA]" 
     : role.includes("Back End") 
-      ? "text-blue-300" 
+      ? "text-[#3a85b3]" 
       : role.includes("AI") 
         ? "text-green-300" 
-        : "text-yellow-300";
+        : "text-[#e0ebf3]";
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
