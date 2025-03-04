@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HostelReview from "../components/hostelFeedback/HostelFeedback";
 
-const HostelReviewPage: React.FC = () => {
+const FeedbackPage: React.FC = () => {
     const [hostelData, setHostelData] = useState({
         hostelName: "Cozy Hostel",
         landlordName: "Landlords Name",
-        price: "LKR 15,000/Moth",
+        price: "LKR 15,000/Month",
         currentRating: 4.0,
         hostelImage: "", // Update with image path
         totalUsers: 3
@@ -34,4 +34,4 @@ const HostelReviewPage: React.FC = () => {
     );
 };
 
-export default HostelReviewPage;
+export default FeedbackPage;

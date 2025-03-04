@@ -8,6 +8,7 @@ import Listing from "./pages/Listing";
 
 
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
+import HostelReviewPage from './pages/FeedbackPage';
 import Signup1 from "./pages/Signup1";
 import Signup2 from "./pages/Signup2";
 import User from "./pages/User";
@@ -22,6 +23,7 @@ import TargetPage from "./pages/TargetPage";
 import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
+import FeedbackPage from './pages/FeedbackPage';
 
 
 function App() {
@@ -36,6 +38,7 @@ function App() {
         <Route path="/listing" element={<Listing/>} />
 
         <Route path="/hostel" element={<HostelDisplay />} /> {/* If needed */}
+        <Route path="/hostel/review" element={<FeedbackPage/>}/>
         <Route path="/Signup1" element={<Signup1 />} />
         <Route path="/signup2" element={<Signup2 />} />
         <Route path="/login" element={<Login />} />
