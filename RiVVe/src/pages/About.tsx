@@ -8,7 +8,7 @@ type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal" },
+  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" },
   { name: "Inuka Silva", role: "Team Leader", imageUrl: "https://storage.googleapis.com/rivve-web-trial/inuka" },
   { name: "Ishara Dharmapriya", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/ishara" },
   { name: "Dulen Eragoda", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera" },
@@ -589,7 +589,13 @@ const TeamCard: React.FC<TeamCardProps> = ({ name, role, imageUrl }) => {
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
-      <div className="h-48 bg-gray-700"></div>
+      <div className="h-48 overflow-hidden">
+        <img 
+          src={imageUrl} 
+          alt={`${name} - ${role}`} 
+          className="w-full h-full object-cover"
+        />
+      </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold text-white">{name}</h3>
         <p className={`mt-2 ${roleColor}`}>{role}</p>
