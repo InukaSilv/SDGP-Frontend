@@ -8,10 +8,10 @@ type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" },
+  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal" },
   { name: "Inuka Silva", role: "Team Leader", imageUrl: "https://storage.googleapis.com/rivve-web-trial/inuka" },
   { name: "Ishara Dharmapriya", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/ishara" },
-  { name: "Dulen Eragoda", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera" },
+  { name: "Dulen Eragoda", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera" },
   { name: "Dulen Perera", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenperera" },
   { name: "Hasindu Pieris", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/hasindu" },
 ];
@@ -589,7 +589,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ name, role, imageUrl }) => {
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
-      <div className="h-48 overflow-hidden">
+      <div className="h-80 s overflow-hidden">
         <img 
           src={imageUrl} 
           alt={`${name} - ${role}`} 
