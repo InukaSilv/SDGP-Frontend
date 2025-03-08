@@ -58,15 +58,6 @@ function Contact() {
           </div>
 
           <div className="space-y-8">
-            {/* <div className="flex items-start space-x-6 group">
-              <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
-                <MapPin className="w-6 h-6 text-blue-400" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-xl text-white mb-2">Location</h3>
-                <p className="text-gray-400">123 Hostel Street, Adventure City, AC 12345</p>
-              </div>
-            </div> */}
 
             <div className="flex items-start space-x-6 group">
               <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
@@ -144,6 +135,25 @@ function Contact() {
                     className="absolute -top-2.5 left-4 px-2 bg-gray-800 text-sm text-gray-400"
                   >
                     Email
+                  </label>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="block w-full px-4 py-3 bg-gray-900/50 border-2 border-gray-700 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors duration-200 text-white placeholder-gray-500"
+                    placeholder="your phone number"
+                  />
+                  <label
+                    htmlFor="email"
+                    className="absolute -top-2.5 left-4 px-2 bg-gray-800 text-sm text-gray-400"
+                  >
+                    Phone Number
                   </label>
                 </div>
 
