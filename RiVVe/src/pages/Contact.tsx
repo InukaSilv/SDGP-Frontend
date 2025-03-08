@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Building2 , Mail, Phone } from 'lucide-react';
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -47,6 +47,59 @@ function Contact() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-16">
+
+        <div className="space-y-12">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-6">Let's Connect</h2>
+            <p className="text-gray-400 text-lg">
+              Whether you're a student or a hostel owner looking to join our marketplace,
+              we're here to help make your journey easier.
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {/* <div className="flex items-start space-x-6 group">
+              <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
+                <MapPin className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-xl text-white mb-2">Location</h3>
+                <p className="text-gray-400">123 Hostel Street, Adventure City, AC 12345</p>
+              </div>
+            </div> */}
+
+            <div className="flex items-start space-x-6 group">
+              <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
+                <Phone className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-xl text-white mb-2">Phone</h3>
+                <p className="text-gray-400">+94 766 992535</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-6 group">
+              <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
+                <Mail className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-xl text-white mb-2">Email</h3>
+                <p className="text-gray-400">rivvelk@gmail.com</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-6 group">
+              <div className="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
+                <Building2 className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-xl text-white mb-2">Business Hours</h3>
+                <p className="text-gray-400">Monday - Sunday: 24/7</p>
+              </div>
+            </div>
+          </div>
+            </div>
+
     
      
 
