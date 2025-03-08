@@ -19,6 +19,7 @@ import { Camera } from "lucide-react";
 import { Upload } from "lucide-react";
 import { X } from "lucide-react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function PostAdNew() {
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
@@ -54,6 +55,7 @@ function PostAdNew() {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string>("");
   const [isDrag, setIsDrag] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const toggleRoomType = (type: string) => {
     setFormData((prevType) => ({
@@ -79,18 +81,27 @@ function PostAdNew() {
     }
   }, []);
 
-  // for dragging the pin
-  useEffect(() => {
-    if (marker) {
-      marker.addListener("dragend", () => {
-        const position = marker.position as google.maps.LatLng;
-        setMapPosition({
-          lat: position.lat(),
-          lng: position.lng(),
-        });
-      });
+  // map drag
+  const handleDragEnd = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const newLat = event.latLng.lat();
+      const newLng = event.latLng.lng();
+      setMapPosition({ lat: newLat, lng: newLng });
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        coordinates: {
+          lat: newLat,
+          lng: newLng,
+        },
+      }));
+
+      console.log(
+        "New Position:",
+        formData.coordinates.lat,
+        formData.coordinates.lng
+      );
     }
-  }, [marker]);
+  };
 
   const geocodeAddress = (address: string) => {
     if (typeof google !== "undefined" && google.maps) {
@@ -207,32 +218,51 @@ function PostAdNew() {
   };
 
   // when the post is submitted
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const data = { ...formData };
-    const token = localStorage.getItem("authToken");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      console.log("Tocken not found, please login");
+    }
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("residents", formData.residents);
+    data.append("price", formData.price);
+    data.append("housingType", formData.housingType);
+    data.append("singleRoom", formData.singleRoom);
+    data.append("doubleRoom", formData.doubleRoom);
+    data.append("address", formData.address);
+    data.append("description", formData.description);
+    data.append("contact", formData.contact);
+    data.append("roomType", JSON.stringify(formData.roomType));
+    data.append("facilities", JSON.stringify(formData.facilities));
+    data.append("lat", formData.coordinates.lat.toString());
+    data.append("lng", formData.coordinates.lng.toString());
+    formData.images.forEach((file, index) => {
+      data.append(`images`, file);
+    });
+
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/listings/post-property",
+        "http://localhost:5001/api/listing/listing-all",
         data,
         {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
-      console.log("Form submitted Successfully", response.data);
+      console.log("FormData Submitted Successfully", response.data);
+      navigate("/MyAds");
     } catch (error) {
-      console.error(
-        "Error submitting the form:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error submitting form: ", error);
     }
   };
+
   return (
     <>
-      <div className="flex flex-col mt-20 h-auto w-auto bg-gradient-to-br from-gray-900 to-gray-800 items-center justify-center rounded-3xl shadow-2xl p-8">
+      <div className="flex flex-col mt-20 h-full w-full bg-gradient-to-br from-gray-900 to-gray-800 items-center justify-center shadow-2xl p-8">
         {/* top post property */}
         <div className="flex flex-col text-center align-center justify-center p-4">
           <h1 className="text-4xl font-bold text-white text-center [text-shadow:0_0_20px_rgba(255,255,255,0.3)]">
@@ -276,7 +306,7 @@ function PostAdNew() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all text-white placeholder-gray-400"
                 >
-                  {[...Array(10)].map((_, i) => (
+                  {[...Array(100)].map((_, i) => (
                     <option key={i} value={i + 1} className="bg-gray-800">
                       {i + 1}
                     </option>
@@ -308,7 +338,7 @@ function PostAdNew() {
                   Housing Type
                 </label>
                 <div className="flex gap-4 flex-wrap">
-                  {["Hostel", "Houses", "Apartment"].map((type) => (
+                  {["Hostel", "House", "Apartment"].map((type) => (
                     <TypeButton
                       key={type}
                       type={type}
@@ -420,6 +450,7 @@ function PostAdNew() {
                         ref={markerRef}
                         position={mapPosition}
                         draggable
+                        onDragEnd={handleDragEnd}
                       />
                     </Map>
                   </APIProvider>
@@ -475,6 +506,7 @@ function PostAdNew() {
                 </label>
                 <input
                   type="tel"
+                  onChange={handleChange}
                   name="contact"
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all text-white placeholder-gray-400"
                   placeholder="+94 XX XXX XXXX"
