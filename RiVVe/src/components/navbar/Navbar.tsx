@@ -5,6 +5,7 @@ import { IoMenu } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { Mail } from "lucide-react";
 
 function Navbar() {
   const [mobileView, setMobileView] = useState<boolean>(false);
@@ -52,7 +53,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-gray-700 text-white shadow-lg z-999">
+    <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-[#2772A0]  text-white shadow-lg z-999 ">
       <div className="flex items-center space-x-10">
         <h1 className="text-4xl ml-3 sm:text-3xl font-semibold hover:scale-105 transition-transform cursor-pointer">
           RiVVE
@@ -92,7 +93,14 @@ function Navbar() {
 
       <div className="flex items-center space-x-3 sm:ml-7 md:space-x-6">
         {isLoggedIn ? (
-          <></>
+          <>
+            {" "}
+            <div>
+              <Link to="message">
+                <Mail />{" "}
+              </Link>
+            </div>
+          </>
         ) : (
           <>
             <p className="hidden md:block text-gray-300">Already a member?</p>
@@ -107,7 +115,7 @@ function Navbar() {
 
         <div className="relative">
           <div
-            className="hidden sm:block p-2 text-5xl bg-gray-700 rounded-full hover:bg-gray-600 transition cursor-pointer"
+            className="hidden sm:block p-2 text-5xl bg-[#2772A0] rounded-full hover:bg-gray-600 transition cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           >
             <IoPersonCircleOutline />

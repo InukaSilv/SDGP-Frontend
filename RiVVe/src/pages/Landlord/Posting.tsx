@@ -6,7 +6,7 @@ function Posting() {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-100 p-6">
+      <div className="bg-gray-100">
         <PostAdNew />
       </div>
     </>

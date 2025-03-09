@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import MyAdCard from "../../components/ads/MyAdCard";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Ad {
   id: number;
@@ -17,31 +18,31 @@ interface Ad {
 
 function MyAds() {
   const [ads, setAds] = useState<Ad[]>([]);
-
-  useEffect(() => {
-    setAds([
-      {
-        id: 1,
-        title: "Cozy Apartment Near University",
-        description: "Spacious modern hostel with 5 rooms",
-        rooms: 5,
-        availableSlots: 3,
-        price: "RS 15,000/ Month",
-        imageUrl: "src/assets/main-background.jpeg",
-      },
-      {
-        id: 2,
-        title: "Spacious Hostel Room",
-        description: "Spacious modern hostel with 3 rooms",
-        rooms: 3,
-        availableSlots: 2,
-        price: "RS 10,000/ Month",
-        imageUrl: "src/assets/main-background.jpeg",
-      },
-    ]);
-  }, []);
-
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchListing = async () => {
+      const Token = localStorage.getItem("authToken");
+      if (!Token) {
+        navigate("/login");
+      }
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/api/listing/profile-listing",
+          {
+            headers: {
+              Authorization: `Bearer ${Token}`,
+            },
+          }
+        );
+        setAds(response.data);
+        console.log(response.data);
+      } catch (err) {
+        console.error("Error fetching listings", err);
+      }
+    };
+    fetchListing();
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 mt-20">
       <Navbar />

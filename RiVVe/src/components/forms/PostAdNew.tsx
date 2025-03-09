@@ -18,6 +18,8 @@ import { Phone } from "lucide-react";
 import { Camera } from "lucide-react";
 import { Upload } from "lucide-react";
 import { X } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function PostAdNew() {
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
@@ -53,6 +55,7 @@ function PostAdNew() {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string>("");
   const [isDrag, setIsDrag] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const toggleRoomType = (type: string) => {
     setFormData((prevType) => ({
@@ -78,18 +81,27 @@ function PostAdNew() {
     }
   }, []);
 
-  // for dragging the pin
-  useEffect(() => {
-    if (marker) {
-      marker.addListener("dragend", () => {
-        const position = marker.position as google.maps.LatLng;
-        setMapPosition({
-          lat: position.lat(),
-          lng: position.lng(),
-        });
-      });
+  // map drag
+  const handleDragEnd = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const newLat = event.latLng.lat();
+      const newLng = event.latLng.lng();
+      setMapPosition({ lat: newLat, lng: newLng });
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        coordinates: {
+          lat: newLat,
+          lng: newLng,
+        },
+      }));
+
+      console.log(
+        "New Position:",
+        formData.coordinates.lat,
+        formData.coordinates.lng
+      );
     }
-  }, [marker]);
+  };
 
   const geocodeAddress = (address: string) => {
     if (typeof google !== "undefined" && google.maps) {
@@ -205,11 +217,54 @@ function PostAdNew() {
     setPreviewImages((prev) => [...prev, ...newPreviews]);
   };
 
+  // when the post is submitted
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      console.log("Tocken not found, please login");
+    }
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("residents", formData.residents);
+    data.append("price", formData.price);
+    data.append("housingType", formData.housingType);
+    data.append("singleRoom", formData.singleRoom);
+    data.append("doubleRoom", formData.doubleRoom);
+    data.append("address", formData.address);
+    data.append("description", formData.description);
+    data.append("contact", formData.contact);
+    data.append("roomType", JSON.stringify(formData.roomType));
+    data.append("facilities", JSON.stringify(formData.facilities));
+    data.append("lat", formData.coordinates.lat.toString());
+    data.append("lng", formData.coordinates.lng.toString());
+    formData.images.forEach((file, index) => {
+      data.append(`images`, file);
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/listing/listing-all",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      console.log("FormData Submitted Successfully", response.data);
+      navigate("/MyAds");
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+    }
+  };
+
   return (
     <>
-      <div className="flex flex-col mt-20 h-auto w-auto bg-blue-950 items-center justify-center rounded-3xl">
+      <div className="flex flex-col mt-20 h-full w-full bg-gradient-to-br from-gray-900 to-gray-800 items-center justify-center shadow-2xl p-8">
         {/* top post property */}
-        <div className="flex flex-col text-center align-center justify-center p-4 ">
+        <div className="flex flex-col text-center align-center justify-center p-4">
           <h1 className="text-4xl font-bold text-white text-center [text-shadow:0_0_20px_rgba(255,255,255,0.3)]">
             Post Your Property Ad
           </h1>
@@ -219,11 +274,11 @@ function PostAdNew() {
         </div>
 
         {/* Form data */}
-        <form className="w-full">
-          <div className="w-full flex flex-col md:flex-row  bg-gray-700 p-6">
+        <form className="w-full" onSubmit={handleSubmit}>
+          <div className="w-full flex flex-col md:flex-row bg-gray-700/50 p-6 rounded-xl backdrop-blur-sm">
             {/* left div of the form */}
             <div className="flex flex-col p-3 md:w-2/3 space-y-6">
-              {/* title input  */}
+              {/* title input */}
               <div className="mb-6 flex flex-col w-full">
                 <label className="block text-gray-100 font-medium mb-2">
                   Ad Title
@@ -240,7 +295,7 @@ function PostAdNew() {
               </div>
 
               {/* number of residents */}
-              <div className=" flex flex-col w-full">
+              <div className="flex flex-col w-full">
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   <UsersRound className="mr-2 text-blue-500" /> Number of
                   Residents
@@ -251,8 +306,8 @@ function PostAdNew() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all text-white placeholder-gray-400"
                 >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i} value={i + 1} className="bg-[#0B1120]">
+                  {[...Array(100)].map((_, i) => (
+                    <option key={i} value={i + 1} className="bg-gray-800">
                       {i + 1}
                     </option>
                   ))}
@@ -277,13 +332,13 @@ function PostAdNew() {
                 />
               </div>
 
-              {/* housing Type  room type*/}
+              {/* housing Type */}
               <div>
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   Housing Type
                 </label>
                 <div className="flex gap-4 flex-wrap">
-                  {["Hostel", "Houses", "Apartment"].map((type) => (
+                  {["Hostel", "House", "Apartment"].map((type) => (
                     <TypeButton
                       key={type}
                       type={type}
@@ -395,6 +450,7 @@ function PostAdNew() {
                         ref={markerRef}
                         position={mapPosition}
                         draggable
+                        onDragEnd={handleDragEnd}
                       />
                     </Map>
                   </APIProvider>
@@ -405,6 +461,7 @@ function PostAdNew() {
                 </p>
               </div>
 
+              {/* facilities */}
               <div>
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   Available Facilities
@@ -412,7 +469,8 @@ function PostAdNew() {
                 <div className="grid grid-cols-3 gap-3">
                   {facilities.map(({ name, icon }) => (
                     <div
-                      className={`cursor-pointer bg-gray-600 font-semibold text-white border-1 border-gray-700 p-4 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center gap-2 bg-gradient-to-r hover:shadow-[0_0_20px_rgba(96,165,250,0.3)] ${
+                      key={name}
+                      className={`cursor-pointer bg-gray-600/50 font-semibold text-white border-1 border-gray-700 p-4 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center gap-2 hover:bg-gray-700/70 ${
                         formData.facilities.includes(name)
                           ? "bg-gray-800 shadow-[0_0_20px_rgba(96,165,250,0.3)]"
                           : ""
@@ -426,6 +484,7 @@ function PostAdNew() {
                 </div>
               </div>
 
+              {/* description */}
               <div>
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   Description
@@ -439,6 +498,7 @@ function PostAdNew() {
                 />
               </div>
 
+              {/* contact */}
               <div>
                 <label className="block text-gray-100 font-medium mb-2 flex">
                   <Phone className="mr-2 text-blue-500" />
@@ -446,6 +506,7 @@ function PostAdNew() {
                 </label>
                 <input
                   type="tel"
+                  onChange={handleChange}
                   name="contact"
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all text-white placeholder-gray-400"
                   placeholder="+94 XX XXX XXXX"
@@ -532,7 +593,7 @@ function PostAdNew() {
           <div className="w-full p-6 flex justify-end">
             <button
               type="submit"
-              className=" w-150 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold text-lg py-3 px-10 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              className="w-150 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold text-lg py-3 px-10 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               Post Property
             </button>

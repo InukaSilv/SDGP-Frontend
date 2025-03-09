@@ -8,21 +8,29 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { Circle } from "../circle/Circles";
-import SearchBar from "./SearchBar";
 
 type GoogleMapComponentProps = {
-  mapCenter: { lat: number; lng: number };
   radius: number;
+  mapPosition: { lat: number; lng: number };
+  setMapPosition: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number }>
+  >;
+  mapLoaded: boolean;
+  setMapLoaded: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number }>
+  >;
+  Error: string;
 };
 
-function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
-  const [error, setError] = useState<string | null>(null);
+function GoogleMapComponent({
+  radius,
+  mapPosition,
+  setMapPosition,
+  mapLoaded,
+  setMapLoaded,
+  error,
+}: GoogleMapComponentProps) {
   const [markerRef] = useAdvancedMarkerRef();
-  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
-    lat: mapCenter.lat,
-    lng: mapCenter.lng,
-  });
-  const [mapLoaded, setMapLoaded] = useState(false);
 
   type Poi = { key: string; location: google.maps.LatLngLiteral };
   const locations: Poi[] = [
@@ -31,28 +39,30 @@ function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
     { key: "gangaramayaTemple", location: { lat: 6.9155, lng: 79.8561 } },
   ];
 
+  // when loading, take the location of the user
+  // useEffect(() => {
+  //   if ("geolocation" in navigator) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) =>
+  //         setMapPosition({
+  //           lat: position.coords.latitude,
+  //           lng: position.coords.longitude,
+  //         }),
+  //       (error) => setError(error.message)
+  //     );
+  //   } else {
+  //     setError("Geolocation is not supported by this browser.");
+  //   }
+
+  //   // Force re-render to fix Google Maps not showing correctly
+  //   setTimeout(() => setMapLoaded(true), 500);
+  // }, []);
+
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) =>
-          setMapPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          }),
-        (error) => setError(error.message)
-      );
-    } else {
-      setError("Geolocation is not supported by this browser.");
-    }
+    setMapPosition(mapPosition);
+  }, [mapPosition]);
 
-    // Force re-render to fix Google Maps not showing correctly
-    setTimeout(() => setMapLoaded(true), 500);
-  }, []);
-
-  useEffect(() => {
-    setMapPosition(mapCenter);
-  }, [mapCenter]);
-
+  // filtering based on radius
   const filteredLocations = locations.filter((poi) => {
     if (
       mapPosition &&
@@ -78,14 +88,14 @@ function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
     return false;
   });
 
-  const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
-    if (place?.geometry?.location) {
-      setMapPosition({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
-    }
-  };
+  // const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+  //   if (place?.geometry?.location) {
+  //     setMapPosition({
+  //       lat: place.geometry.location.lat(),
+  //       lng: place.geometry.location.lng(),
+  //     });
+  //   }
+  // };
 
   return (
     <div className="h-screen w-full">
