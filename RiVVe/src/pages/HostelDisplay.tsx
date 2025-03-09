@@ -11,31 +11,66 @@ import { useLocation } from "react-router-dom";
 import { Map } from "lucide-react";
 import RadiusSlider from "../components/Slider/RadiusSlider";
 import { Radius } from "lucide-react";
+import axios from "axios";
 
 const HostelDisplay: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
-    lat: 6.9271,
-    lng: 79.8612,
-  });
   const [radius, setRadius] = useState<number>(5);
   const [showmap, setShowmap] = useState<boolean>(false);
   const [radiusControl, setRadiusControl] = useState<boolean>(false);
   const [radiusSmallControl, setRadiusSmallControl] = useState<boolean>(false);
+  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>(
+    "",
+    ""
+  );
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const location = useLocation();
+
+  // default checking if the location is searched or if the location is get by default
   useEffect(() => {
     if (location.state?.place?.lat && location.state?.place?.lng) {
-      setMapCenter({
+      setMapPosition({
         lat: location.state.place.lat,
         lng: location.state.place.lng,
       });
+    } else {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) =>
+            setMapPosition({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            }),
+          (error) => setError(error.message)
+        );
+      }
     }
+    setTimeout(() => setMapLoaded(true), 500);
   }, [location.state]);
 
+  useEffect(() => {
+    const fetchLisiting = async () => {
+      // asking for the ads based on the location from the backend
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/api/listing/get-listing",
+          { params: { lat: mapPosition.lat, lng: mapPosition.lng, radius } }
+        );
+      } catch (error) {
+        console.error("Error fetching Listing:", error);
+      }
+    };
+    if (mapPosition.lat && mapPosition.lng) {
+      fetchLisiting();
+    }
+  }, [mapPosition, radius]);
+
+  // on select of an university the map will be updated with the center
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     if (place?.geometry?.location) {
-      setMapCenter({
+      setMapPosition({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
@@ -127,7 +162,14 @@ const HostelDisplay: React.FC = () => {
             showmap ? "block md:block w-full h-screen" : "hidden md:block"
           }`}
         >
-          <GoogleMapComponent mapCenter={mapCenter} radius={radius} />
+          <GoogleMapComponent
+            radius={radius}
+            mapPosition={mapPosition}
+            setMapPosition={setMapPosition}
+            mapLoaded={mapLoaded}
+            setMapLoaded={setMapLoaded}
+            error={error}
+          />
         </div>
 
         {/* small screen map icon */}
