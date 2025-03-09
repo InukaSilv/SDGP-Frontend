@@ -158,7 +158,7 @@ const HostelDisplay: React.FC = () => {
         </div>
 
         <div
-          className={`w-full md:w-1/2 h-[65vh] fixed right-0 top-[160px] bg-white shadow-lg transition-all duration-300 ${
+          className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bg-white shadow-lg transition-all duration-300 ${
             showmap ? "block md:block w-full h-screen" : "hidden md:block"
           }`}
         >
