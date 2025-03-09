@@ -21,42 +21,48 @@ import TargetPage from "./pages/TargetPage";
 import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
+
+
+import Contact from "./pages/Contact";
+
+
 import Chat from "./pages/Chat";
-import Testings from "./pages/Testings/testings";
+
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/listing" element={<Listing />} />
-          <Route path="/hostel" element={<HostelDisplay />} />
-          <Route path="/Signup1" element={<Signup1 />} />
-          <Route path="/signup2" element={<Signup2 />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/verifyWaiting" element={<VerifyWaiting />} />
-          <Route path="/forgotpassword" element={<ForgotPasswordEmail />} />
-          <Route path="/user" element={<ProtectedRoute element={<User />} />} />
-          <Route
-            path="/MyAds"
-            element={<ProtectedRoute element={<MyAds />} />}
-          />
-          <Route path="/target-page" element={<TargetPage />} />
-          <Route path="/testd" element={<HostelDetails />} />
-          <Route path="/message" element={<Chat />} />
-          <Route
-            path="/posting"
-            element={<ProtectedLandlordRoute element={<Posting />} />}
-          />
-          <Route
-            path="/edit-ad"
-            element={<ProtectedRoute element={<EditAd />} />}
-          />
-          <Route path="/testing" element={<Testings />} />
-        </Routes>
+
+       <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<About />} />
+
+        <Route path="/listing" element={<Listing/>} />
+
+        <Route path="/hostel" element={<HostelDisplay />} /> {/* If needed */}
+        <Route path="/Signup1" element={<Signup1 />} />
+        <Route path="/signup2" element={<Signup2 />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/verifyWaiting" element={<VerifyWaiting />} />
+        <Route path="/forgotpassword" element={<ForgotPasswordEmail />} />
+        <Route path="/user" element={<ProtectedRoute element={<User />} />} />
+        <Route path="/MyAds" element={<ProtectedRoute element={<MyAds />} />} />
+        <Route path="/target-page" element={<TargetPage />} />
+        <Route path="/testd" element={<HostelDetails />} />
+        <Route path="/Contact" element={<Contact />} />
+        <Route
+          path="/posting"
+          element={<ProtectedLandlordRoute element={<Posting />} />}
+        />
+        <Route
+          path="/edit-ad"
+          element={<ProtectedRoute element={<EditAd />} />}
+        />
+
+      </Routes>
+
       </div>
     </Router>
   );

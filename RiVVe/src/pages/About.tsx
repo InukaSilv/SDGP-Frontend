@@ -8,36 +8,14 @@ type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  {
-    name: "Lasal Rathnayake",
-    role: "Front End Developer",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal",
-  },
-  {
-    name: "Inuka Silva",
-    role: "Team Leader",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/inuka",
-  },
-  {
-    name: "Ishara Dharmapriya",
-    role: "Front End Developer",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/ishara",
-  },
-  {
-    name: "Dulen Eragoda",
-    role: "Back End Developer",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera",
-  },
-  {
-    name: "Dulen Perera",
-    role: "Back End Developer",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenperera",
-  },
-  {
-    name: "Hasindu Pieris",
-    role: "Back End Developer",
-    imageUrl: "https://storage.googleapis.com/rivve-web-trial/hasindu",
-  },
+
+  { name: "Lasal Rathnayake", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal" },
+  { name: "Inuka Silva", role: "Team Leader", imageUrl: "https://storage.googleapis.com/rivve-web-trial/inuka" },
+  { name: "Ishara Dharmapriya", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/ishara" },
+  { name: "Dulen Eragoda", role: "Front End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera" },
+  { name: "Dulen Perera", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenperera" },
+  { name: "Hasindu Pieris", role: "Back End Developer", imageUrl: "https://storage.googleapis.com/rivve-web-trial/hasindu" },
+
 ];
 
 // Frontend technologies with their icons
@@ -245,10 +223,8 @@ const AnimatedCounter: React.FC<{
   }, [isVisible, endValue]);
 
   return (
-    <div
-      ref={counterRef}
-      className="flex flex-col items-center p-6 bg-gray-800 rounded-xl shadow-lg border-t-2 border-[#2772A0] transform transition-transform duration-500 hover:scale-105"
-    >
+    <div ref={counterRef} className="flex flex-col items-center p-6 bg-gray-800 rounded-xl shadow-lg border-t-2 border-[#2772A0] transform transition-transform duration-500 hover:scale-105">
+
       <span className="text-4xl font-bold text-white mb-2">
         {count}
         {suffix}
@@ -281,9 +257,9 @@ const AmenitiesSlideshow = () => {
 
   return (
     <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#e0ebf3] to-[#f0f7fc] py-8 px-4 rounded-lg relative shadow-md">
-      <h3 className="text-2xl font-semibold text-center text-[#2772A0] mb-6">
-        Common Amenities
-      </h3>
+
+      <h3 className="text-2xl font-semibold text-center text-[#2772A0] mb-6">Common Amenities</h3>
+      
 
       <div className="relative h-24">
         <div
@@ -294,31 +270,25 @@ const AmenitiesSlideshow = () => {
           }}
         >
           {/* Duplicate the amenities to create a continuous effect */}
-          {[...commonAmenities, ...commonAmenities, ...commonAmenities].map(
-            (amenity, index) => (
-              <div
-                key={index}
-                className="bg-white p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#3a85b3]/20 min-w-48 transform transition-transform duration-300 hover:scale-105"
-              >
-                <div className="text-2xl">{amenity.icon}</div>
-                <span className="text-gray-700 whitespace-nowrap font-medium">
-                  {amenity.name}
-                </span>
-              </div>
-            )
-          )}
+
+          {[...commonAmenities, ...commonAmenities, ...commonAmenities].map((amenity, index) => (
+            <div 
+              key={index} 
+              className="bg-white p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#3a85b3]/20 min-w-48 transform transition-transform duration-300 hover:scale-105"
+            >
+              <div className="text-2xl">{amenity.icon}</div>
+              <span className="text-gray-700 whitespace-nowrap font-medium">{amenity.name}</span>
+            </div>
+          ))}
+
         </div>
       </div>
 
       {/* Add gradient overlays for better visual effect */}
-      <div
-        className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
-      <div
-        className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#f0f7fc] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
+
+      <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+      <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#f0f7fc] to-transparent pointer-events-none" style={{ top: '4rem' }}></div>
+
     </div>
   );
 };
@@ -351,12 +321,13 @@ const ParallaxBackground: React.FC = () => {
   }, []);
 
   return (
-    <div
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{
-        backgroundImage:
-          "radial-gradient(circle, rgba(39, 114, 160, 0.1) 1px, transparent 1px)",
-        backgroundSize: "30px 30px",
+
+    <div 
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" 
+      style={{ 
+        backgroundImage: 'radial-gradient(circle, rgba(39, 114, 160, 0.1) 1px, transparent 1px)',
+        backgroundSize: '30px 30px',
+
         transform: `translateY(${offset * 0.3}px)`,
         opacity: 0.5,
       }}
@@ -373,18 +344,14 @@ const About = () => {
       {/* Hero Section with animated gradient */}
       <section className="relative flex flex-col items-center justify-center text-center px-4 overflow-hidden min-h-screen">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#2772A0]/20 to-gray-900/70 z-0"></div>
-
+        
         {/* Animated circles in background */}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1e5f8a]/20 rounded-full filter blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        ></div>
-
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1e5f8a]/20 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
         <div className="relative z-10 max-w-4xl">
-          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-            About RiVVE
-          </h1>
+          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">About RiVVE</h1>
+
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-12">
             RiVVE is a student-focused hostel booking platform designed to make
@@ -422,19 +389,10 @@ const About = () => {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg
-            className="w-6 h-6 text-[#CCDDEA]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            ></path>
+
+          <svg className="w-6 h-6 text-[#CCDDEA]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+
           </svg>
         </div>
       </section>
@@ -443,28 +401,25 @@ const About = () => {
 
       {/* Our Mission & Vision - Redesigned with cards */}
       <section className="relative px-4 py-20 min-h-screen">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-16">
-          Our Mission & Vision
-        </h2>
 
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-16">Our Mission & Vision</h2>
+        
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-[#2772A0] transform transition-all duration-500 hover:scale-105">
             <div className="text-3xl text-[#3a85b3] mb-4">🚀</div>
-            <h3 className="text-2xl font-semibold text-white mb-4">
-              Our Mission
-            </h3>
+            <h3 className="text-2xl font-semibold text-white mb-4">Our Mission</h3>
+
             <p className="text-gray-300">
               To simplify the hostel booking process for students by providing a
               reliable, transparent, and user-friendly platform. We make finding
               the perfect student accommodation as easy as possible.
             </p>
           </div>
-
+          
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-[#CCDDEA] transform transition-all duration-500 hover:scale-105">
             <div className="text-3xl text-[#CCDDEA] mb-4">🔭</div>
-            <h3 className="text-2xl font-semibold text-white mb-4">
-              Our Vision
-            </h3>
+            <h3 className="text-2xl font-semibold text-white mb-4">Our Vision</h3>
+
             <p className="text-gray-300">
               To become the leading platform for student accommodation
               worldwide, bridging the gap between students and verified hostel
@@ -481,11 +436,10 @@ const About = () => {
       <section className="px-4 py-20 relative">
         <div className="absolute top-1/3 right-0 w-64 h-64 bg-[#2772A0]/10 rounded-full filter blur-3xl"></div>
         <div className="absolute bottom-1/3 left-0 w-64 h-64 bg-[#3a85b3]/10 rounded-full filter blur-3xl"></div>
-
+        
         <div className="relative max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-            Platform Features
-          </h2>
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Platform Features</h2>
+
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto text-center mb-16">
             Everything you need to find, book, and enjoy your perfect hostel
@@ -500,16 +454,14 @@ const About = () => {
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {studentFeatures.map((feature, index) => (
-                <div
-                  key={index}
+
+                <div 
+                  key={index} 
                   className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#2772A0] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[#2772A0]/20 group"
                 >
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {feature.icon}
-                  </div>
-                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#3a85b3] transition-colors duration-300">
-                    {feature.title}
-                  </h4>
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#3a85b3] transition-colors duration-300">{feature.title}</h4>
+
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -524,16 +476,14 @@ const About = () => {
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {ownerFeatures.map((feature, index) => (
-                <div
-                  key={index}
+
+                <div 
+                  key={index} 
                   className="bg-gray-800/80 backdrop-blur p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#CCDDEA] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[#CCDDEA]/20 group"
                 >
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {feature.icon}
-                  </div>
-                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#CCDDEA] transition-colors duration-300">
-                    {feature.title}
-                  </h4>
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                  <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#CCDDEA] transition-colors duration-300">{feature.title}</h4>
+
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -550,10 +500,10 @@ const About = () => {
       {/* FAQ Section with animated accordion */}
       <section className="px-4 py-20 relative min-h-screen">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-            Frequently Asked Questions
-          </h2>
+
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Frequently Asked Questions</h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
+          
 
           <div className="space-y-6">
             {faqItems.map((item, index) => (
@@ -562,12 +512,10 @@ const About = () => {
                 className="group bg-gray-800/60 backdrop-blur rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
               >
                 <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-                  <h4 className="text-xl font-medium text-white group-hover:text-[#3a85b3] transition-colors duration-300">
-                    {item.question}
-                  </h4>
-                  <div className="h-8 w-8 rounded-full bg-[#1e5f8a]/50 flex items-center justify-center text-[#CCDDEA] transition-transform duration-300 group-open:rotate-45">
-                    +
-                  </div>
+
+                  <h4 className="text-xl font-medium text-white group-hover:text-[#3a85b3] transition-colors duration-300">{item.question}</h4>
+                  <div className="h-8 w-8 rounded-full bg-[#1e5f8a]/50 flex items-center justify-center text-[#CCDDEA] transition-transform duration-300 group-open:rotate-45">+</div>
+
                 </summary>
                 <div className="p-6 pt-0 border-t border-gray-700">
                   <p className="text-gray-300">{item.answer}</p>
@@ -584,21 +532,22 @@ const About = () => {
       <section className="px-4 py-20 relative overflow-hidden min-h-screen">
         <div className="absolute top-1/2 left-1/2 w-full h-full max-w-4xl -translate-x-1/2 -translate-y-1/2 bg-[#2772A0]/10 rounded-full filter blur-3xl animate-pulse"></div>
 
+        
         <div className="relative max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-            Why Choose RiVVE?
-          </h2>
+          <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Why Choose RiVVE?</h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
-
+          
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
               title="Verified Listings"
               description="All hostels and accommodations are verified to ensure safety and trust."
               iconColor="text-green-400"
             />
-            <FeatureCard
-              title="Student Chat System"
-              description="Chat with previous tenants to get firsthand insights before booking."
+
+            <FeatureCard 
+              title="Student Chat System" 
+              description="Chat with previous tenants to get firsthand insights before booking." 
+
               iconColor="text-[#3a85b3]"
             />
             <FeatureCard
@@ -614,10 +563,10 @@ const About = () => {
 
       {/* Team Section with hover effects */}
       <section className="px-4 py-20 relative">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-          Meet Our Team
-        </h2>
+
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Meet Our Team</h2>
         <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
+        
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
@@ -635,10 +584,10 @@ const About = () => {
 
       {/* Technologies We Use - with animated hover effects */}
       <section className="px-4 py-20 relative">
-        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
-          Technologies We Use
-        </h2>
+
+        <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">Technologies We Use</h2>
         <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-16"></div>
+        
 
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 justify-center">
           {/* Frontend Tech Stack */}
@@ -661,9 +610,9 @@ const About = () => {
                       className="h-10 w-10"
                     />
                   </div>
-                  <span className="text-gray-300 font-medium group-hover:text-[#CCDDEA] transition-colors duration-300">
-                    {tech.name}
-                  </span>
+
+                  <span className="text-gray-300 font-medium group-hover:text-[#CCDDEA] transition-colors duration-300">{tech.name}</span>
+
                 </div>
               ))}
             </div>
@@ -689,9 +638,9 @@ const About = () => {
                       className="h-10 w-10"
                     />
                   </div>
-                  <span className="text-gray-300 font-medium group-hover:text-[#e0ebf3] transition-colors duration-300">
-                    {tech.name}
-                  </span>
+
+                  <span className="text-gray-300 font-medium group-hover:text-[#e0ebf3] transition-colors duration-300">{tech.name}</span>
+
                 </div>
               ))}
             </div>
@@ -707,26 +656,12 @@ const About = () => {
           an email.
         </p>
         <div className="flex flex-wrap justify-center gap-6 mt-6">
-          <SocialIcon
-            name="LinkedIn"
-            link="https://linkedin.com"
-            color="bg-[#2772A0]"
-          />
-          <SocialIcon
-            name="Twitter"
-            link="https://twitter.com"
-            color="bg-[#3a85b3]"
-          />
-          <SocialIcon
-            name="Facebook"
-            link="https://facebook.com"
-            color="bg-[#1e5f8a]"
-          />
-          <SocialIcon
-            name="Instagram"
-            link="https://instagram.com"
-            color="bg-[#3a85b3]"
-          />
+
+          <SocialIcon name="LinkedIn" link="https://linkedin.com" color="bg-[#2772A0]" />
+          <SocialIcon name="Twitter" link="https://twitter.com" color="bg-[#3a85b3]" />
+          <SocialIcon name="Facebook" link="https://facebook.com" color="bg-[#1e5f8a]" />
+          <SocialIcon name="Instagram" link="https://instagram.com" color="bg-[#3a85b3]" />
+
         </div>
       </section>
     </div>
@@ -742,11 +677,9 @@ type FeatureProps = {
   iconColor: string;
 };
 
-const FeatureCard: React.FC<FeatureProps> = ({
-  title,
-  description,
-  iconColor,
-}) => (
+
+const FeatureCard: React.FC<FeatureProps> = ({ title, description, iconColor }) => (
+
   <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-center border-t-2 border-gray-700 hover:border-[#CCDDEA] transition-all duration-300">
     <div className={`text-4xl mb-4 ${iconColor}`}>
       {title === "Verified Listings" && "✓"}
@@ -766,17 +699,25 @@ type TeamCardProps = {
 };
 
 const TeamCard: React.FC<TeamCardProps> = ({ name, role, imageUrl }) => {
-  const roleColor = role.includes("Front End")
-    ? "text-[#CCDDEA]"
-    : role.includes("Back End")
-    ? "text-[#3a85b3]"
-    : role.includes("AI")
-    ? "text-green-300"
-    : "text-[#e0ebf3]";
+
+  const roleColor = role.includes("Front End") 
+    ? "text-[#CCDDEA]" 
+    : role.includes("Back End") 
+      ? "text-[#3a85b3]" 
+      : role.includes("AI") 
+        ? "text-green-300" 
+        : "text-[#e0ebf3]";
+
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
-      <div className="h-48 bg-gray-700"></div>
+      <div className="h-80 s overflow-hidden">
+        <img 
+          src={imageUrl} 
+          alt={`${name} - ${role}`} 
+          className="w-full h-full object-cover"
+        />
+      </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold text-white">{name}</h3>
         <p className={`mt-2 ${roleColor}`}>{role}</p>

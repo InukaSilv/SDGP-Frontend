@@ -81,7 +81,7 @@ function Navbar() {
             <Link to="/hostel">Hostels</Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-            Contact
+            <Link to="/contact">Contact </Link>
           </li>
           {isLoggedIn && userRole === "Landlord" && (
             <li className="hover:text-gray-400 cursor-pointer transition">
