@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/navbar/navbar";
+import Footer from "../components/footer/Footer";
 
 type TeamMember = {
   name: string;
@@ -546,6 +547,7 @@ const About = () => {
           <SocialIcon name="Instagram" link="https://instagram.com" color="bg-[#3a85b3]" />
         </div>
       </section>
+      <Footer/>
     </div>
   );
 };

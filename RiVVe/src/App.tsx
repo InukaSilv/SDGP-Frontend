@@ -4,6 +4,8 @@ import Navbar from './components/navbar/Navbar';
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 
+import Footer from "./components/footer/Footer";
+
 import Listing from "./pages/Listing";
 
 
@@ -56,6 +58,8 @@ function App() {
           path="/edit-ad"
           element={<ProtectedRoute element={<EditAd />} />}
         />
+
+        
 
       </Routes>
       </div>
