@@ -5,7 +5,7 @@ interface RadiusSlider {
 }
 function RadiusSlider({ radius, setRadius }: RadiusSlider) {
   const changeRadius = (e: Event, newValue: number) => {
-    setRadius(newValue);
+    setRadius(typeof newValue === "number" ? newValue : newValue[0]);
   };
 
   return (

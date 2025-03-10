@@ -20,6 +20,7 @@ type GoogleMapComponentProps = {
     React.SetStateAction<{ lat: number; lng: number }>
   >;
   Error: string;
+  locations: [];
 };
 
 function GoogleMapComponent({
@@ -29,15 +30,10 @@ function GoogleMapComponent({
   mapLoaded,
   setMapLoaded,
   error,
+  locations,
 }: GoogleMapComponentProps) {
   const [markerRef] = useAdvancedMarkerRef();
-
-  type Poi = { key: string; location: google.maps.LatLngLiteral };
-  const locations: Poi[] = [
-    { key: "galleFaceGreen", location: { lat: 6.9271, lng: 79.8424 } },
-    { key: "lotusTower", location: { lat: 6.927079, lng: 79.861244 } },
-    { key: "gangaramayaTemple", location: { lat: 6.9155, lng: 79.8561 } },
-  ];
+  const [selected, setSelected] = useState<string>("");
 
   // when loading, take the location of the user
   // useEffect(() => {
@@ -103,7 +99,10 @@ function GoogleMapComponent({
         {mapLoaded && (
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <Map defaultZoom={13} center={mapPosition} mapId="DEMO_MAP_ID">
-              <AdvancedMarker position={mapPosition}>
+              <AdvancedMarker
+                position={mapPosition}
+                onClick={() => setSelected(poi)}
+              >
                 <Pin
                   background={"#FF0000"}
                   glyphColor={"#FFF"}
@@ -111,7 +110,7 @@ function GoogleMapComponent({
                 />
               </AdvancedMarker>
 
-              {filteredLocations.map((poi) => (
+              {locations.map((poi) => (
                 <AdvancedMarker key={poi.key} position={poi.location}>
                   <Pin
                     background={"#FBBC04"}
@@ -120,6 +119,16 @@ function GoogleMapComponent({
                   />
                 </AdvancedMarker>
               ))}
+
+              {selected && (
+                <AdvancedMarker key={selected.key} position={selected.location}>
+                  <Pin
+                    background={"#FBBC"}
+                    glyphColor={"#000"}
+                    borderColor={"#000"}
+                  />
+                </AdvancedMarker>
+              )}
 
               <Circle
                 radius={radius * 1000}

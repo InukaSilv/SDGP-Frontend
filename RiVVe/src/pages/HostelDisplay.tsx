@@ -19,14 +19,16 @@ const HostelDisplay: React.FC = () => {
   const [showmap, setShowmap] = useState<boolean>(false);
   const [radiusControl, setRadiusControl] = useState<boolean>(false);
   const [radiusSmallControl, setRadiusSmallControl] = useState<boolean>(false);
-  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>(
-    "",
-    ""
-  );
+  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
+    lat: 0,
+    lng: 0,
+  });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const location = useLocation();
+  const [listing, setListing] = useState<AdDisplayer[]>([]);
+  type Poi = { key: string; location: google.maps.LatLngLiteral };
+  const [locations, setLocations] = useState<Poi[]>([]);
 
   // default checking if the location is searched or if the location is get by default
   useEffect(() => {
@@ -50,14 +52,29 @@ const HostelDisplay: React.FC = () => {
     setTimeout(() => setMapLoaded(true), 500);
   }, [location.state]);
 
+  // fetching the ads
   useEffect(() => {
+    console.log("triggered with radius chnage");
     const fetchLisiting = async () => {
       // asking for the ads based on the location from the backend
+
       try {
         const response = await axios.get(
           "http://localhost:5001/api/listing/get-listing",
           { params: { lat: mapPosition.lat, lng: mapPosition.lng, radius } }
         );
+        setListing(response.data);
+        console.log(response.data);
+        console.log(listing.length);
+
+        const locationMarkers = response.data.map((record) => ({
+          key: record._id,
+          location: {
+            lat: record.location.coordinates[1],
+            lng: record.location.coordinates[0],
+          },
+        }));
+        setLocations(locationMarkers);
       } catch (error) {
         console.error("Error fetching Listing:", error);
       }
@@ -66,6 +83,11 @@ const HostelDisplay: React.FC = () => {
       fetchLisiting();
     }
   }, [mapPosition, radius]);
+
+  useEffect(() => {
+    console.log("Updated listings: ", listing.length);
+    console.log("Updated locations: ", locations);
+  }, [listing, locations]);
 
   // on select of an university the map will be updated with the center
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
@@ -150,9 +172,9 @@ const HostelDisplay: React.FC = () => {
             showmap ? "pointer-events-none opacity-50" : ""
           }`}
         >
-          {[...Array(10)].map((_, index) => (
-            <div key={index} className="flex justify-center">
-              <AdDisplayer />
+          {listing.map((listing) => (
+            <div key={listing.id} className="flex justify-center">
+              <AdDisplayer {...listing} />
             </div>
           ))}
         </div>
@@ -169,6 +191,7 @@ const HostelDisplay: React.FC = () => {
             mapLoaded={mapLoaded}
             setMapLoaded={setMapLoaded}
             error={error}
+            locations={locations}
           />
         </div>
 
