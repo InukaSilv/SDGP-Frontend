@@ -11,7 +11,7 @@ function TypeButton({ type, isSelected, onClick }: TypeButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center px-4 py-1 border rounded-3xl mx-2 hover:cursor-pointer hover:bg-gray-600 ${
+      className={`flex items-center px-4 py-1 border rounded-3xl mx-2 hover:cursor-pointer hover:bg-gray-600 font-semibold text-white ${
         isSelected
           ? "bg-gray-600 text-white border-gray-600"
           : "bg-transparent border-gray-500 text-black"

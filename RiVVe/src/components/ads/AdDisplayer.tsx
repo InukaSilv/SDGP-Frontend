@@ -1,9 +1,19 @@
 
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star, MapPin, Users } from 'lucide-react';
 
+
 function AdDisplayer() {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleFavoriteClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsFavorite(!isFavorite);
+  };
+
   return (
     <Link to="/target-page" className="block w-full transform transition-all duration-300 hover:scale-[1.02]">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -47,6 +57,7 @@ function AdDisplayer() {
             </button>
           </div>
         </div>
+
       </div>
     </Link>
   );

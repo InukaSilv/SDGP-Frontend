@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from './components/navbar/Navbar';
+import Navbar from "./components/navbar/Navbar";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 
 import Footer from "./components/footer/Footer";
 
 import Listing from "./pages/Listing";
-
 
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
 import Signup1 from "./pages/Signup1";
@@ -25,12 +24,17 @@ import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
 
+
 import Contact from "./pages/Contact";
+
+
+import Chat from "./pages/Chat";
 
 
 function App() {
   return (
     <Router>
+
        <div className="min-h-screen bg-gray-100">
       <Navbar />
       <Routes>
@@ -62,6 +66,7 @@ function App() {
         
 
       </Routes>
+
       </div>
     </Router>
   );
