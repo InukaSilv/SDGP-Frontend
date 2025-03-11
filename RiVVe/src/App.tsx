@@ -23,6 +23,7 @@ import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
 import Chat from "./pages/Chat";
 import Testings from "./pages/Testings/testings";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             element={<ProtectedRoute element={<EditAd />} />}
           />
           <Route path="/testing" element={<Testings />} />
+          <Route path="/contacts" element={<Contact />} />
         </Routes>
       </div>
     </Router>

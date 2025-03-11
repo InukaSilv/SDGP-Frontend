@@ -28,7 +28,7 @@ function AdDisplayer({
 }) {
   return (
     <Link
-      to="/target-page"
+      to="/listing"
       className="block w-full transform transition-all duration-300 hover:scale-[1.02]"
     >
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">

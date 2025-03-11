@@ -59,30 +59,30 @@ function GoogleMapComponent({
   }, [mapPosition]);
 
   // filtering based on radius
-  const filteredLocations = locations.filter((poi) => {
-    if (
-      mapPosition &&
-      typeof google !== "undefined" &&
-      google.maps &&
-      google.maps.geometry
-    ) {
-      const userLatLng = new google.maps.LatLng(
-        mapPosition.lat,
-        mapPosition.lng
-      );
-      const propLatLng = new google.maps.LatLng(
-        poi.location.lat,
-        poi.location.lng
-      );
-      const distance =
-        google.maps.geometry.spherical.computeDistanceBetween(
-          userLatLng,
-          propLatLng
-        ) / 1000;
-      return distance <= radius;
-    }
-    return false;
-  });
+  // const filteredLocations = locations.filter((poi) => {
+  //   if (
+  //     mapPosition &&
+  //     typeof google !== "undefined" &&
+  //     google.maps &&
+  //     google.maps.geometry
+  //   ) {
+  //     const userLatLng = new google.maps.LatLng(
+  //       mapPosition.lat,
+  //       mapPosition.lng
+  //     );
+  //     const propLatLng = new google.maps.LatLng(
+  //       poi.location.lat,
+  //       poi.location.lng
+  //     );
+  //     const distance =
+  //       google.maps.geometry.spherical.computeDistanceBetween(
+  //         userLatLng,
+  //         propLatLng
+  //       ) / 1000;
+  //     return distance <= radius;
+  //   }
+  //   return false;
+  // });
 
   // const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
   //   if (place?.geometry?.location) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/navbar/navbar";
+import Footer from "../components/footer/Footer";
 
 type TeamMember = {
   name: string;
@@ -25,7 +26,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Dulen Eragoda",
-    role: "Back End Developer",
+    role: "Front End Developer",
     imageUrl: "https://storage.googleapis.com/rivve-web-trial/dulenera",
   },
   {
@@ -294,6 +295,7 @@ const AmenitiesSlideshow = () => {
           }}
         >
           {/* Duplicate the amenities to create a continuous effect */}
+
           {[...commonAmenities, ...commonAmenities, ...commonAmenities].map(
             (amenity, index) => (
               <div
@@ -311,6 +313,7 @@ const AmenitiesSlideshow = () => {
       </div>
 
       {/* Add gradient overlays for better visual effect */}
+
       <div
         className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none"
         style={{ top: "4rem" }}
@@ -357,6 +360,7 @@ const ParallaxBackground: React.FC = () => {
         backgroundImage:
           "radial-gradient(circle, rgba(39, 114, 160, 0.1) 1px, transparent 1px)",
         backgroundSize: "30px 30px",
+
         transform: `translateY(${offset * 0.3}px)`,
         opacity: 0.5,
       }}
@@ -385,6 +389,7 @@ const About = () => {
           <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
             About RiVVE
           </h1>
+
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-12">
             RiVVE is a student-focused hostel booking platform designed to make
@@ -453,6 +458,7 @@ const About = () => {
             <h3 className="text-2xl font-semibold text-white mb-4">
               Our Mission
             </h3>
+
             <p className="text-gray-300">
               To simplify the hostel booking process for students by providing a
               reliable, transparent, and user-friendly platform. We make finding
@@ -465,6 +471,7 @@ const About = () => {
             <h3 className="text-2xl font-semibold text-white mb-4">
               Our Vision
             </h3>
+
             <p className="text-gray-300">
               To become the leading platform for student accommodation
               worldwide, bridging the gap between students and verified hostel
@@ -486,6 +493,7 @@ const About = () => {
           <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
             Platform Features
           </h2>
+
           <div className="w-24 h-1 bg-gradient-to-r from-[#2772A0] to-[#CCDDEA] mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto text-center mb-16">
             Everything you need to find, book, and enjoy your perfect hostel
@@ -510,6 +518,7 @@ const About = () => {
                   <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#3a85b3] transition-colors duration-300">
                     {feature.title}
                   </h4>
+
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -534,6 +543,7 @@ const About = () => {
                   <h4 className="text-xl font-semibold text-white mb-3 group-hover:text-[#CCDDEA] transition-colors duration-300">
                     {feature.title}
                   </h4>
+
                   <p className="text-gray-400">{feature.description}</p>
                 </div>
               ))}
@@ -596,6 +606,7 @@ const About = () => {
               description="All hostels and accommodations are verified to ensure safety and trust."
               iconColor="text-green-400"
             />
+
             <FeatureCard
               title="Student Chat System"
               description="Chat with previous tenants to get firsthand insights before booking."
@@ -661,6 +672,7 @@ const About = () => {
                       className="h-10 w-10"
                     />
                   </div>
+
                   <span className="text-gray-300 font-medium group-hover:text-[#CCDDEA] transition-colors duration-300">
                     {tech.name}
                   </span>
@@ -689,6 +701,7 @@ const About = () => {
                       className="h-10 w-10"
                     />
                   </div>
+
                   <span className="text-gray-300 font-medium group-hover:text-[#e0ebf3] transition-colors duration-300">
                     {tech.name}
                   </span>
@@ -729,6 +742,7 @@ const About = () => {
           />
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
@@ -776,7 +790,13 @@ const TeamCard: React.FC<TeamCardProps> = ({ name, role, imageUrl }) => {
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
-      <div className="h-48 bg-gray-700"></div>
+      <div className="h-80 s overflow-hidden">
+        <img
+          src={imageUrl}
+          alt={`${name} - ${role}`}
+          className="w-full h-full object-cover"
+        />
+      </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold text-white">{name}</h3>
         <p className={`mt-2 ${roleColor}`}>{role}</p>
@@ -846,14 +866,16 @@ const SocialIcon: React.FC<SocialIconProps> = ({ name, link, color }) => {
   };
 
   return (
-    <a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${color} text-white p-3 rounded-full hover:opacity-80 transition-opacity duration-300 flex items-center justify-center w-10 h-10`}
-      aria-label={name}
-    >
-      {renderIcon()}
-    </a>
+    <>
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${color} text-white p-3 rounded-full hover:opacity-80 transition-opacity duration-300 flex items-center justify-center w-10 h-10`}
+        aria-label={name}
+      >
+        {renderIcon()}
+      </a>
+    </>
   );
 };

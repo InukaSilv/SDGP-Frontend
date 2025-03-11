@@ -20,8 +20,8 @@ const HostelDisplay: React.FC = () => {
   const [radiusControl, setRadiusControl] = useState<boolean>(false);
   const [radiusSmallControl, setRadiusSmallControl] = useState<boolean>(false);
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
-    lat: 0,
-    lng: 0,
+    lat: 6.899675,
+    lng: 79.853703,
   });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
