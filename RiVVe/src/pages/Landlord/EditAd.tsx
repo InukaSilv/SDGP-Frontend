@@ -9,6 +9,7 @@ import { ChefHat } from "lucide-react";
 import { Coffee } from "lucide-react";
 import { Upload } from "lucide-react";
 import { X } from "lucide-react";
+import axios from "axios";
 
 interface RoomTypes {
   singleRoom: number;
@@ -35,13 +36,13 @@ function EditAd() {
   const [formData, setFormData] = useState({
     title: ad?.title || "",
     description: ad?.description || "",
-    singleRooms: ad?.roomTypes?.singleRoom || 0,
-    doubleRooms: ad?.roomTypes?.doubleRoom || 0,
+    singleRoom: ad?.roomTypes?.singleRoom || 0,
+    doubleRoom: ad?.roomTypes?.doubleRoom || 0,
     price: ad?.price || "",
     contact: ad?.contact || "",
     facilities: ad?.facilities || [],
     images: ad?.images || [],
-    removeImages: [],
+    removeImages: [] as string[],
     newImages: [] as File[],
   });
 
@@ -78,17 +79,22 @@ function EditAd() {
     });
   };
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  // adding an image
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       const totalImages =
-        formData.images.length + files.length - formData.removeImages.length;
-      if (totalImages > 6) {
+        formData.images.length +
+        formData.newImages.length -
+        formData.removeImages.length;
+
+      if (totalImages + files.length > 6) {
         setImageError("You can upload a maximum of 6 images.");
         return;
       }
+
       for (const file of files) {
         if (file.size > MAX_FILE_SIZE) {
           setImageError("Each file size should not exceed 5MB.");
@@ -99,15 +105,107 @@ function EditAd() {
           return;
         }
       }
+
       const newPreviews = files.map((file) => URL.createObjectURL(file));
       setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...newPreviews],
         newImages: [...prev.newImages, ...files],
       }));
+      setNewPreview((prev) => [...prev, ...newPreviews]);
       setImageError("");
     }
   };
+
+  // Remove an image
+  const handleImageRemove = (img: string, isExisting: boolean) => {
+    if (isExisting) {
+      setFormData((prev) => ({
+        ...prev,
+        images: prev.images.filter((image) => image !== img),
+        removeImages: [...prev.removeImages, img],
+      }));
+    } else {
+      const index = newPreview.indexOf(img);
+      if (index !== -1) {
+        URL.revokeObjectURL(img);
+        setNewPreview((prev) => prev.filter((_, i) => i !== index));
+        setFormData((prev) => ({
+          ...prev,
+          newImages: prev.newImages.filter((_, i) => i !== index),
+        }));
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      console.log("Token not found please login");
+    }
+    const data = new FormData();
+    data.append("propertyId", ad._id);
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("singleRoom", formData.singleRoom.toString());
+    data.append("doubleRoom", formData.doubleRoom.toString());
+    data.append("price", formData.price.toString());
+    data.append("contact", formData.contact.toString());
+    formData.facilities.forEach((facility) => {
+      data.append("facilities", facility);
+    });
+    // data.append("removeImages", JSON.stringify(formData.removeImages));
+    formData.removeImages.forEach((removeing) => {
+      data.append("removeImages", removeing);
+    });
+    formData.newImages.forEach((file, index) => {
+      data.append(`images`, file);
+    });
+
+    try {
+      const response = await axios.put(
+        "http://localhost:5001/api/listing/update-listing",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      console.log("formData Submitted Successfully", response.data);
+      navigate("/MyAds");
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      navigate("/login");
+    }
+    try {
+      const data = {
+        propertyId: ad._id,
+      };
+      const response = await axios.delete(
+        "http://localhost:5001/api/listing/delete-post",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          data,
+        }
+      );
+      console.log("deleted Successfully");
+      navigate("/MyAds");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gray-200">
@@ -122,9 +220,11 @@ function EditAd() {
                 Update your property listing details
               </h5>
             </div>
+
+            {/* main div */}
             <div className="w-full drop-shadow-2xl bg-white p-3 rounded-b-md">
-              <form>
-                <div className="flex flex-row gap-3">
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-row gap-3 border-b-1 border-gray-500 pb-3">
                   <div className="md:w-1/2">
                     {/* title */}
                     <div className="flex flex-col gap-2 ">
@@ -162,7 +262,7 @@ function EditAd() {
                           type="number"
                           onChange={handleChange}
                           name="singleRoom"
-                          value={formData.singleRooms}
+                          value={formData.singleRoom}
                           className="border-1 border-gray-400 p-2 rounded-md"
                         />
                       </div>
@@ -173,8 +273,8 @@ function EditAd() {
                         <input
                           type="number"
                           onChange={handleChange}
-                          name="singleRoom"
-                          value={formData.doubleRooms}
+                          name="doubleRoom"
+                          value={formData.doubleRoom}
                           className="border-1 border-gray-400 p-2 rounded-md"
                         />
                       </div>
@@ -183,7 +283,7 @@ function EditAd() {
                         <input
                           type="number"
                           onChange={handleChange}
-                          name="singleRoom"
+                          name="price"
                           min="0"
                           step="1000"
                           value={formData.price}
@@ -207,8 +307,7 @@ function EditAd() {
                         className="border-1 border-gray-400 p-2 rounded-md"
                       />
                     </div>
-                  </div>
-                  <div className="w-1/2">
+
                     {/* facilities */}
                     <div className="flex flex-col  gap-2">
                       <label className="text-md text-gray-600">
@@ -263,7 +362,10 @@ function EditAd() {
                         </label>
                       </div>
                     </div>
+                  </div>
 
+                  {/* right side */}
+                  <div className="w-1/2">
                     <div className="grid grid-cols-2 gap-2 mt-2">
                       {formData.images.map((img, index) => (
                         <div key={index} className="relative group">
@@ -276,6 +378,24 @@ function EditAd() {
                           <button
                             type="button"
                             className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110 hover:cursor-pointer"
+                            onClick={() => handleImageRemove(img, true)}
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                      {newPreview.map((preview, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={preview}
+                            alt="Image"
+                            className="w-full h-[200px] object-cover rounded-lg transition-all duration-300 
+                     group-hover:brightness-[0.95] group-hover:shadow-lg"
+                          />
+                          <button
+                            type="button"
+                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110 hover:cursor-pointer"
+                            onClick={() => handleImageRemove(preview, false)}
                           >
                             <X size={16} />
                           </button>
@@ -284,7 +404,19 @@ function EditAd() {
                     </div>
                   </div>
                 </div>
+                <button
+                  type="submit"
+                  className="p-3 bg-blue-900 text-white rounded-md font-bold mt-5"
+                >
+                  Update Post
+                </button>
               </form>
+              <button
+                className="p-3 bg-red-600 text-white rounded-md font-bold w-30 mt-2"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
