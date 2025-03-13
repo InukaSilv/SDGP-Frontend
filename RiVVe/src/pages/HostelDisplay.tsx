@@ -20,8 +20,8 @@ const HostelDisplay: React.FC = () => {
   const [radiusControl, setRadiusControl] = useState<boolean>(false);
   const [radiusSmallControl, setRadiusSmallControl] = useState<boolean>(false);
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
-    lat: 6.899675,
-    lng: 79.853703,
+    lat: 0,
+    lng: 0,
   });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,7 +107,7 @@ const HostelDisplay: React.FC = () => {
     <>
       <Navbar />
       {/* top searchbar and filter */}
-      <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-white/10 shadow-lg py-2 backdrop-blur-md z-10">
+      <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-transparent shadow-lg py-2 backdrop-blur-md z-10">
         <div className="flex items-center gap-2 md:gap-4 bg-white border border-white/30 shadow-2xl p-2 rounded-3xl transition-all duration-300 hover:shadow-blue-500/50 md:w-120">
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div className="flex items-center gap-3 bg-none">
@@ -168,7 +168,7 @@ const HostelDisplay: React.FC = () => {
       {/* map and ads */}
       <div className="flex flex-col md:flex-row pt-40 px-4 gap-6 relative">
         <div
-          className={`w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-5 overflow-auto h-screen scrollbar-hidden${
+          className={`w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-auto h-screen scrollbar-hidden${
             showmap ? "pointer-events-none opacity-50" : ""
           }`}
         >
@@ -180,10 +180,10 @@ const HostelDisplay: React.FC = () => {
         </div>
 
         <div
-          className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bg-white shadow-lg transition-all duration-300 ${
-            showmap ? "block md:block w-full h-screen" : "hidden md:block"
-          }`}
-        >
+  className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bottom-0 bg-gray-800 shadow-lg transition-all duration-300 ${
+    showmap ? "block md:block w-full h-full" : "hidden md:block"
+  }`}
+>
           <GoogleMapComponent
             radius={radius}
             mapPosition={mapPosition}
