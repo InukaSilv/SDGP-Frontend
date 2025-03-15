@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Send, Building2, Mail, Phone, Instagram, Facebook } from "lucide-react";
+import {
+  Send,
+  Building2,
+  Mail,
+  Phone,
+  Instagram,
+  Facebook,
+} from "lucide-react";
 import Footer from "../components/footer/Footer";
 
 function Contact() {
@@ -15,13 +22,14 @@ function Contact() {
 
   // Load EmailJS SDK
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
     script.async = true;
     document.body.appendChild(script);
 
     script.onload = () => {
-      window.emailjs.init("C7KLbWo0B3hVsXjO9"); 
+      window.emailjs.init("C7KLbWo0B3hVsXjO9");
     };
 
     return () => {
@@ -34,8 +42,8 @@ function Contact() {
     setIsLoading(true);
 
     // EmailJS parameters
-    const serviceID = 'default_service';
-    const templateID = 'template_4l990f7';
+    const serviceID = "default_service";
+    const templateID = "template_4l990f7";
     const templateParams = {
       name: formData.name,
       email: formData.email,
@@ -45,11 +53,18 @@ function Contact() {
     };
 
     // Send email using EmailJS
-    window.emailjs.send(serviceID, templateID, templateParams)
+    window.emailjs
+      .send(serviceID, templateID, templateParams)
       .then(() => {
         setSubmitted(true);
         setIsLoading(false);
-        setFormData({ name: "", email: "", phoneno: "", subject: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phoneno: "",
+          subject: "",
+          message: "",
+        });
         setTimeout(() => setSubmitted(false), 3000);
       })
       .catch((error) => {
@@ -59,9 +74,7 @@ function Contact() {
       });
   };
 
-  const handleChange = (
-    e
-  ) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -126,7 +139,9 @@ function Contact() {
                 <Instagram className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-xl text-white mb-2">Instagram</h3>
+                <h3 className="font-semibold text-xl text-white mb-2">
+                  Instagram
+                </h3>
                 <p className="text-gray-400">@rivve_lk</p>
               </div>
             </div>
@@ -136,7 +151,9 @@ function Contact() {
                 <Facebook className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-xl text-white mb-2">Facebook</h3>
+                <h3 className="font-semibold text-xl text-white mb-2">
+                  Facebook
+                </h3>
                 <p className="text-gray-400">@rivvelk</p>
               </div>
             </div>
@@ -159,7 +176,11 @@ function Contact() {
         <div className="relative">
           <div className="absolute inset-0 bg-blue-600/5 rounded-2xl transform -rotate-6"></div>
           <div className="relative bg-gray-800 rounded-2xl p-8 shadow-xl">
-            <form id="contact-form" onSubmit={handleSubmit} className="space-y-6">
+            <form
+              id="contact-form"
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 gap-6">
                 <div className="relative">
                   <input
@@ -283,7 +304,7 @@ function Contact() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

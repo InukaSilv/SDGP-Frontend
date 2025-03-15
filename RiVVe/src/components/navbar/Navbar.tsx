@@ -88,6 +88,12 @@ function Navbar() {
               <Link to="/MyAds">MyAds</Link>
             </li>
           )}
+
+          {isLoggedIn && userRole === "Student" && (
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/student-review">Add Review</Link>
+            </li>
+          )}
         </ul>
       </div>
 

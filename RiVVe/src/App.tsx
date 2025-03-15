@@ -24,16 +24,21 @@ import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlor
 import Chat from "./pages/Chat";
 import Testings from "./pages/Testings/testings";
 import Contact from "./pages/Contact";
+import Listing2 from "./pages/Listing2";
+import StudentReview from "./pages/Student/StudentReview";
+import FeedbackPage from "./pages/Student/FeedbackPage";
 
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<About />} />
+
           <Route path="/listing" element={<Listing />} />
+          <Route path="/listing2" element={<Listing2 />} />
+
           <Route path="/hostel" element={<HostelDisplay />} />
           <Route path="/Signup1" element={<Signup1 />} />
           <Route path="/signup2" element={<Signup2 />} />
@@ -58,6 +63,8 @@ function App() {
           />
           <Route path="/testing" element={<Testings />} />
           <Route path="/contacts" element={<Contact />} />
+          <Route path="/student-review" element={<StudentReview />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
         </Routes>
       </div>
     </Router>

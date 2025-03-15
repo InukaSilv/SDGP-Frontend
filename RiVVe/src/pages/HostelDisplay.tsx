@@ -174,7 +174,7 @@ const HostelDisplay: React.FC = () => {
         >
           {listing.map((listing) => (
             <div key={listing.id} className="flex justify-center">
-              <AdDisplayer {...listing} />
+              <AdDisplayer ad={listing} />
             </div>
           ))}
         </div>

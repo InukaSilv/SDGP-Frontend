@@ -11,6 +11,7 @@ import { Power } from "lucide-react";
 import { Save } from "lucide-react";
 import { Sparkles } from "lucide-react";
 import { Zap } from "lucide-react";
+import Navbar from "../components/navbar/Navbar";
 
 interface User {
   firstName: string;
@@ -75,6 +76,7 @@ function User() {
 
   return (
     <>
+      <Navbar />
       <h1 className="mt-20 text-[#2772A0] text-center pt-10 text-4xl font-semibold">
         Welcome {userdata ? userdata.firstName : " User "}
       </h1>
