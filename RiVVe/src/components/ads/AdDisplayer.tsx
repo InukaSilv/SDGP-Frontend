@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Star, MapPin, Users } from "lucide-react";
+import { Star, MapPin, Users, User } from "lucide-react";
 
 interface roomTypes {
   doubleRoom: number;
@@ -65,7 +65,7 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
 
           {ad.roomTypes.doubleRoom !== 0 && (
             <div className="flex items-center text-gray-600 mb-4">
-              <Users className="w-4 h-4 mr-2" />
+              <User className="w-4 h-4 mr-2" />
               <span className="text-sm">
                 {ad.roomTypes.singleRoom} Single rooms
               </span>

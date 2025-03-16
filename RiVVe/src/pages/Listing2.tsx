@@ -18,6 +18,7 @@ import {
   AirVent,
   CookingPot,
   WashingMachine,
+  User,
 } from "lucide-react";
 import Footer from "../components/footer/Footer";
 import axios from "axios";
@@ -162,6 +163,23 @@ function Listing2() {
                       <MapPin className="h-5 w-5 text-gray-400 mr-2" />
                       <span className="text-gray-300">{ad.address}</span>
                     </div>
+                    {ad.roomTypes.singleRoom !== 0 && (
+                      <div className="flex items-center text-gray-300 mb-1">
+                        <Users className="w-4 h-4 mr-2" />
+                        <span className="text-sm">
+                          {ad.roomTypes.doubleRoom} Double rooms
+                        </span>
+                      </div>
+                    )}
+
+                    {ad.roomTypes.doubleRoom !== 0 && (
+                      <div className="flex items-center text-gray-300 mb-4">
+                        <User className="w-4 h-4 mr-2" />
+                        <span className="text-sm">
+                          {ad.roomTypes.singleRoom} Single rooms
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <button className="p-2 rounded-full hover:bg-gray-700">
                     <Heart className="h-6 w-6 text-red-400" />

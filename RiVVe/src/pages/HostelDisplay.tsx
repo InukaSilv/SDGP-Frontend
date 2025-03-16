@@ -12,6 +12,7 @@ import { Map } from "lucide-react";
 import RadiusSlider from "../components/Slider/RadiusSlider";
 import { Radius } from "lucide-react";
 import axios from "axios";
+import Chatbot from "../components/chatbot/Chatbot";
 
 const HostelDisplay: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -180,10 +181,10 @@ const HostelDisplay: React.FC = () => {
         </div>
 
         <div
-  className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bottom-0 bg-gray-800 shadow-lg transition-all duration-300 ${
-    showmap ? "block md:block w-full h-full" : "hidden md:block"
-  }`}
->
+          className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bottom-0 bg-gray-800 shadow-lg transition-all duration-300 ${
+            showmap ? "block md:block w-full h-full" : "hidden md:block"
+          }`}
+        >
           <GoogleMapComponent
             radius={radius}
             mapPosition={mapPosition}
@@ -219,6 +220,7 @@ const HostelDisplay: React.FC = () => {
           <Map size={25} />
         </div>
       </div>
+      <Chatbot />
     </>
   );
 };

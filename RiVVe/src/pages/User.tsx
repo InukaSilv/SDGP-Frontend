@@ -12,6 +12,7 @@ import { Save } from "lucide-react";
 import { Sparkles } from "lucide-react";
 import { Zap } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
+import axios from "axios";
 
 interface User {
   firstName: string;
@@ -21,6 +22,7 @@ interface User {
 
 function User() {
   const storedUser = localStorage.getItem("user");
+  const authToken = localStorage.getItem("authToken");
   const userdata = storedUser ? JSON.parse(storedUser) : null;
   const [isEditing, setIsEdit] = useState<boolean>(false);
   const [defaultpassword, setDefaultPassword] = useState<string>("");
@@ -46,6 +48,42 @@ function User() {
     if (!userdata) {
       return;
     }
+
+    if (!defaultpassword && !newPassword) {
+      try {
+        const response = await axios.put(
+          "http://localhost:5001/api/auth/update-user",
+          {
+            userId: userdata._id,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...userdata,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+          })
+        );
+        setMessage("Profile updated successfully!");
+        console.log(response.data);
+      } catch (err) {
+        console.error("Error updating profile:", err);
+        setError("Failed to update profile");
+      }
+      return;
+    }
+
     try {
       const credentials = await signInWithEmailAndPassword(
         auth,
@@ -129,7 +167,7 @@ function User() {
               <input
                 type="text"
                 name="firstName"
-                value={userdata.firstName}
+                value={formData.firstName}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${
@@ -145,8 +183,8 @@ function User() {
               </label>
               <input
                 type="text"
-                name="firstName"
-                value={userdata.lastName}
+                name="lastName"
+                value={formData.lastName}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${
@@ -161,9 +199,9 @@ function User() {
                 Phone
               </label>
               <input
-                type="text"
-                name="firstName"
-                value={userdata.phone ? userdata.phone : "Update phone number"}
+                type="tel"
+                name="phone"
+                value={formData.phone ? formData.phone : "Update phone number"}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${
@@ -202,7 +240,7 @@ function User() {
                   </h3>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                  <label className="w-32 text-sm font-medium text-[#1e5f8a]">
+                  <label className="w-32 text-sm font-medium text-[rgb(30,95,138)]">
                     Current password
                   </label>
                   <input
