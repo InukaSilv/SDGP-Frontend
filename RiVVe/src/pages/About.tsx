@@ -281,12 +281,14 @@ const AmenitiesSlideshow = () => {
   }
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1a3b55] to-[#2d5f87] py-8 px-4 rounded-lg relative shadow-md">
-      <h3 className="text-2xl font-semibold text-center text-white mb-6">
-        Common Amenities
+    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#051a2e] to-[#0a4680] py-10 px-6 rounded-xl relative shadow-xl border-t border-blue-400/20">
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDAwMDAwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBhMzc2OCIgc3Ryb2tlLXdpZHRoPSIxIj48L3BhdGg+Cjwvc3ZnPg==')] opacity-10"></div>
+      
+      <h3 className="text-3xl font-bold text-center text-white mb-8 relative z-10 tracking-wide">
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-blue-400">Common Amenities</span>
       </h3>
 
-      <div className="relative h-24">
+      <div className="relative h-28 z-10">
         <div
           className="absolute flex gap-6"
           style={{
@@ -295,15 +297,14 @@ const AmenitiesSlideshow = () => {
           }}
         >
           {/* Duplicate the amenities to create a continuous effect */}
-
           {[...commonAmenities, ...commonAmenities, ...commonAmenities].map(
             (amenity, index) => (
               <div
                 key={index}
-                className="bg-[#eaf4fb] p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#6aaddf]/30 min-w-48 transform transition-transform duration-300 hover:scale-105"
+                className="bg-gradient-to-br from-[#113a5d] to-[#051a2e] p-5 rounded-lg shadow-lg flex items-center gap-4 min-w-52 transform transition-all duration-300 hover:scale-105 hover:shadow-blue-400/20 border border-blue-400/20"
               >
-                <div className="text-2xl text-[#0a5688]">{amenity.icon}</div>
-                <span className="text-[#104c72] whitespace-nowrap font-medium">
+                <div className="text-3xl text-blue-300">{amenity.icon}</div>
+                <span className="text-blue-100 whitespace-nowrap font-medium">
                   {amenity.name}
                 </span>
               </div>
@@ -312,27 +313,33 @@ const AmenitiesSlideshow = () => {
         </div>
       </div>
 
-      {/* Add gradient overlays for better visual effect */}
-
+      {/* Enhanced gradient overlays for dramatic effect */}
       <div
-        className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#1a3b55] to-transparent pointer-events-none"
+        className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-[#051a2e] to-transparent pointer-events-none"
         style={{ top: "4rem" }}
       ></div>
       <div
-        className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#2d5f87] to-transparent pointer-events-none"
+        className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-[#0a4680] to-transparent pointer-events-none"
         style={{ top: "4rem" }}
       ></div>
+      
+      {/* Add subtle glow effect */}
+      <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 h-20 bg-blue-500/20 blur-3xl rounded-full"></div>
     </div>
   );
 };
 
-// Section Transition Component with ocean blue theme
+// Section Transition Component with enhanced ocean blue theme
 const SectionTransition: React.FC = () => (
-  <div className="w-full flex justify-center my-16">
+  <div className="w-full flex justify-center my-20">
     <div className="flex items-center w-full max-w-4xl">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#2d5f87]"></div>
-      <div className="mx-4 text-[#2d5f87]">•</div>
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#2d5f87]"></div>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-blue-400/70"></div>
+      <div className="mx-4 text-blue-400">
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0L14.59 8.41L23 11L14.59 13.59L12 22L9.41 13.59L1 11L9.41 8.41L12 0Z"></path>
+        </svg>
+      </div>
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-blue-400/70"></div>
     </div>
   </div>
 );
