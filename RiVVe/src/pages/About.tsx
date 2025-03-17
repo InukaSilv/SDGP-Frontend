@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
+import MouseGlowEffect from "../components/mouseGlowEffect/MouseGlowEffect";
 
 type TeamMember = {
   name: string;
@@ -417,6 +418,7 @@ const About = () => {
   return (
     <div className="bg-gray-900 text-gray-100 relative overflow-hidden">
       <ParallaxBackground />
+      <MouseGlowEffect/>
       <Navbar />
 
       {/* Hero Section with animated gradient */}
