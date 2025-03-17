@@ -261,67 +261,110 @@ const AnimatedCounter: React.FC<{
 
 // Amenities Slideshow Component with light theme
 const AmenitiesSlideshow = () => {
-  const [position, setPosition] = useState(0);
-
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const totalItems = commonAmenities.length;
+  
   useEffect(() => {
-    // Animation interval to move items from right to left
+    if (!autoplay) return;
+    
     const interval = setInterval(() => {
-      setPosition((prev) => prev - 1);
-    }, 50); // Speed of the animation
-
+      setActiveIndex((prevIndex) => (prevIndex + 1) % totalItems);
+    }, 3000);
+    
     return () => clearInterval(interval);
-  }, []);
-
-  // Calculate the total width needed for all items
-  const totalWidth = commonAmenities.length * 200; // Each item is approximately 200px wide
-
-  // When all items have moved past the view, reset position to start again
-  if (position < -totalWidth) {
-    setPosition(window.innerWidth);
-  }
+  }, [autoplay, totalItems]);
+  
+  const handleMouseEnter = () => setAutoplay(false);
+  const handleMouseLeave = () => setAutoplay(true);
+  
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setAutoplay(false);
+    setTimeout(() => setAutoplay(true), 5000);
+  };
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1a3049] to-[#2d5e84] py-10 px-6 rounded-xl relative shadow-xl border-t border-[#CCDDEA]/20">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDAwMDAwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCA2NkwwIDUwTDAgMTZMMjggMEw1NiAxNkw1NiA1MEwyOCA2NkwyOCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNhODViMyIgc3Ryb2tlLXdpZHRoPSIxIj48L3BhdGg+Cjwvc3ZnPg==')] opacity-10"></div>
-      
-      <h3 className="text-3xl font-bold text-center mb-8 relative z-10 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3]">
+    <div 
+      className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1a3049] to-[#2d5e84] py-12 px-6 rounded-xl relative shadow-xl border-t border-[#CCDDEA]/20"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >      
+      <h3 className="text-3xl font-bold text-center mb-12 relative z-10 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3]">
         Common Amenities
       </h3>
 
-      <div className="relative h-28 z-10">
-        <div
-          className="absolute flex gap-6"
-          style={{
-            transform: `translateX(${position}px)`,
-            transition: "transform 0.1s linear",
-          }}
-        >
-          {/* Duplicate the amenities to create a continuous effect */}
-          {[...commonAmenities, ...commonAmenities, ...commonAmenities].map(
-            (amenity, index) => (
+      <div className="relative h-44 z-10 flex justify-center items-center">
+        <div className="flex items-center justify-center w-full">
+          {commonAmenities.map((amenity, index) => {
+            // Calculate position relative to active item
+            const position = (index - activeIndex + totalItems) % totalItems;
+            const isActive = position === 0;
+            const isVisible = position <= 2 || position >= totalItems - 2;
+            
+            // Calculate transform properties
+            let translateX = 0;
+            let scale = 0.8;
+            let opacity = 0.5;
+            let zIndex = 0;
+            
+            if (isActive) {
+              scale = 1;
+              opacity = 1;
+              zIndex = 10;
+            } else if (position === 1 || position === totalItems - 1) {
+              translateX = position === 1 ? 180 : -180;
+              scale = 0.9;
+              opacity = 0.7;
+              zIndex = 5;
+            } else if (position === 2 || position === totalItems - 2) {
+              translateX = position === 2 ? 300 : -300;
+              scale = 0.8;
+              opacity = 0.4;
+              zIndex = 1;
+            } else {
+              translateX = position < totalItems / 2 ? 400 : -400;
+              opacity = 0;
+            }
+            
+            return (
               <div
                 key={index}
-                className="bg-gradient-to-br from-[#2d5e84] to-[#1a3049] p-5 rounded-lg shadow-lg flex items-center gap-4 min-w-52 transform transition-all duration-300 hover:scale-105 hover:shadow-[#CCDDEA]/20 border border-[#CCDDEA]/20"
+                className={`absolute bg-gradient-to-br from-[#2d5e84] to-[#1a3049] p-5 rounded-lg shadow-lg flex items-center gap-4 min-w-60 transition-all duration-500 cursor-pointer ${isActive ? 'shadow-[#CCDDEA]/40' : 'shadow-[#CCDDEA]/10'} border border-[#CCDDEA]/20`}
+                style={{
+                  transform: `translateX(${translateX}px) scale(${scale})`,
+                  opacity,
+                  zIndex
+                }}
+                onClick={() => handleItemClick(index)}
               >
-                <div className="text-3xl text-[#CCDDEA]">{amenity.icon}</div>
-                <span className="text-[#CCDDEA] whitespace-nowrap font-medium">
+                <div className={`text-3xl ${isActive ? 'text-[#CCDDEA]' : 'text-[#CCDDEA]/80'}`}>
+                  {amenity.icon}
+                </div>
+                <span className={`whitespace-nowrap font-medium ${isActive ? 'text-[#CCDDEA]' : 'text-[#CCDDEA]/80'}`}>
                   {amenity.name}
                 </span>
+                {isActive && (
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-[#CCDDEA] rounded-full"></div>
+                )}
               </div>
-            )
-          )}
+            );
+          })}
         </div>
       </div>
-
-      {/* Enhanced gradient overlays for dramatic effect */}
-      <div
-        className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-[#1a3049] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
-      <div
-        className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-[#2d5e84] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
+      
+      {/* Navigation dots */}
+      <div className="flex justify-center gap-2 mt-8">
+        {commonAmenities.map((_, index) => (
+          <button
+            key={index}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === activeIndex ? 'bg-[#CCDDEA] w-6' : 'bg-[#CCDDEA]/40'
+            }`}
+            onClick={() => handleItemClick(index)}
+          />
+        ))}
+      </div>
       
       {/* Add subtle glow effect */}
       <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 h-20 bg-[#3a85b3]/20 blur-3xl rounded-full"></div>
