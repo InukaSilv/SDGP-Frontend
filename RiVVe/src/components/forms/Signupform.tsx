@@ -136,8 +136,8 @@ function Signupform({ role }: { role: string }) {
   };
 
   return (
-    <div className="bg-white/80 p-8 rounded-2xl shadow-xl w-120">
-      <h2 className="text-3xl font-bold text-blue-600 mb-6">
+    <div className="bg-white/90 p-8 rounded-l-2xl shadow-xl w-full">
+      <h2 className="text-3xl font-bold text-[#2772A0] mb-6">
         Create Your Account
       </h2>
       <form className="space-y-6" onSubmit={handleSignup}>
@@ -291,9 +291,14 @@ function Signupform({ role }: { role: string }) {
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554]"
           >
-            Sign up with google
+            <img
+              src="https://www.google.com/favicon.ico"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            <span>Sign Up with Google</span>
           </button>
         </div>
       </form>

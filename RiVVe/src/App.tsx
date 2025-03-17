@@ -27,6 +27,7 @@ import Contact from "./pages/Contact";
 import Listing2 from "./pages/Listing2";
 import StudentReview from "./pages/Student/StudentReview";
 import FeedbackPage from "./pages/Student/FeedbackPage";
+import LandLordVerify from "./pages/Landlord/LandlordVerify";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route path="/contacts" element={<Contact />} />
           <Route path="/student-review" element={<StudentReview />} />
           <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/landlord-verification" element={<LandLordVerify />} />
         </Routes>
       </div>
     </Router>

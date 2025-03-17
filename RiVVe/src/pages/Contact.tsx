@@ -8,6 +8,7 @@ import {
   Facebook,
 } from "lucide-react";
 import Footer from "../components/footer/Footer";
+import Navbar from "../components/navbar/Navbar";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -81,6 +82,7 @@ function Contact() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
+      <Navbar />
       <div
         className="h-[400px] relative bg-cover bg-center bg-fixed"
         style={{
