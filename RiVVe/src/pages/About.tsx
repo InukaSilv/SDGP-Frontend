@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 
 type TeamMember = {
@@ -281,8 +281,8 @@ const AmenitiesSlideshow = () => {
   }
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#e0ebf3] to-[#f0f7fc] py-8 px-4 rounded-lg relative shadow-md">
-      <h3 className="text-2xl font-semibold text-center text-[#2772A0] mb-6">
+    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#1a3b55] to-[#2d5f87] py-8 px-4 rounded-lg relative shadow-md">
+      <h3 className="text-2xl font-semibold text-center text-white mb-6">
         Common Amenities
       </h3>
 
@@ -300,10 +300,10 @@ const AmenitiesSlideshow = () => {
             (amenity, index) => (
               <div
                 key={index}
-                className="bg-white p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#3a85b3]/20 min-w-48 transform transition-transform duration-300 hover:scale-105"
+                className="bg-[#eaf4fb] p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#6aaddf]/30 min-w-48 transform transition-transform duration-300 hover:scale-105"
               >
-                <div className="text-2xl">{amenity.icon}</div>
-                <span className="text-gray-700 whitespace-nowrap font-medium">
+                <div className="text-2xl text-[#0a5688]">{amenity.icon}</div>
+                <span className="text-[#104c72] whitespace-nowrap font-medium">
                   {amenity.name}
                 </span>
               </div>
@@ -315,24 +315,24 @@ const AmenitiesSlideshow = () => {
       {/* Add gradient overlays for better visual effect */}
 
       <div
-        className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none"
+        className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#1a3b55] to-transparent pointer-events-none"
         style={{ top: "4rem" }}
       ></div>
       <div
-        className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#f0f7fc] to-transparent pointer-events-none"
+        className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#2d5f87] to-transparent pointer-events-none"
         style={{ top: "4rem" }}
       ></div>
     </div>
   );
 };
 
-// Section Transition Component
+// Section Transition Component with ocean blue theme
 const SectionTransition: React.FC = () => (
   <div className="w-full flex justify-center my-16">
     <div className="flex items-center w-full max-w-4xl">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#2772A0]"></div>
-      <div className="mx-4 text-[#2772A0]">•</div>
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#2772A0]"></div>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#2d5f87]"></div>
+      <div className="mx-4 text-[#2d5f87]">•</div>
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#2d5f87]"></div>
     </div>
   </div>
 );
