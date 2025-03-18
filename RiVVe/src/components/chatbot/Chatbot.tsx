@@ -1,4 +1,4 @@
-import { Bot, MessageCircle, MinusIcon, SendIcon, X } from "lucide-react";
+import { Bot, MessageCircle, MinusIcon, SendIcon, X, ChevronUp } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
@@ -11,7 +11,7 @@ interface ChatMessage {
   timestamp: Date;
   conversation_id: string;
   isUser: boolean; // To distinguish between user and bot messages
-  content: string; 
+  content: string; // The actual message content
 }
 
 function Chatbot() {
@@ -27,7 +27,7 @@ function Chatbot() {
   // Generate a conversation ID or get from localStorage if it exists
   const conversationId = localStorage.getItem("conversationId") || `conv-${Date.now()}`;
   
-  
+  // Save conversation ID to localStorage if it doesn't exist
   useEffect(() => {
     if (!localStorage.getItem("conversationId")) {
       localStorage.setItem("conversationId", conversationId);
@@ -78,7 +78,7 @@ function Chatbot() {
   const sendMessage = async () => {
     if (!message.trim()) return;
     
-    
+    // Add user message to the chat
     const userMessage: ChatMessage = {
       user_id: userId,
       conversation_id: conversationId,
@@ -89,7 +89,7 @@ function Chatbot() {
     
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
-    setMessage(""); 
+    setMessage(""); // Clear input field
     
     try {
       // Send message to backend
@@ -152,7 +152,7 @@ function Chatbot() {
           } transition-all duration-300 ease-in-out transform`}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-2xl flex justify-between items-center">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-2xl flex justify-between items-center">
             <Bot size={20} />
             <h1 className="text-white font-semibold">RiVVE ChatBot</h1>
             <div className="flex gap-2">
@@ -160,7 +160,7 @@ function Chatbot() {
                 className="rounded-md hover:bg-white/20 p-1 transition-colors duration-200"
                 onClick={() => setIsMinimized(!isMinimized)}
               >
-                <MinusIcon size={19} />
+                {isMinimized ? <ChevronUp size={19} /> : <MinusIcon size={19} />}
               </button>
               <button
                 className="rounded-md hover:bg-white/20 p-1 transition-colors duration-200"
