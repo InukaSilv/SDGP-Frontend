@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
+import MouseGlowEffect from "../components/mouseGlowEffect/MouseGlowEffect";
 
 type TeamMember = {
   name: string;
@@ -261,78 +262,123 @@ const AnimatedCounter: React.FC<{
 
 // Amenities Slideshow Component with light theme
 const AmenitiesSlideshow = () => {
-  const [position, setPosition] = useState(0);
-
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const totalItems = commonAmenities.length;
+  
   useEffect(() => {
-    // Animation interval to move items from right to left
+    if (!autoplay) return;
+    
     const interval = setInterval(() => {
-      setPosition((prev) => prev - 1);
-    }, 50); // Speed of the animation
-
+      setActiveIndex((prevIndex) => (prevIndex + 1) % totalItems);
+    }, 3000);
+    
     return () => clearInterval(interval);
-  }, []);
-
-  // Calculate the total width needed for all items
-  const totalWidth = commonAmenities.length * 200; // Each item is approximately 200px wide
-
-  // When all items have moved past the view, reset position to start again
-  if (position < -totalWidth) {
-    setPosition(window.innerWidth);
-  }
+  }, [autoplay, totalItems]);
+  
+  const handleMouseEnter = () => setAutoplay(false);
+  const handleMouseLeave = () => setAutoplay(true);
+  
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setAutoplay(false);
+    setTimeout(() => setAutoplay(true), 5000);
+  };
 
   return (
-    <div className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#e0ebf3] to-[#f0f7fc] py-8 px-4 rounded-lg relative shadow-md">
-      <h3 className="text-2xl font-semibold text-center text-[#2772A0] mb-6">
+    <div 
+      className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#0d192b] to-[#172c47] py-16 px-6 rounded-xl relative shadow-xl"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >      
+      <h3 className="text-4xl font-bold text-center mb-16 relative z-10 tracking-wide text-[#8eafd1]">
         Common Amenities
       </h3>
 
-      <div className="relative h-24">
-        <div
-          className="absolute flex gap-6"
-          style={{
-            transform: `translateX(${position}px)`,
-            transition: "transform 0.1s linear",
-          }}
-        >
-          {/* Duplicate the amenities to create a continuous effect */}
-
-          {[...commonAmenities, ...commonAmenities, ...commonAmenities].map(
-            (amenity, index) => (
+      <div className="relative h-56 z-10 flex justify-center items-center">
+        <div className="flex items-center justify-center w-full">
+          {commonAmenities.map((amenity, index) => {
+            // Calculate position relative to active item
+            const position = (index - activeIndex + totalItems) % totalItems;
+            const isActive = position === 0;
+            const isVisible = position <= 2 || position >= totalItems - 2;
+            
+            // Calculate transform properties
+            let translateX = 0;
+            let scale = 0.8;
+            let opacity = 0.5;
+            let zIndex = 0;
+            
+            if (isActive) {
+              scale = 1;
+              opacity = 1;
+              zIndex = 10;
+            } else if (position === 1 || position === totalItems - 1) {
+              translateX = position === 1 ? 250 : -250;
+              scale = 0.9;
+              opacity = 0.7;
+              zIndex = 5;
+            } else if (position === 2 || position === totalItems - 2) {
+              translateX = position === 2 ? 450 : -450;
+              scale = 0.8;
+              opacity = 0.4;
+              zIndex = 1;
+            } else {
+              translateX = position < totalItems / 2 ? 600 : -600;
+              opacity = 0;
+            }
+            
+            return (
               <div
                 key={index}
-                className="bg-white p-4 rounded-lg shadow-md flex items-center gap-3 border border-[#3a85b3]/20 min-w-48 transform transition-transform duration-300 hover:scale-105"
+                className={`absolute bg-[#172c47] p-8 rounded-lg shadow-lg flex items-center gap-6 min-w-80 h-40 transition-all duration-500 cursor-pointer ${isActive ? 'shadow-[#8eafd1]/40' : 'shadow-[#8eafd1]/10'} border border-[#8eafd1]/20`}
+                style={{
+                  transform: `translateX(${translateX}px) scale(${scale})`,
+                  opacity,
+                  zIndex
+                }}
+                onClick={() => handleItemClick(index)}
               >
-                <div className="text-2xl">{amenity.icon}</div>
-                <span className="text-gray-700 whitespace-nowrap font-medium">
+                <div className={`text-5xl ${isActive ? 'text-[#8eafd1]' : 'text-[#8eafd1]/80'}`}>
+                  {amenity.icon}
+                </div>
+                <span className={`whitespace-nowrap font-medium text-xl ${isActive ? 'text-[#8eafd1]' : 'text-[#8eafd1]/80'}`}>
                   {amenity.name}
                 </span>
+                {isActive && (
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#8eafd1] rounded-full"></div>
+                )}
               </div>
-            )
-          )}
+            );
+          })}
         </div>
       </div>
-
-      {/* Add gradient overlays for better visual effect */}
-
-      <div
-        className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-[#e0ebf3] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
-      <div
-        className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#f0f7fc] to-transparent pointer-events-none"
-        style={{ top: "4rem" }}
-      ></div>
+      
+      {/* Navigation dots */}
+      <div className="flex justify-center gap-2 mt-12">
+        {commonAmenities.map((_, index) => (
+          <button
+            key={index}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === activeIndex ? 'bg-[#8eafd1] w-8' : 'bg-[#8eafd1]/40'
+            }`}
+            onClick={() => handleItemClick(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
-// Section Transition Component
+// Section Transition Component with dark blue theme
 const SectionTransition: React.FC = () => (
-  <div className="w-full flex justify-center my-16">
+  <div className="w-full flex justify-center my-20">
     <div className="flex items-center w-full max-w-4xl">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#2772A0]"></div>
-      <div className="mx-4 text-[#2772A0]">•</div>
-      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#2772A0]"></div>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#8eafd1]/70"></div>
+      <div className="mx-4 text-[#8eafd1]">
+        <div className="w-2 h-16 bg-[#8eafd1]/30 rounded-full"></div>
+      </div>
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#8eafd1]/70"></div>
     </div>
   </div>
 );
@@ -372,6 +418,7 @@ const About = () => {
   return (
     <div className="bg-gray-900 text-gray-100 relative overflow-hidden">
       <ParallaxBackground />
+      <MouseGlowEffect/>
       <Navbar />
 
       {/* Hero Section with animated gradient */}
@@ -426,15 +473,23 @@ const About = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg
-            className="w-6 h-6 text-[#CCDDEA]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
+        <div 
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer"
+           onClick={() => {
+            window.scrollTo({
+              top: window.innerHeight,
+              behavior: 'smooth'
+           });
+         }}
+      >
+        <svg
+          className="w-6 h-6 text-[#CCDDEA]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+           <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
