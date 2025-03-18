@@ -28,6 +28,12 @@ import Listing2 from "./pages/Listing2";
 import StudentReview from "./pages/Student/StudentReview";
 import FeedbackPage from "./pages/Student/FeedbackPage";
 import LandLordVerify from "./pages/Landlord/LandlordVerify";
+import Admin from "./pages/Admin/Admin";
+import AdminMain from "./pages/Admin/AdminMain";
+import AdminUsers from "./pages/Admin/AdminUsers";
+import AdminVerification from "./pages/Admin/AdminVerification";
+import Adminads from "./pages/Admin/Adminads";
+import Payment from "./pages/Payment/Payment";
 
 function App() {
   return (
@@ -67,6 +73,12 @@ function App() {
           <Route path="/student-review" element={<StudentReview />} />
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/landlord-verification" element={<LandLordVerify />} />
+          <Route path="/Admin-login" element={<Admin />} />
+          <Route path="/admin-main" element={<AdminMain />} />
+          <Route path="/admin-users" element={<AdminUsers />} />
+          <Route path="/admin-verify" element={<AdminVerification />} />
+          <Route path="/admin-ads" element={<Adminads />} />
+          <Route path="/payment" element={<Payment />} />
         </Routes>
       </div>
     </Router>

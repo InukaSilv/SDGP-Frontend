@@ -35,17 +35,24 @@ function VerifyWaiting() {
           phone: formData.phone,
           dob: formData.dob,
           registerType: "password",
-          isPremium: formData.isPremium || false,
+          isPremium: false,
           idToken: idToken,
-          role: formData.role || "student", // Default to student if not provided
+          role: formData.role || "student",
+          paymentType: formData.paymentType || "none",
         };
+        console.log(formData);
         try {
           await axios.post(
             "http://localhost:5001/api/auth/signup",
             requestData
           );
           console.log("User data sent to backend successfully");
-          navigate("/login");
+
+          if (formData.paymentType !== "none") {
+            navigate("/payment");
+          } else {
+            navigate("/login");
+          }
         } catch (error) {
           console.error(
             "Error saving to MongoDB:",

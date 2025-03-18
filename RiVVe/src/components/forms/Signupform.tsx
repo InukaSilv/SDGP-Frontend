@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye } from "lucide-react";
@@ -20,9 +20,16 @@ interface FormData {
   dob: string;
   password: string;
   confirmpassword: string;
+  paymentType: string;
 }
 
-function Signupform({ role }: { role: string }) {
+function Signupform({
+  role,
+  selectedPlan,
+}: {
+  role: string;
+  selectedPlan: string;
+}) {
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
@@ -34,12 +41,16 @@ function Signupform({ role }: { role: string }) {
     dob: "",
     password: "",
     confirmpassword: "",
+    paymentType: selectedPlan,
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [existingError, setExistingError] = useState<string>("");
+  useEffect(() => {
+    setFormData((prevData) => ({ ...prevData, paymentType: selectedPlan }));
+  }, [selectedPlan]);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -125,10 +136,16 @@ function Signupform({ role }: { role: string }) {
         isPremium: false,
         idToken: idToken,
         role: role || "Student",
+        paymentType: selectedPlan || "none",
       };
 
       await axios.post("http://localhost:5001/api/auth/signup", userData);
       console.log("google signup success");
+      if (userData.paymentType !== "none") {
+        navigate("/payment");
+      } else {
+        navigate("/login");
+      }
       navigate("/login");
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);

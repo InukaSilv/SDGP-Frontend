@@ -3,7 +3,7 @@ import {
   signOut,
   updatePassword,
 } from "firebase/auth";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import {
@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   User2,
   UserRoundPen,
+  Camera,
 } from "lucide-react";
 import { Power } from "lucide-react";
 import { Save } from "lucide-react";
@@ -21,6 +22,7 @@ import { Zap } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import axios from "axios";
 import Footer from "../components/footer/Footer";
+import { Pencil } from "lucide-react";
 
 interface User {
   firstName: string;
@@ -42,6 +44,7 @@ function User() {
     lastName: userdata?.lastName || "",
     phone: userdata?.phone || "",
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -112,6 +115,41 @@ function User() {
     }
   };
 
+  const handleProfilePhotoChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("Image size should be less than 5MB.");
+      event.target.value = "";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("user", userdata._id);
+
+    try {
+      const response = await axios.put(
+        "http://localhost:5001/api/listing/uploadDp",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -125,14 +163,31 @@ function User() {
       </div>
 
       {/* main div */}
-      <div className="flex flex-col md:flex-row mx-4 px-20 py-8 gap-8 ">
+      <div className="flex flex-col md:flex-row mx-4 md:px-20 py-8 gap-8 ">
         {/* left div */}
-        <div className="w-1/3">
+        <div className="w-full md:w-1/3">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-[#e0ebf3] ">
             <div className="bg-gradient-to-br from-[#0A192F] via-[#112240] to-[#0A192F] px-6 py-14 flex flex-col items-center">
-              <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white shadow-xl">
+              <div
+                className="bg-white rounded-full p-1 absolute mt-25 ml-15"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Camera />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleProfilePhotoChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+              <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white shadow-xl mb-3">
                 <img
-                  src={`https://api.dicebear.com/7.x/initials/svg?seed=${userdata?.firstName} ${userdata?.lastName}&backgroundColor=#2772A0`}
+                  src={
+                    userdata.profilePhoto
+                      ? userdata.profilePhoto
+                      : `https://api.dicebear.com/7.x/initials/svg?seed=${userdata?.firstName} ${userdata?.lastName}&backgroundColor=#2772A0`
+                  }
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -204,8 +259,8 @@ function User() {
 
         {/* right div */}
         <div
-          className={` bg-white p-8 rounded-2xl shadow-md w-2/3 ${
-            isEditing ? "h-[680px]" : "h-[450px]"
+          className={` bg-white p-8 rounded-2xl shadow-md w-full md:w-2/3 ${
+            isEditing ? "h-[800px] md:h-[680px]" : "h-[500px] md:h-[450px]"
           }`}
         >
           <div>
