@@ -34,6 +34,8 @@ import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminVerification from "./pages/Admin/AdminVerification";
 import Adminads from "./pages/Admin/Adminads";
 import Payment from "./pages/Payment/Payment";
+import ProtectedStudentRoute from "./components/protectedRoute/ProtectedStudentRoute";
+import PremiumWishList from "./pages/Student/PremiumWishList";
 
 function App() {
   return (
@@ -79,6 +81,10 @@ function App() {
           <Route path="/admin-verify" element={<AdminVerification />} />
           <Route path="/admin-ads" element={<Adminads />} />
           <Route path="/payment" element={<Payment />} />
+          <Route
+            path="/wishlist"
+            element={<ProtectedStudentRoute element={<PremiumWishList />} />}
+          />
         </Routes>
       </div>
     </Router>

@@ -12,6 +12,7 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [issPremium, setIsPremium] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const changeMobView = () => {
@@ -27,6 +28,7 @@ function Navbar() {
         const user = JSON.parse(storedUser);
         setIsLoggedIn(true);
         setUserRole(user?.role || null);
+        setIsPremium(user?.isPremium || false);
       } catch (error) {
         console.error("Error parsing user data:", error);
         setIsLoggedIn(false);
@@ -92,6 +94,12 @@ function Navbar() {
           {isLoggedIn && userRole === "Student" && (
             <li className="hover:text-gray-400 cursor-pointer transition">
               <Link to="/student-review">Add Review</Link>
+            </li>
+          )}
+
+          {isLoggedIn && userRole === "Student" && issPremium && (
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/wishlist">WishList</Link>
             </li>
           )}
         </ul>

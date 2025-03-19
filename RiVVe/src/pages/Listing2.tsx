@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import {
   Star,
@@ -27,6 +27,9 @@ import HostCardWithPopup from "../components/ads/HostCardWithPopup";
 
 function Listing2() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const authToken = localStorage.getItem("authToken");
+  const storedUser = localStorage.getItem("user");
+  const requser = JSON.parse(storedUser);
   const location = useLocation();
   const ad = location.state?.ad;
 
@@ -114,8 +117,29 @@ function Listing2() {
       </div>
     );
   };
-  const toggleWishlist = () => {
-    setIsInWishlist(!isInWishlist);
+  const toggleWishlist = async (userId: string, adId: string) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/listing/adwishlist`,
+        { userId, adId },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        if (response.data.status) {
+          setIsInWishlist(true);
+        } else {
+          setIsInWishlist(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+    }
   };
 
   return (
@@ -359,29 +383,31 @@ function Listing2() {
                     </div>
                   </div>
 
-                  <button
-                    className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
-                    onClick={toggleWishlist}
-                  >
-                    <div className="flex items-center justify-center">
-                      <Heart
-                        className={`h-5 w-5 mr-2 ${
-                          isInWishlist ? "fill-current" : ""
-                        }`}
-                      />
-                      {isInWishlist
-                        ? "Remove from Wishlist"
-                        : "Add to Wishlist"}
-                    </div>
-                  </button>
+                  {authToken && requser && (
+                    <button
+                      className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
+                      onClick={() => toggleWishlist(requser._id, ad._id)}
+                    >
+                      <div className="flex items-center justify-center">
+                        <Heart
+                          className={`h-5 w-5 mr-2 ${
+                            isInWishlist ? "fill-current" : ""
+                          }`}
+                        />
+                        {isInWishlist
+                          ? "Remove from Wishlist"
+                          : "Add to Wishlist"}
+                      </div>
+                    </button>
+                  )}
 
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors mb-4">
-                    Contact Host
-                  </button>
-
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors mb-4">
-                    Checkout Now
-                  </button>
+                  {!authToken && (
+                    <Link to="/signup1">
+                      <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors mb-4">
+                        create an account to find more information
+                      </button>
+                    </Link>
+                  )}
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
