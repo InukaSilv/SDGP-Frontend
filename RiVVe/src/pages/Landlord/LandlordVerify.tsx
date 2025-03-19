@@ -1,6 +1,6 @@
 import { Check, Upload, X } from "lucide-react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../../components/navbar/Navbar";
 
@@ -13,7 +13,13 @@ interface LandveriProps {
 function LandLordVerification() {
   const location = useLocation();
   const user = location.state;
-  console.log(user);
+  if (!user || !user.userdata) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-red-500">User data not available.</p>
+      </div>
+    );
+  }
 
   const [formData, setFormData] = useState<LandveriProps>({
     email: user?.userdata?.email || "",
@@ -21,10 +27,6 @@ function LandLordVerification() {
     id: [],
   });
 
-  const [verifyingPhone, setVerifyingPhone] = useState<boolean>(false);
-  const [OTP, setOtp] = useState<string>(""); // OTP input value
-  const [serverOtp, setServerOtp] = useState<string>(""); // OTP from server
-  const [verificationMessage, setVerificationMessage] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,44 +55,33 @@ function LandLordVerification() {
     });
   };
 
-  const handlePhoneVerification = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault();
-    setVerifyingPhone(true);
+  const navigate = useNavigate();
+  const handleUpload = async () => {
+    if (formData.id.length === 0) {
+      setError("Please upload at least one image.");
+      return;
+    }
+
+    const formDataToUpload = new FormData();
+    formData.id.forEach((file) => formDataToUpload.append("images", file));
+    formDataToUpload.append("id", user.userdata._id);
+
     try {
-      const response = await axios.get(
-        "http://localhost:5001/api/auth/verifyPhone",
+      const response = await axios.post(
+        "http://localhost:5001/api/auth/uploadId",
+        formDataToUpload,
         {
-          params: { phone: formData.phone },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log("Verification response:", response.data);
-      setServerOtp(response.data.otp);
-    } catch (error) {
-      console.error("Error verifying phone:", error);
-      setVerificationMessage("Failed to send OTP. Try again.");
-    }
-  };
-
-  const handleOtpSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (OTP === serverOtp) {
-      try {
-        const response = await axios.put(
-          "http://localhost:5001/api/auth/setPhoneVerified",
-          {
-            phone: formData.phone,
-          }
-        );
-        console.log("Phone verified:", response.data);
-        setVerificationMessage("Phone number successfully verified!");
-      } catch (error) {
-        console.error("Error verifying phone:", error);
-        setVerificationMessage("Error verifying phone. Try again.");
-      }
-    } else {
-      setVerificationMessage("Incorrect OTP. Please try again.");
+      console.log("Upload successful");
+      const updatedUser = response.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      window.location.reload();
+      setError("");
+    } catch (err) {
+      console.error("Upload failed:", err);
+      setError("Failed to upload images. Please try again.");
     }
   };
 
@@ -99,22 +90,22 @@ function LandLordVerification() {
       <Navbar />
       <div className="h-screen flex items-center content-center justify-center">
         <div className="w-[500px] h-[600px] bg-blue-300/30 shadow-2xl rounded-xl">
-          <h1 className="p-4 text-2xl font-bold text-gray-500">
-            Landlord Verification
-          </h1>
+          <div className="flex">
+            <Link to="/user" className="p-5 font-semibold">
+              <h2>Back</h2>
+            </Link>
+            <h1 className="p-4 text-2xl font-bold text-gray-500 ml-5">
+              Landlord Verification
+            </h1>
+          </div>
+
           <hr className="w-[98%] mx-1 text-gray-500/50 rounded-2xl" />
-          <form className="mt-4 px-4">
+          <form className="mt-4 px-4" onSubmit={(e) => e.preventDefault()}>
             <div className="mb-4">
               <div className="flex gap-2 mb-2">
                 <label className="block text-gray-700 font-medium">Email</label>
                 {user?.userdata?.isEmailVerified && (
-                  <span
-                    className={`px-2 text-sm rounded flex gap-1 ${
-                      !user.userdata.isEmailVerified
-                        ? "text-red-600 bg-red-600/10"
-                        : "text-green-600 bg-green-600/10"
-                    }`}
-                  >
+                  <span className="px-2 text-sm rounded flex gap-1 text-green-600 bg-green-600/10">
                     <Check size={15} className="mt-1" />
                     Verified
                   </span>
@@ -130,87 +121,27 @@ function LandLordVerification() {
               />
             </div>
 
-            <div className="mb-4">
-              <div className="flex gap-2 mb-2 items-center">
-                <label className="text-gray-700 font-medium">Phone</label>
+            <div className="mt-5">
+              <div className="flex gap-2 mb-2">
+                <label className="block text-gray-700 font-medium">Image</label>
                 <span
                   className={`px-2 text-sm rounded flex items-center gap-1 ${
-                    user?.userdata?.isPhoneVerified
+                    user?.userdata?.isIdVerified
                       ? "text-green-600 bg-green-600/10"
                       : "text-red-600 bg-red-600/10"
                   }`}
                 >
-                  {user?.userdata?.isPhoneVerified ? (
+                  {user?.userdata?.isIdVerified && (
                     <>
                       <Check size={15} />
                       Verified
                     </>
-                  ) : (
-                    "Not Verified"
+                  )}
+                  {!user?.userdata?.isIdVerified && <>Not Verified </>}
+                  {user?.userdata?.IdVerificationStatus === "Pending" && (
+                    <>Pending</>
                   )}
                 </span>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    disabled={user?.userdata?.isPhoneVerified}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {!user?.userdata?.isPhoneVerified && (
-                    <button
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                      onClick={handlePhoneVerification}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-
-                {verifyingPhone && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <input
-                      type="text"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="Enter OTP"
-                      value={OTP}
-                      onChange={(e) => setOtp(e.target.value)}
-                    />
-                    <button
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                      onClick={handleOtpSubmit}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                )}
-                {verificationMessage && (
-                  <p className="text-sm text-gray-600 mt-2">
-                    {verificationMessage}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="flex gap-2 mb-2">
-                <label className="block text-gray-700 font-medium">Image</label>
-                {user?.userdata?.isIdVerified && (
-                  <span
-                    className={`px-2 text-sm rounded flex gap-1 ${
-                      !user.userdata.isIdVerified
-                        ? "text-red-600 bg-red-600/10"
-                        : "text-green-600 bg-green-600/10"
-                    }`}
-                  >
-                    <Check size={15} className="mt-1" />
-                    Verified
-                  </span>
-                )}
               </div>
 
               <label className="border-2 border-dashed border-gray-300 p-4 rounded-lg cursor-pointer flex flex-col items-center gap-2 hover:bg-gray-100 transition">
@@ -248,24 +179,33 @@ function LandLordVerification() {
                       </button>
                     </div>
                   ))}
-                  {error && <p className="text-red-500">{error}</p>}
-                  <button className="p-2 bg-blue-400/30 rounded-sm font-semibold">
-                    Upload
-                  </button>
                 </div>
+              )}
+
+              {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+
+              {!user.userdata.isIdVerified && (
+                <button
+                  type="button"
+                  onClick={handleUpload}
+                  className="mt-4 w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={formData.id.length === 0}
+                >
+                  Upload ID
+                </button>
               )}
             </div>
           </form>
-          {user.role === "Landlord" &&
-            user.isEmailVerified === true &&
-            user.isPhoneVerified === true &&
-            user.isIdVerified === true && (
-              <>
-                <p className="text-green-600 text-2xl font-semibold">
-                  Congrats you are a verified user, Post your ad to find to
-                  Students for your hostel
+
+          {user.userdata.role === "Landlord" &&
+            user.userdata.isEmailVerified &&
+            user.userdata.isIdVerified && (
+              <div className="mt-6 px-4">
+                <p className="text-green-600 text-xl font-semibold text-center">
+                  Congratulations! You are a verified landlord. You can now post
+                  your property listings.
                 </p>
-              </>
+              </div>
             )}
         </div>
       </div>

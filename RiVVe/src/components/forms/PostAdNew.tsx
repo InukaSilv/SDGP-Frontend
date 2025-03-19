@@ -114,6 +114,13 @@ function PostAdNew() {
             lat: location.lat(),
             lng: location.lng(),
           });
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            coordinates: {
+              lat: location.lat(),
+              lng: location.lng(),
+            },
+          }));
         } else {
           setError(
             `Geocode was not successful for the following reason: ${status}`

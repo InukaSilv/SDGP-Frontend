@@ -46,6 +46,7 @@ function User() {
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // on input change the formdata will get updated
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prev) => ({
@@ -54,6 +55,7 @@ function User() {
     }));
   };
 
+  // onsubmit the user data will get updated
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     if (!userdata) {
@@ -79,6 +81,9 @@ function User() {
         );
 
         setMessage("Profile updated successfully!");
+        const updatedUser = response.data;
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        window.location.reload();
         console.log(response.data);
       } catch (err) {
         console.error("Error updating profile:", err);
@@ -87,6 +92,7 @@ function User() {
       return;
     }
 
+    // if password is changed
     try {
       const credentials = await signInWithEmailAndPassword(
         auth,
@@ -115,6 +121,7 @@ function User() {
     }
   };
 
+  // profile photo gets changed and refreshes the page
   const handleProfilePhotoChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -142,17 +149,40 @@ function User() {
           },
         }
       );
-
-      console.log(response);
+      const updatedUser = response.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Failed to upload image. Please try again.");
     }
   };
 
+  // on payment selection if the user is not premium the payment type changes to yearly, monthly
+  const handlepayment = async (action: string) => {
+    try {
+      const response = await axios.put(
+        "http://localhost:5001/api/auth/updatepayment",
+        { action, userId: userdata._id },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      navigate("/payment");
+    } catch (error) {
+      console.error("payment selection error");
+    }
+  };
+
+  // Cancelling the subscription
+  const handelCancelSubscription = async () => {};
   return (
     <>
       <Navbar />
+      {/* welcome Note */}
       <div className="ml-10 ">
         <h1 className="text-4xl font-bold text-[#2772A0] mt-22">
           Welcome {userdata ? userdata.firstName : " User "}
@@ -168,6 +198,7 @@ function User() {
         <div className="w-full md:w-1/3">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-[#e0ebf3] ">
             <div className="bg-gradient-to-br from-[#0A192F] via-[#112240] to-[#0A192F] px-6 py-14 flex flex-col items-center">
+              {/* profile photo and change */}
               <div
                 className="bg-white rounded-full p-1 absolute mt-25 ml-15"
                 onClick={() => fileInputRef.current?.click()}
@@ -199,6 +230,7 @@ function User() {
               <p className="text-[#e0ebf3] text-sm">{userdata?.role}</p>
             </div>
 
+            {/* user detils and actions to edit signout and cancel subscription */}
             <div className="flex flex-col mx-5 mt-3 gap-3">
               <div className="flex items-center">
                 <Mail className="w-5 h-5 mr-3 text-[#112240]" />
@@ -216,10 +248,10 @@ function User() {
               </div>
             </div>
 
+            {/* landlord verification */}
             <div className="mx-5 mt-4 flex flex-col gap-4 mb-3">
               {userdata.role === "Landlord" &&
                 (userdata.isEmailVerified === false ||
-                  userdata.isPhoneVerified === false ||
                   userdata.isIdVerified === false) && (
                   <>
                     <p className="font-semibold text-green-600">
@@ -239,6 +271,7 @@ function User() {
                   </>
                 )}
 
+              {/* button to edit user data */}
               <button
                 onClick={() => setIsEdit(!isEditing)}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[#3a85b3]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
@@ -246,6 +279,20 @@ function User() {
                 <UserRoundPen className="w-4 h-4" />
                 {isEditing ? "Cancel Editing" : "Edit Profile"}
               </button>
+
+              {/* cancel subscription accessible to all premium members */}
+              {userdata.isPremium && (
+                <>
+                  <button
+                    onClick={handelCancelSubscription}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
+                  >
+                    Cancel Subscription
+                  </button>
+                </>
+              )}
+
+              {/* sign out  */}
               <button
                 onClick={Logout}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition duration-200"
@@ -314,7 +361,8 @@ function User() {
               <input
                 type="tel"
                 name="phone"
-                value={formData.phone ? formData.phone : "Update phone number"}
+                value={formData.phone && formData.phone}
+                placeholder={!formData.phone && "Update phone number"}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${
@@ -395,6 +443,8 @@ function User() {
           </form>
         </div>
       </div>
+
+      {/* ad to show the premium info */}
       <div className="max-w-6xl mx-auto px-4 mb-16">
         <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
@@ -432,7 +482,8 @@ function User() {
               </ul>
             </div>
 
-            {userdata.isPremium === "false" && (
+            {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
+            {!userdata.isPremium && (
               <div className="flex flex-col items-center md:items-end ">
                 <div className="text-white text-center md:text-right mb-4">
                   <span className="text-secondary/80 text-sm line-through">
@@ -445,10 +496,27 @@ function User() {
                     Limited time offer - 50% off!
                   </p>
                 </div>
-                <button className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95">
+
+                {/* option 1 */}
+                <button
+                  onClick={() => handlepayment("monthly")}
+                  className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                >
                   <span className="relative z-10 flex items-center gap-2">
                     <Sparkles className="h-5 w-5" />
-                    Upgrade to Premium
+                    Upgrade to gold monthly
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                </button>
+
+                {/* option 2 */}
+                <button
+                  onClick={() => handlepayment("yearly")}
+                  className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Upgrade to Platinum yearly
                   </span>
                   <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </button>

@@ -8,6 +8,8 @@ interface dashboardDataProps {
   totalUsers: number;
   studentUsers: number;
   Landlords: number;
+  ads: number;
+  toReview: number;
 }
 function AdminMain() {
   const navigate = useNavigate();
@@ -76,6 +78,26 @@ function AdminMain() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">
                     Students : {dashboardData?.studentUsers}
+                  </h3>
+                  <Users className="w-6 h-6 text-blue-500" />
+                </div>
+              </div>
+            </div>
+            <div className="w-[400px] mx-auto">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">
+                    ads : {dashboardData?.ads}
+                  </h3>
+                  <Users className="w-6 h-6 text-blue-500" />
+                </div>
+              </div>
+            </div>
+            <div className="w-[400px] mx-auto">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">
+                    Landlords to Verify : {dashboardData?.toReview}
                   </h3>
                   <Users className="w-6 h-6 text-blue-500" />
                 </div>
