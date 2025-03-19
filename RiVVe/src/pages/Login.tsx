@@ -16,6 +16,7 @@ interface FormData {
 }
 
 function Login() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [showpass, setShowPass] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
@@ -47,7 +48,7 @@ function Login() {
 
       console.log("Token from firebase", token);
 
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken: token }),
@@ -75,7 +76,7 @@ function Login() {
       const token = await result.user.getIdToken();
       console.log("Token from firebase", token);
 
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken: token }),

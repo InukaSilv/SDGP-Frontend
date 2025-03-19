@@ -4,6 +4,7 @@ import { auth, sendEmailVerification } from "../firebase";
 import axios from "axios";
 
 function VerifyWaiting() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const location = useLocation();
   const { formData } = location.state || {};
@@ -42,10 +43,7 @@ function VerifyWaiting() {
         };
         console.log(formData);
         try {
-          await axios.post(
-            "http://localhost:5001/api/auth/signup",
-            requestData
-          );
+          await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
           console.log("User data sent to backend successfully");
 
           if (formData.paymentType !== "none") {

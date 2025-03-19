@@ -21,6 +21,7 @@ interface AdCardProps {
 }
 
 function AdCard({ ad }: AdCardProps) {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [slots, setSlots] = useState(ad.residents);
   const navigate = useNavigate();
   const [addStudent, setAddStudent] = useState<boolean>(false);
@@ -32,7 +33,7 @@ function AdCard({ ad }: AdCardProps) {
     const authToken = localStorage.getItem("authToken");
     try {
       await axios.put(
-        "http://localhost:5001/api/listing/add-slot",
+        `${API_BASE_URL}/api/listing/add-slot`,
         { operation, adId: ad._id },
         {
           headers: {
@@ -58,7 +59,7 @@ function AdCard({ ad }: AdCardProps) {
     try {
       const authToken = localStorage.getItem("authToken");
       const response = await axios.post(
-        "http://localhost:5001/api/listing/add-student-property",
+        `${API_BASE_URL}/api/listing/add-student-property`,
         { adId: ad._id, email: email },
         {
           headers: {

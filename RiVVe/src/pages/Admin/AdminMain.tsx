@@ -12,6 +12,7 @@ interface dashboardDataProps {
   toReview: number;
 }
 function AdminMain() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState<dashboardDataProps>();
 
@@ -23,14 +24,11 @@ function AdminMain() {
 
     const getinitialData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5001/api/admin/get-Data",
-          {
-            headers: {
-              Authorization: `Bearer ${adminAuth}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_BASE_URL}/api/admin/get-Data`, {
+          headers: {
+            Authorization: `Bearer ${adminAuth}`,
+          },
+        });
         setDashboardData(response.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);

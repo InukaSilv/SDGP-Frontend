@@ -22,6 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function PostAdNew() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
     lat: 6.9271,
@@ -251,7 +252,7 @@ function PostAdNew() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/listing/listing-all",
+        `${API_BASE_URL}/api/listing/listing-all`,
         data,
         {
           headers: {

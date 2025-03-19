@@ -14,7 +14,7 @@ function StudentReview() {
     address: string;
     images: string[];
   }
-
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +30,7 @@ function StudentReview() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:5001/api/listing/check-reviews",
+          `${API_BASE_URL}/api/listing/check-reviews`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,

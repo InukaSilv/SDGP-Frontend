@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 
 function ForgotPasswordEmail() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [email, setEmail] = useState<string>("");
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
@@ -23,7 +24,7 @@ function ForgotPasswordEmail() {
     setMessage("");
     try {
       const { data } = await axios.post(
-        "http://localhost:5001/api/auth/checkforforget",
+        `${API_BASE_URL}/api/auth/checkforforget`,
         { email }
       );
 

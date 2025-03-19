@@ -30,6 +30,7 @@ function Signupform({
   role: string;
   selectedPlan: string;
 }) {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
@@ -139,7 +140,7 @@ function Signupform({
         paymentType: selectedPlan || "none",
       };
 
-      await axios.post("http://localhost:5001/api/auth/signup", userData);
+      await axios.post(`${API_BASE_URL}/api/auth/signup`, userData);
       console.log("google signup success");
       if (userData.paymentType !== "none") {
         navigate("/payment");

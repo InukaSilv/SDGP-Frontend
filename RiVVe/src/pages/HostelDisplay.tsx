@@ -15,6 +15,7 @@ import axios from "axios";
 import Chatbot from "../components/chatbot/Chatbot";
 
 const HostelDisplay: React.FC = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [radius, setRadius] = useState<number>(5);
   const [showmap, setShowmap] = useState<boolean>(false);
@@ -61,7 +62,7 @@ const HostelDisplay: React.FC = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:5001/api/listing/get-listing",
+          `${API_BASE_URL}/api/listing/get-listing`,
           { params: { lat: mapPosition.lat, lng: mapPosition.lng, radius } }
         );
         setListing(response.data);

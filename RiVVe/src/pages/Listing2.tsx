@@ -26,6 +26,7 @@ import SimilarHostelCard from "../components/ads/SimilarHostelCard";
 import HostCardWithPopup from "../components/ads/HostCardWithPopup";
 
 function Listing2() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const ad = location.state?.ad;
 
@@ -45,7 +46,7 @@ function Listing2() {
       try {
         if (ad.reviews && ad.reviews.length > 0) {
           const response = await axios.get(
-            "http://localhost:5001/api/listing/get-reviews",
+            `${API_BASE_URL}/api/listing/get-reviews`,
             {
               params: { reviews: ad.reviews.join(","), id: ad._id },
             }
@@ -61,7 +62,7 @@ function Listing2() {
     const fetchOwnerDetail = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5001/api/listing/getowner`,
+          `${API_BASE_URL}/api/listing/getowner`,
           {
             params: { propertyId: ad._id },
           }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Lock, User, AlertCircle } from "lucide-react";
 
 function Admin() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,13 +13,10 @@ function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5001/api/admin/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/admin/login`, {
+        username,
+        password,
+      });
       localStorage.setItem("adminToken", response.data.token);
       navigate("/admin-main");
     } catch (err) {

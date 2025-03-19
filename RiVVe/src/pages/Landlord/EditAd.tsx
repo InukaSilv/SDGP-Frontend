@@ -30,6 +30,7 @@ interface Ad {
 }
 
 function EditAd() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
   const ad = location.state?.ad as Ad;
@@ -164,7 +165,7 @@ function EditAd() {
 
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/listing/update-listing",
+        `${API_BASE_URL}/api/listing/update-listing`,
         data,
         {
           headers: {
@@ -191,7 +192,7 @@ function EditAd() {
         propertyId: ad._id,
       };
       const response = await axios.delete(
-        "http://localhost:5001/api/listing/delete-post",
+        `${API_BASE_URL}/api/listing/delete-post`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

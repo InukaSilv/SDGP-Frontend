@@ -16,6 +16,7 @@ interface OwnerDetail {
 }
 
 function FeedbackPage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const property = location.state;
   const [ownerDetail, setOwnerDetail] = useState<{
@@ -70,7 +71,7 @@ function FeedbackPage() {
 
     try {
       const respond = await axios.post(
-        "http://localhost:5001/api/listing/post-review",
+        `${API_BASE_URL}/api/listing/post-review`,
         { ...formData, propertyId: property._id },
         {
           headers: {
@@ -93,7 +94,7 @@ function FeedbackPage() {
     const fetchOwnerDetail = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5001/api/listing/getowner`,
+          `${API_BASE_URL}/api/listing/getowner`,
           {
             params: { propertyId: property._id },
           }

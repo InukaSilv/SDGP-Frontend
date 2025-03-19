@@ -19,6 +19,7 @@ interface Ads {
 }
 
 function Adminads() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [ads, setAds] = useState<Ads[]>([]);
   const adminAuth = localStorage.getItem("adminToken");
@@ -26,7 +27,7 @@ function Adminads() {
   const getAds = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/admin/get-Ads-Data",
+        `${API_BASE_URL}/api/admin/get-Ads-Data`,
         {
           headers: {
             Authorization: `Bearer ${adminAuth}`,

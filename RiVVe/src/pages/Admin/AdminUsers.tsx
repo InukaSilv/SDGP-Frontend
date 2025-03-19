@@ -18,6 +18,7 @@ interface User {
 }
 
 function AdminUsers() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,7 @@ function AdminUsers() {
   const getUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/admin/get-User-Data",
+        `${API_BASE_URL}/api/admin/get-User-Data`,
         {
           headers: {
             Authorization: `Bearer ${adminAuth}`,
@@ -55,7 +56,7 @@ function AdminUsers() {
 
   const handleRemove = async (userId) => {
     try {
-      await axios.delete("http://localhost:5001/api/admin/delete-user", {
+      await axios.delete(`${API_BASE_URL}/api/admin/delete-user`, {
         headers: {
           Authorization: `Bearer ${adminAuth}`,
         },

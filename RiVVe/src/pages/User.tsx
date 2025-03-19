@@ -31,6 +31,7 @@ interface User {
 }
 
 function User() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const storedUser = localStorage.getItem("user");
   const authToken = localStorage.getItem("authToken");
   const userdata = storedUser ? JSON.parse(storedUser) : null;
@@ -65,7 +66,7 @@ function User() {
     if (!defaultpassword && !newPassword) {
       try {
         const response = await axios.put(
-          "http://localhost:5001/api/auth/update-user",
+          `${API_BASE_URL}/api/auth/update-user`,
           {
             userId: userdata._id,
             firstName: formData.firstName,
@@ -141,7 +142,7 @@ function User() {
 
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/listing/uploadDp",
+        `${API_BASE_URL}/api/listing/uploadDp`,
         formData,
         {
           headers: {
@@ -162,7 +163,7 @@ function User() {
   const handlepayment = async (action: string) => {
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/auth/updatepayment",
+        `${API_BASE_URL}/api/auth/updatepayment`,
         { action, userId: userdata._id },
         {
           headers: {

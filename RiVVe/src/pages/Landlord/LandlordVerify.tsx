@@ -11,6 +11,7 @@ interface LandveriProps {
 }
 
 function LandLordVerification() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const user = location.state;
   if (!user || !user.userdata) {
@@ -68,7 +69,7 @@ function LandLordVerification() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/auth/uploadId",
+        `${API_BASE_URL}/api/auth/uploadId`,
         formDataToUpload,
         {
           headers: { "Content-Type": "multipart/form-data" },

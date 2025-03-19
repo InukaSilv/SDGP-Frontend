@@ -17,6 +17,7 @@ interface Ad {
 }
 
 function MyAds() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [ads, setAds] = useState<Ad[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -27,7 +28,7 @@ function MyAds() {
       }
       try {
         const response = await axios.get(
-          "http://localhost:5001/api/listing/profile-listing",
+          `${API_BASE_URL}/api/listing/profile-listing`,
           {
             headers: {
               Authorization: `Bearer ${Token}`,
