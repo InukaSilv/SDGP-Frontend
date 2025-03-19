@@ -4,14 +4,9 @@ import axios from "axios";
 
 // Define types for our messages
 interface ChatMessage {
-  id?: number;
-  user_id: string;
-  user_message?: string;
-  bot_response?: string;
-  timestamp: Date;
-  conversation_id: string;
   isUser: boolean; // To distinguish between user and bot messages
   content: string; // The actual message content
+  timestamp: Date;
 }
 
 function Chatbot() {
@@ -22,7 +17,7 @@ function Chatbot() {
   const [loading, setLoading] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Get user from localStorage
+  // Get user from localStorage or use a default
   const userId = localStorage.getItem("user") || "guest-user";
   // Generate a conversation ID or get from localStorage if it exists
   const conversationId = localStorage.getItem("conversationId") || `conv-${Date.now()}`;
@@ -34,13 +29,6 @@ function Chatbot() {
     }
   }, [conversationId]);
   
-  // Fetch chat history when component mounts
-  useEffect(() => {
-    if (isOpen) {
-      fetchChatHistory();
-    }
-  }, [isOpen]);
-  
   // Auto scroll to bottom when new messages appear
   useEffect(() => {
     scrollToBottom();
@@ -50,38 +38,11 @@ function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
-  const fetchChatHistory = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:3000'}/api/chat-history/${conversationId}`);
-      
-      const formattedMessages = response.data.flatMap((item: any) => [
-        {
-          ...item,
-          isUser: true,
-          content: item.user_message,
-          timestamp: new Date(item.timestamp)
-        },
-        {
-          ...item,
-          isUser: false,
-          content: item.bot_response,
-          timestamp: new Date(item.timestamp)
-        }
-      ]);
-      
-      setMessages(formattedMessages);
-    } catch (error) {
-      console.error("Error fetching chat history:", error);
-    }
-  };
-  
   const sendMessage = async () => {
     if (!message.trim()) return;
     
     // Add user message to the chat
     const userMessage: ChatMessage = {
-      user_id: userId,
-      conversation_id: conversationId,
       isUser: true,
       content: message,
       timestamp: new Date()
@@ -89,22 +50,33 @@ function Chatbot() {
     
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
+    const sentMessage = message; // Store the sent message
     setMessage(""); // Clear input field
     
     try {
-      // Send message to backend
-      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:3000'}/api/chat`, {
-        userId: userId,
-        message: message,
-        conversationId: conversationId
+      // Configure axios with proper headers for CORS
+      const response = await axios.post('http://localhost:5000/chat', {
+        user_id: userId,
+        message: sentMessage,
+        conversation_id: conversationId
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        // Enable credentials
+        withCredentials: false
       });
+      
+      console.log("API Response:", response.data);
+      
+      
+      const botResponseText = response.data.response || "No response received";
       
       // Add bot response to the chat
       const botMessage: ChatMessage = {
-        user_id: userId,
-        conversation_id: conversationId,
         isUser: false,
-        content: response.data.response,
+        content: botResponseText,
         timestamp: new Date()
       };
       
@@ -114,8 +86,6 @@ function Chatbot() {
       
       // Add error message
       const errorMessage: ChatMessage = {
-        user_id: userId,
-        conversation_id: conversationId,
         isUser: false,
         content: "Sorry, there was an error processing your message. Please try again.",
         timestamp: new Date()
@@ -215,7 +185,7 @@ function Chatbot() {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t relative bottom-4">
+              <div className="p-4 border-t relative bottom-4 z-50 bg-white">
                 <div className="flex items-center">
                   <textarea
                     value={message}
