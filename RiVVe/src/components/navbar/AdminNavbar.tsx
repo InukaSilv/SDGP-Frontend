@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   LogOut,
 } from "lucide-react";
+import { useState } from "react";
 function AdminNavbar() {
   const navigate = useNavigate();
 
@@ -19,7 +20,7 @@ function AdminNavbar() {
   };
   return (
     <>
-      <nav className="bg-white h-screen w-64 fixed left-0 top-0 shadow-lg">
+      <nav className="bg-white h-screen w-50 fixed left-0 top-0 shadow-lg">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-[#2772A0]">RiVVE Admin</h1>
         </div>

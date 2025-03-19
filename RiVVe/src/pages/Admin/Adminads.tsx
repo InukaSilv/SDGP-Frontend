@@ -2,7 +2,6 @@ import { Locate, MapPin, Pin, Star, StickyNote } from "lucide-react";
 import AdminNavbar from "../../components/navbar/AdminNavbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { matchRoutes } from "react-router-dom";
 
 interface Ads {
   _id: string;
@@ -57,6 +56,21 @@ function Adminads() {
     if (filterType === "all") return matchesSearch;
     return matchesSearch && listing.housingType === filterType;
   });
+
+  const removeAdd = async (id: string) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/admin/delete-ad`, {
+        headers: {
+          Authorization: `Bearer ${adminAuth}`,
+        },
+        data: { propertyId: id },
+      });
+      getAds();
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -185,7 +199,10 @@ function Adminads() {
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <button className="bg-red-400 p-2 rounded-sm text-white">
+                          <button
+                            className="bg-red-400 p-2 rounded-sm text-white"
+                            onClick={() => removeAdd(ads._id)}
+                          >
                             Remove
                           </button>
                         </td>

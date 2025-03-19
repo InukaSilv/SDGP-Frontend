@@ -142,6 +142,9 @@ function LandLordVerification() {
                   {user?.userdata?.IdVerificationStatus === "Pending" && (
                     <>Pending</>
                   )}
+                  {user?.userdata?.IdVerificationStatus === "Rejected" && (
+                    <>Rejected</>
+                  )}
                 </span>
               </div>
 
