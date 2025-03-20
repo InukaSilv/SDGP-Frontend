@@ -23,12 +23,13 @@ import { useNavigate } from "react-router-dom";
 
 function PostAdNew() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
     lat: 6.9271,
     lng: 80.8612,
   });
-  const [error, setError] = useState<string>("");
-  const [markerRef] = useAdvancedMarkerRef();
+  const [Error, setError] = useState<string>("");
+  const [markerRef, marker] = useAdvancedMarkerRef();
   const facilities = [
     { name: "A/C", icon: <Wind size={20} /> },
     { name: "CCTV", icon: <Shield size={20} /> },
@@ -107,7 +108,7 @@ function PostAdNew() {
     if (typeof google !== "undefined" && google.maps) {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ address: address }, function (results, status) {
-        if (status === "OK" && results) {
+        if (status === "OK") {
           const location = results[0].geometry.location;
           console.log(location);
           setMapPosition({
@@ -225,7 +226,7 @@ function PostAdNew() {
   };
 
   // when the post is submitted
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
@@ -245,7 +246,7 @@ function PostAdNew() {
     data.append("facilities", JSON.stringify(formData.facilities));
     data.append("lat", formData.coordinates.lat.toString());
     data.append("lng", formData.coordinates.lng.toString());
-    formData.images.forEach((file) => {
+    formData.images.forEach((file, index) => {
       data.append(`images`, file);
     });
 
@@ -310,7 +311,7 @@ function PostAdNew() {
                 <select
                   name="residents"
                   value={formData.residents}
-                  onChange={() => handleChange}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all text-white placeholder-gray-400"
                 >
                   {[...Array(100)].map((_, i) => (
@@ -466,7 +467,6 @@ function PostAdNew() {
                   Click on the marker and, Drag the marker or click on the map
                   to adjust the location
                 </p>
-                {error && <p className="text-red-400">{error}</p>}
               </div>
 
               {/* facilities */}

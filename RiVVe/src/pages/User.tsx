@@ -17,6 +17,7 @@ import {
   Save,
   Sparkles,
   Zap,
+  BadgeCheck,
 } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import axios from "axios";
@@ -232,6 +233,14 @@ function User() {
                 {userdata?.firstName} {userdata?.lastName}
               </h2>
               <p className="text-[#e0ebf3] text-sm">{userdata?.role}</p>
+              {userdata.role === "Landlord" &&
+                userdata.isEmailVerified &&
+                userdata.isIdVerified && (
+                  <div className="flex items-center gap-2">
+                    <BadgeCheck size={30} className="text-blue-400 mt-2" />
+                    <h1 className="text-blue-400 mt-2">Verified</h1>
+                  </div>
+                )}
             </div>
 
             {/* user detils and actions to edit signout and cancel subscription */}
