@@ -279,7 +279,7 @@ const AmenitiesSlideshow = () => {
   const handleMouseEnter = () => setAutoplay(false);
   const handleMouseLeave = () => setAutoplay(true);
 
-  const handleItemClick = (index) => {
+  const handleItemClick = (index: number) => {
     setActiveIndex(index);
     setAutoplay(false);
     setTimeout(() => setAutoplay(true), 5000);
@@ -301,7 +301,6 @@ const AmenitiesSlideshow = () => {
             // Calculate position relative to active item
             const position = (index - activeIndex + totalItems) % totalItems;
             const isActive = position === 0;
-            const isVisible = position <= 2 || position >= totalItems - 2;
 
             // Calculate transform properties
             let translateX = 0;

@@ -1,4 +1,4 @@
-import { Locate, MapPin, Pin, Star, StickyNote } from "lucide-react";
+import { MapPin, Star, StickyNote } from "lucide-react";
 import AdminNavbar from "../../components/navbar/AdminNavbar";
 import { useEffect, useState } from "react";
 import axios from "axios";

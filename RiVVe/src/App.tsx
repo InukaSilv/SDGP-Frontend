@@ -1,6 +1,4 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/navbar/Navbar";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed

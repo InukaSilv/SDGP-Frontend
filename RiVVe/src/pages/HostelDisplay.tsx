@@ -14,6 +14,13 @@ import { Radius } from "lucide-react";
 import axios from "axios";
 import Chatbot from "../components/chatbot/Chatbot";
 
+interface ListingRecord {
+  _id: string;
+  location: {
+    coordinates: [number, number];
+  };
+}
+
 const HostelDisplay: React.FC = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -69,7 +76,7 @@ const HostelDisplay: React.FC = () => {
         console.log(response.data);
         console.log(listing.length);
 
-        const locationMarkers = response.data.map((record) => ({
+        const locationMarkers = response.data.map((record: ListingRecord) => ({
           key: record._id,
           location: {
             lat: record.location.coordinates[1],
@@ -191,8 +198,7 @@ const HostelDisplay: React.FC = () => {
             mapPosition={mapPosition}
             setMapPosition={setMapPosition}
             mapLoaded={mapLoaded}
-            setMapLoaded={setMapLoaded}
-            error={error}
+            error={error || ""}
             locations={locations}
           />
         </div>

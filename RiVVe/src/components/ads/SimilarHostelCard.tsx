@@ -1,7 +1,18 @@
-import React from "react";
-import { Link, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
-function SimilarHostelCard({ hostel }) {
+interface Hostel {
+  images: string[];
+  title: string;
+  address: string;
+  averageRating: number;
+  totalRatingCount: number;
+  price: number;
+}
+
+interface SimilarHostelCardProps {
+  hostel: Hostel;
+}
+function SimilarHostelCard({ hostel }: SimilarHostelCardProps) {
   return (
     <div className="bg-gray-800 rounded-xl overflow-hidden transition-transform hover:scale-105">
       <div className="relative h-48">

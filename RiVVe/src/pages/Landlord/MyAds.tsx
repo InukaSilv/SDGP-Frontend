@@ -7,13 +7,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface Ad {
-  id: number;
+  _id: string;
   title: string;
   description: string;
-  rooms: number;
-  availableSlots: number;
+  roomTypes: {
+    singleRoom: number;
+    doubleRoom: number;
+  };
+  residents: number;
   price: string;
-  imageUrl: string;
+  images: string[];
 }
 
 function MyAds() {
@@ -65,7 +68,7 @@ function MyAds() {
         {ads.length > 0 ? (
           <div className="flex flex-col gap-6">
             {ads.map((ad) => (
-              <MyAdCard key={ad.id} ad={ad} />
+              <MyAdCard key={ad._id} ad={ad} />
             ))}
           </div>
         ) : (

@@ -55,7 +55,7 @@ function AdminUsers() {
       user.lastName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleRemove = async (userId) => {
+  const handleRemove = async (userId: string) => {
     try {
       await axios.delete(`${API_BASE_URL}/api/admin/delete-user`, {
         headers: {
@@ -66,7 +66,7 @@ function AdminUsers() {
       getUsers();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error fetching users:", err);
+      console.error("Error deleting user:", error);
       setIsLoading(false);
     }
   };

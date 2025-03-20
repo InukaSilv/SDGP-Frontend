@@ -1,15 +1,19 @@
 import { useState } from "react";
-import {
-  MessageCircle,
-  Phone,
-  Mail,
-  Users,
-  X,
-  Star,
-  MapPin,
-} from "lucide-react";
+import { MessageCircle, Phone, Mail, Users, X, Star } from "lucide-react";
 
-const HostCardWithPopup = ({ host }) => {
+interface Host {
+  profilePhoto: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  isEmailVerified: boolean;
+  isIdVerified: boolean;
+  isPhoneVerified: boolean;
+  createdAt: string;
+  phone: string;
+  email: string;
+}
+const HostCardWithPopup = ({ host }: { host: Host }) => {
   const authToken = localStorage.getItem("authToken");
 
   const [showDetails, setShowDetails] = useState(false);

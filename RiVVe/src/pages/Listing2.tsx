@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import {
@@ -57,6 +57,16 @@ interface OwnerDetail {
   name: string;
   contact: string;
   email: string;
+  profilePhoto: string;
+  firstName: string;
+  lastName: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isIdVerified: boolean;
+  isAddressVerified: boolean;
+  joinedDate: string;
+  createdAt: string;
+  phone: string;
 }
 
 interface SimilarProperty {
@@ -65,6 +75,9 @@ interface SimilarProperty {
   price: number;
   images: string[];
   rating: number;
+  address: string;
+  averageRating: number;
+  totalRatingCount: number;
 }
 
 function Listing2() {
@@ -461,8 +474,7 @@ function Listing2() {
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
-                {/* <HostCardWithPopup host={hostel.host} /> */}
-                <HostCardWithPopup host={ownerDetail} />
+                {ownerDetail && <HostCardWithPopup host={ownerDetail} />}
               </div>
             </div>
           </div>

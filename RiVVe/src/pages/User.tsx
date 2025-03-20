@@ -102,7 +102,11 @@ function User() {
       await updatePassword(user, newPassword);
       setMessage("Password changed Successfully");
     } catch (error) {
-      console.error("Error updating password", error.message);
+      if (error instanceof Error) {
+        console.error("Error updating password", error.message);
+      } else {
+        console.error("Error updating password", error);
+      }
       setError("Current password is wrong");
     }
   };

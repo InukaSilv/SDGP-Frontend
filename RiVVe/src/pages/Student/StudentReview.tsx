@@ -18,8 +18,7 @@ function StudentReview() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStudentReviews = async () => {
@@ -45,6 +44,7 @@ function StudentReview() {
         }
       } catch (error) {
         console.error("Error fetching student reviews:", error);
+        setError("Error loading reviews");
       } finally {
         setLoading(false);
       }

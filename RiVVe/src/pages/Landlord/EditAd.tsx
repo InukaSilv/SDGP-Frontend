@@ -56,8 +56,8 @@ function EditAd() {
     { name: "Food", icon: <Coffee size={20} /> },
   ];
 
-  const [imageError, setImageError] = useState<string>("");
   const [newPreview, setNewPreview] = useState<string[]>([]);
+  const [imageError, setImageError] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -113,7 +113,6 @@ function EditAd() {
         newImages: [...prev.newImages, ...files],
       }));
       setNewPreview((prev) => [...prev, ...newPreviews]);
-      setImageError("");
     }
   };
 
@@ -338,6 +337,9 @@ function EditAd() {
                         <Camera className=" text-blue-400 mb-2" /> Photos
                       </label>
                       <div className="border-2 border-dashed rounded-xl p-8 text-center items-center transition-all flex flex-col">
+                        {imageError && (
+                          <p className="text-red-500 mb-2">{imageError}</p>
+                        )}
                         <input
                           type="file"
                           id="images"
