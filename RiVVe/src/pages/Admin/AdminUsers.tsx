@@ -4,6 +4,7 @@ import AdminNavbar from "../../components/navbar/AdminNavbar";
 import axios from "axios";
 
 interface User {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -63,6 +64,7 @@ function AdminUsers() {
         data: { id: userId },
       });
       getUsers();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error("Error fetching users:", err);
       setIsLoading(false);

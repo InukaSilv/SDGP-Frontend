@@ -1,7 +1,4 @@
 import { motion } from "framer-motion";
-
-import Navbar from "../components/navbar/navbar";
-import Homesearchbutton from "../components/buttons/Homesearchbutton";
 import SearchBar from "../components/googlemap/SearchBar";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";

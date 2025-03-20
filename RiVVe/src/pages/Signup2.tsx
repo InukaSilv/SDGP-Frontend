@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar/navbar";
+import { useLocation } from "react-router-dom";
+import Navbar from "../components/navbar/Navbar";
 import Signupform from "../components/forms/Signupform";
 
 function Signup2() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { role, id } = location.state || {};
   const [selectedPlan, setSelectedPlan] = useState("none");
 

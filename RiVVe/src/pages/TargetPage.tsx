@@ -1,16 +1,19 @@
-
-
-
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Star, MapPin, Edit, Wifi, Coffee, Utensils, Clock } from 'lucide-react';
-import { SAMPLE_HOSTELS } from '../data/data';
-
-
+import React from "react";
+import { useParams, Link } from "react-router-dom";
+import {
+  Star,
+  MapPin,
+  Edit,
+  Wifi,
+  Coffee,
+  Utensils,
+  Clock,
+} from "lucide-react";
+import { SAMPLE_HOSTELS } from "../data/data";
 
 function TargetPage() {
   const { id } = useParams();
-  const hostel = SAMPLE_HOSTELS.find(h => h.id === Number(id));
+  const hostel = SAMPLE_HOSTELS.find((h) => h.id === Number(id));
 
   if (!hostel) {
     return (
@@ -49,13 +52,17 @@ function TargetPage() {
             <h1 className="text-3xl font-bold text-gray-900">{hostel.name}</h1>
             <div className="flex items-center bg-indigo-100 px-3 py-1 rounded-lg">
               <Star className="w-5 h-5 text-indigo-600 fill-current" />
-              <span className="ml-1 font-semibold text-indigo-600">{hostel.rating}</span>
+              <span className="ml-1 font-semibold text-indigo-600">
+                {hostel.rating}
+              </span>
             </div>
           </div>
 
           <div className="flex items-center text-gray-600 mb-6">
             <MapPin className="w-5 h-5 mr-2" />
-            <span>{hostel.location} • {hostel.distance}km from center</span>
+            <span>
+              {hostel.location} • {hostel.distance}km from center
+            </span>
           </div>
 
           <div className="border-t border-gray-200 pt-6 mb-6">
@@ -67,7 +74,10 @@ function TargetPage() {
             <h2 className="text-xl font-semibold mb-4">Amenities</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {hostel.amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center space-x-2 text-gray-600">
+                <div
+                  key={index}
+                  className="flex items-center space-x-2 text-gray-600"
+                >
                   {getAmenityIcon(amenity)}
                   <span>{amenity}</span>
                 </div>
@@ -78,7 +88,9 @@ function TargetPage() {
           <div className="border-t border-gray-200 mt-6 pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold text-gray-900">${hostel.price}</span>
+                <span className="text-2xl font-bold text-gray-900">
+                  ${hostel.price}
+                </span>
                 <span className="text-gray-600">/night</span>
               </div>
               <button className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-500 transition-colors">
@@ -96,13 +108,13 @@ export default TargetPage;
 
 function getAmenityIcon(amenity: string) {
   switch (amenity.toLowerCase()) {
-    case 'free wifi':
+    case "free wifi":
       return <Wifi className="w-5 h-5" />;
-    case 'free breakfast':
+    case "free breakfast":
       return <Coffee className="w-5 h-5" />;
-    case 'shared kitchen':
+    case "shared kitchen":
       return <Utensils className="w-5 h-5" />;
-    case '24/7 reception':
+    case "24/7 reception":
       return <Clock className="w-5 h-5" />;
     default:
       return <div className="w-5 h-5" />;

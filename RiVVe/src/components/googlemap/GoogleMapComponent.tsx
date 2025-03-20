@@ -7,7 +7,7 @@ import {
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
-import { Circle } from "../circle/Circles";
+import { Circle } from "../circle/circles";
 
 type GoogleMapComponentProps = {
   radius: number;

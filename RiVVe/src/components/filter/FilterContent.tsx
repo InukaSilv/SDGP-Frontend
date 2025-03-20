@@ -6,7 +6,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
-function FilterContent({ isExpanded, setIsExpanded }) {
+interface FilterContentProps {
+  isExpanded: boolean;
+  setIsExpanded: (value: boolean) => void;
+}
+function FilterContent({ isExpanded, setIsExpanded }: FilterContentProps) {
   const [priceRange, setPriceRange] = useState<number[]>([30000, 60000]);
   const [selectedHousingType, setSelectedHousingType] = useState<string[]>([]);
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);

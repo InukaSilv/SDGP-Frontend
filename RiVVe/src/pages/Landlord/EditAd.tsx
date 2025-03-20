@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../../components/navbar/navbar";
+import Navbar from "../../components/navbar/Navbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Camera, Phone, Wind } from "lucide-react";
 import { Shield } from "lucide-react";
@@ -138,7 +138,7 @@ function EditAd() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
@@ -159,7 +159,7 @@ function EditAd() {
     formData.removeImages.forEach((removeing) => {
       data.append("removeImages", removeing);
     });
-    formData.newImages.forEach((file, index) => {
+    formData.newImages.forEach((file) => {
       data.append(`images`, file);
     });
 
@@ -191,15 +191,12 @@ function EditAd() {
       const data = {
         propertyId: ad._id,
       };
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/listing/delete-post`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          data,
-        }
-      );
+      await axios.delete(`${API_BASE_URL}/api/listing/delete-post`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        data,
+      });
       console.log("deleted Successfully");
       navigate("/MyAds");
     } catch (error) {

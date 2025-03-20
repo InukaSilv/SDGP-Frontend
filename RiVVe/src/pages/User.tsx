@@ -4,25 +4,23 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { useRef, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import {
   Mail,
   Phone,
   Shield,
   ShieldCheck,
-  User2,
   UserRoundPen,
   Camera,
+  Power,
+  Save,
+  Sparkles,
+  Zap,
 } from "lucide-react";
-import { Power } from "lucide-react";
-import { Save } from "lucide-react";
-import { Sparkles } from "lucide-react";
-import { Zap } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import axios from "axios";
 import Footer from "../components/footer/Footer";
-import { Pencil } from "lucide-react";
 
 interface User {
   firstName: string;
@@ -38,7 +36,7 @@ function User() {
   const [isEditing, setIsEdit] = useState<boolean>(false);
   const [defaultpassword, setDefaultPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [, setError] = useState<string>("");
   const [Message, setMessage] = useState<string>("");
   const [formData, setFormData] = useState<User>({
     firstName: userdata?.firstName || "",
@@ -101,7 +99,6 @@ function User() {
         defaultpassword
       );
       const user = credentials.user;
-      const token = await user.getIdToken();
       await updatePassword(user, newPassword);
       setMessage("Password changed Successfully");
     } catch (error) {
@@ -123,8 +120,10 @@ function User() {
   };
 
   // profile photo gets changed and refreshes the page
-  const handleProfilePhotoChange = async (event) => {
-    const file = event.target.files[0];
+  const handleProfilePhotoChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
     if (!file) {
       return;
     }
@@ -162,7 +161,7 @@ function User() {
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
   const handlepayment = async (action: string) => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${API_BASE_URL}/api/auth/updatepayment`,
         { action, userId: userdata._id },
         {
@@ -174,7 +173,7 @@ function User() {
       );
       navigate("/payment");
     } catch (error) {
-      console.error("payment selection error");
+      console.error("payment selection error; ", error);
     }
   };
 
@@ -363,7 +362,7 @@ function User() {
                 type="tel"
                 name="phone"
                 value={formData.phone && formData.phone}
-                placeholder={!formData.phone && "Update phone number"}
+                placeholder={!formData.phone ? "Update phone number" : ""}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${

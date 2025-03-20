@@ -17,7 +17,6 @@ const HostelReview: React.FC<HostelReviewProps> = ({
   price,
   currentRating,
   hostelImage,
-  totalUsers = 0,
 }) => {
   const [userRating, setUserRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");

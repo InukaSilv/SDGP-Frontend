@@ -13,10 +13,12 @@ function StudentReview() {
     name: string;
     address: string;
     images: string[];
+    averageRating: number;
   }
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -115,9 +117,11 @@ function StudentReview() {
                       {property.title}
                     </h3>
                     <p className="text-gray-600 mb-2">{property.address}</p>
-                    <div className="flex">
+                    <div className="flex gap-2">
                       <Star className="h-5 w-5 text-yellow-400 fill-current mb-3" />
-                      <h2></h2>
+                      <h2 className="font-semibold">
+                        {property.averageRating}
+                      </h2>
                     </div>
 
                     <button

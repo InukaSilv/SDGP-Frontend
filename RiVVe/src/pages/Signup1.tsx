@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import { PiStudent } from "react-icons/pi";
 import { LuHouse } from "react-icons/lu";
 import { motion } from "framer-motion";

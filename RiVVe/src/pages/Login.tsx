@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from "react";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import { EyeOff, Eye, LogIn, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -8,7 +8,6 @@ import {
   googleProvider,
   signInWithEmailAndPassword,
 } from "../firebase";
-import { getIdToken } from "firebase/auth";
 
 interface FormData {
   email: string;
@@ -63,6 +62,7 @@ function Login() {
         alert(data.message);
       }
       console.log(token);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.log("loggin error");
       setLoginError("Email and password does not match");
@@ -93,6 +93,7 @@ function Login() {
           "User dosent exist, please use other method or Signup if not registered yet"
         );
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setLoginError(
         "User dosent exist, please use other method or Signup if not registered yet"

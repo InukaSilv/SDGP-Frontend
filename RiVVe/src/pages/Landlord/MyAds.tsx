@@ -1,9 +1,9 @@
 import { Plus } from "lucide-react";
-import Navbar from "../../components/navbar/navbar";
+import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
 
 import MyAdCard from "../../components/ads/MyAdCard";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface Ad {
@@ -20,6 +20,7 @@ function MyAds() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [ads, setAds] = useState<Ad[]>([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchListing = async () => {
       const Token = localStorage.getItem("authToken");
@@ -50,6 +51,8 @@ function MyAds() {
       <div className="container mx-auto py-10 px-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-semibold">My Listings</h1>
+
+          {/* { && Landlord.propertyCount === 3} */}
           <button
             className="flex items-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition"
             onClick={() => navigate("/posting")}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import GoogleMapComponent from "../components/googlemap/GoogleMapComponent";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import AdDisplayer from "../components/ads/AdDisplayer";
 import { Filter } from "lucide-react";
 import { motion } from "framer-motion";

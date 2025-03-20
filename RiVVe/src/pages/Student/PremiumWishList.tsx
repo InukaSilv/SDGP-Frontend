@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import { Star, Trash2 } from "lucide-react";
 import axios from "axios";
@@ -63,7 +63,7 @@ function PremiumWishList() {
             {wishlistItems.map((ad) => (
               <Link to="/listing2" state={{ ad }}>
                 <div
-                  key={ad._id}
+                  key={ad.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"
                 >
                   <div className="relative h-48">
@@ -73,7 +73,7 @@ function PremiumWishList() {
                       className="w-full h-full object-cover"
                     />
                     <button
-                      onClick={() => handleDelete(ad._id)}
+                      onClick={() => handleDelete(ad.id)}
                       className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
                     >
                       <Trash2 className="w-5 h-5 text-red-500" />

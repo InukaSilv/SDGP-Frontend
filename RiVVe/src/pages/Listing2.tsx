@@ -7,14 +7,10 @@ import {
   Wifi,
   ChefHat,
   Car,
-  Phone,
-  Mail,
-  MessageCircle,
   Heart,
   Cctv,
   Users,
   BookOpen,
-  X,
   AirVent,
   CookingPot,
   WashingMachine,
@@ -26,25 +22,66 @@ import axios from "axios";
 import SimilarHostelCard from "../components/ads/SimilarHostelCard";
 import HostCardWithPopup from "../components/ads/HostCardWithPopup";
 
+interface Review {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  rating: number;
+  review: string;
+  createdAt: string;
+}
+
+interface Property {
+  _id: string;
+  title: string;
+  images: string[];
+  description: string;
+  address: string;
+  housingType: string;
+  price: number;
+  averageRating: number;
+  reviews: string[];
+  roomTypes: {
+    singleRoom: number;
+    doubleRoom: number;
+  };
+  facilities: string[];
+  location: {
+    coordinates: [number, number];
+  };
+  starsCount: Record<number, number>;
+}
+
+interface OwnerDetail {
+  _id: string;
+  name: string;
+  contact: string;
+  email: string;
+}
+
+interface SimilarProperty {
+  _id: string;
+  title: string;
+  price: number;
+  images: string[];
+  rating: number;
+}
+
 function Listing2() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const authToken = localStorage.getItem("authToken");
-  const storedUser = localStorage.getItem("user");
-  const requser = JSON.parse(storedUser);
-  const location = useLocation();
-  const ad = location.state?.ad;
-
-  if (!ad) {
-    return <div>Ad not found</div>;
-  }
-
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [isInWishlist, setIsInWishlist] = useState(false);
 
-  const [reviews, setReviews] = useState([]);
-  const [similarProperties, setSimilarProperties] = useState([]);
-  const [ownerDetail, setOwnerDetail] = useState(null);
-
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [similarProperties, setSimilarProperties] = useState<SimilarProperty[]>(
+    []
+  );
+  const [ownerDetail, setOwnerDetail] = useState<OwnerDetail | null>(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const authToken = localStorage.getItem("authToken");
+  const storedUser = localStorage.getItem("user");
+  const requser = storedUser ? JSON.parse(storedUser) : null;
+  const location = useLocation();
+  const ad: Property = location.state?.ad;
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -79,6 +116,10 @@ function Listing2() {
     fetchReviews();
     fetchOwnerDetail();
   }, [ad.reviews]);
+
+  if (!ad) {
+    return <div>Ad not found</div>;
+  }
 
   const StarRating = ({ rating }: { rating: number }) => {
     return (
