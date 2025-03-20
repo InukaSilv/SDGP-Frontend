@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import { Star, Trash2 } from "lucide-react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface WishlistItem {
   id: string;
@@ -59,44 +60,46 @@ function PremiumWishList() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {wishlistItems.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"
-              >
-                <div className="relative h-48">
-                  <img
-                    src={item.images[0]}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
-                  >
-                    <Trash2 className="w-5 h-5 text-red-500" />
-                  </button>
-                </div>
+            {wishlistItems.map((ad) => (
+              <Link to="/listing2" state={{ ad }}>
+                <div
+                  key={ad._id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"
+                >
+                  <div className="relative h-48">
+                    <img
+                      src={ad.images[0]}
+                      alt={ad.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => handleDelete(ad._id)}
+                      className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
+                    >
+                      <Trash2 className="w-5 h-5 text-red-500" />
+                    </button>
+                  </div>
 
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.title}
-                  </h3>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {ad.title}
+                    </h3>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-gray-700">
-                        {item.averageRating}
-                      </span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                        <span className="text-gray-700">
+                          {ad.averageRating}
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-gray-900">
+                        Rs.{ad.price}
+                        <span className="text-sm text-gray-500">/month</span>
+                      </p>
                     </div>
-                    <p className="text-xl font-bold text-gray-900">
-                      Rs.{item.price}
-                      <span className="text-sm text-gray-500">/month</span>
-                    </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

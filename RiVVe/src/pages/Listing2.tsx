@@ -19,6 +19,7 @@ import {
   CookingPot,
   WashingMachine,
   User,
+  House,
 } from "lucide-react";
 import Footer from "../components/footer/Footer";
 import axios from "axios";
@@ -184,27 +185,35 @@ function Listing2() {
                     <h1 className="text-3xl font-bold text-gray-100">
                       {ad.title}
                     </h1>
-                    <div className="flex items-center mt-2">
-                      <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+                    <div className="flex items-center gap-2 mt-2">
+                      <MapPin className="h-5 w-5 text-gray-400" />
                       <span className="text-gray-300">{ad.address}</span>
                     </div>
-                    {ad.roomTypes.singleRoom !== 0 && (
-                      <div className="flex items-center text-gray-300 mb-1">
-                        <Users className="w-4 h-4 mr-2" />
-                        <span className="text-sm">
-                          {ad.roomTypes.doubleRoom} Double rooms
-                        </span>
-                      </div>
-                    )}
 
-                    {ad.roomTypes.doubleRoom !== 0 && (
-                      <div className="flex items-center text-gray-300 mb-4">
-                        <User className="w-4 h-4 mr-2" />
-                        <span className="text-sm">
-                          {ad.roomTypes.singleRoom} Single rooms
-                        </span>
+                    <div className="mt-2">
+                      {ad.roomTypes.singleRoom !== 0 && (
+                        <div className="flex items-center text-gray-300 mb-1">
+                          <Users className="w-4 h-4 mr-2" />
+                          <span className="text-sm">
+                            {ad.roomTypes.doubleRoom} Double rooms
+                          </span>
+                        </div>
+                      )}
+
+                      {ad.roomTypes.doubleRoom !== 0 && (
+                        <div className="flex items-center text-gray-300 mb-4">
+                          <User className="w-4 h-4 mr-2" />
+                          <span className="text-sm">
+                            {ad.roomTypes.singleRoom} Single rooms
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-center text-gray-300 gap-2">
+                        {ad.housingType === "House" && <House />}
+                        {ad.housingType}
                       </div>
-                    )}
+                    </div>
                   </div>
                   <button className="p-2 rounded-full hover:bg-gray-700">
                     <Heart className="h-6 w-6 text-red-400" />
