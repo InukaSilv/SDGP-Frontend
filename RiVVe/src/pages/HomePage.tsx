@@ -38,12 +38,12 @@ function HomePage() {
         <div className="h-full w-full flex flex-col items-center justify-center bg-black/50 text-center px-4">
           {/* Animate Heading */}
           <motion.h1
-            className="text-white text-5xl md:text-7xl font-bold mb-4 z-11"
+            className="text-white text-5xl md:text-7xl font-bold mb-4 z-11 mt-100 sm:mt-10"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#e8f8fa] to-[#b8c6e1]">
+            <span className="bg-clip-text  text-transparent bg-gradient-to-r from-[#e8f8fa] to-[#b8c6e1]">
               Welcome to RiVVE
             </span>
           </motion.h1>
@@ -69,7 +69,7 @@ function HomePage() {
               <div className="relative flex items-center bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-xl overflow-hidden group hover:bg-white/15 transition-all duration-300">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#3a8bb3] to-[#1e8f8a] opacity-30 blur-md group-hover:opacity-40 transition-opacity duration-300"></div>
 
-                <div className="relative flex w-full items-center justify-between bg-white rounded-xl p-2 md:p-3">
+                <div className="relative flex flex-col sm:flex-row w-full items-center justify-between bg-white rounded-xl p-2 md:p-3">
                   <div className="flex items-center flex-1">
                     <MapPin className="h-5 w-5 text-[#27729A] mr-2 flex-shrink-0" />
                     <SearchBar onPlaceSelect={onPlaceSelect} />
@@ -78,7 +78,7 @@ function HomePage() {
                     type="submit"
                     onClick={handleSubmit}
                     disabled={!selectedPlace}
-                    className="ml-2 bg-gradient-to-r from-[#27729A] to-[#1e8f8a] text-white font-medium py-2 px-6 rounded-lg flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#1e8f8a]/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
+                    className="ml-2 bg-gradient-to-r w-full mt-3 sm:mt-0 sm:w-auto from-[#27729A] to-[#1e8f8a] text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#1e8f8a]/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     <Search className="h-4 w-4" />
                     <span>Search</span>
