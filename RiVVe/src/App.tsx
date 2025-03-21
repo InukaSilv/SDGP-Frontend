@@ -80,7 +80,11 @@ function App() {
           <Route path="/admin-users" element={<AdminUsers />} />
           <Route path="/admin-verify" element={<AdminVerification />} />
           <Route path="/admin-ads" element={<Adminads />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route
+            path="/payment"
+            element={<ProtectedRoute element={<Payment />} />}
+          />
+
           <Route
             path="/wishlist"
             element={<ProtectedStudentRoute element={<PremiumWishList />} />}
