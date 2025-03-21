@@ -435,7 +435,7 @@ const About = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#2772A0]/20 to-gray-900/70 z-0"></div>
 
         {/* Animated circles in background */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute  top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
         <div
           className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1e5f8a]/20 rounded-full filter blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}

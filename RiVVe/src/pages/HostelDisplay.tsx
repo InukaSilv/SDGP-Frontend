@@ -151,7 +151,7 @@ const HostelDisplay: React.FC = () => {
       <Navbar />
       {/* top searchbar and filter */}
       <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-transparent shadow-lg py-2 backdrop-blur-md z-10">
-        <div className="flex items-center gap-2 md:gap-4 bg-white border border-white/30 shadow-2xl p-2 rounded-3xl transition-all duration-300 hover:shadow-blue-500/50 md:w-120">
+        <div className="flex items-center gap-2 md:gap-4 w-100 px-10 bg-white border border-white/30 shadow-2xl p-1 rounded-3xl transition-all duration-300 hover:shadow-blue-500/50">
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div className="flex items-center gap-3 bg-none">
               <SearchBar onPlaceSelect={onPlaceSelect} />
