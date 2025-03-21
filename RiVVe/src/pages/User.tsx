@@ -160,11 +160,12 @@ function User() {
   };
 
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
-  const handlepayment = async (action: string) => {
+  const handlepayment = async (paymentType: string) => {
     try {
-      const response = await axios.put(
+      const planType = paymentType === "monthly" ? "gold" : "platinum"; 
+      await axios.put(
         `${API_BASE_URL}/api/auth/updatepayment`,
-        { action, userId: userdata._id },
+        { paymentType, userId: userdata._id },
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -172,11 +173,28 @@ function User() {
           },
         }
       );
-      navigate("/payment");
+      navigate("/payment",{
+        state: { planType, planDuration: paymentType }
+      });
     } catch (error) {
       console.error("payment selection error");
     }
   };
+
+  const ROLE_PLANS = {
+    student: {
+      monthly: { name: "Gold Plan", price: "500", duration: "month", type: "gold" },
+      yearly: { name: "Platinum Plan", price: "5000", duration: "year", type: "platinum" },
+    },
+    landlord: {
+      monthly: { name: "Gold Plan", price: "800", duration: "month", type: "gold" },
+      yearly: { name: "Platinum Plan", price: "8000", duration: "year", type: "platinum" },
+    },
+  };
+
+  const userRole = userdata?.role?.toLowerCase() || "student"; // Get user role
+  const monthlyPlan = ROLE_PLANS[userRole].monthly;
+  const yearlyPlan = ROLE_PLANS[userRole].yearly;
 
   // Cancelling the subscription
   const handelCancelSubscription = async () => {};
@@ -488,10 +506,10 @@ function User() {
               <div className="flex flex-col items-center md:items-end ">
                 <div className="text-white text-center md:text-right mb-4">
                   <span className="text-secondary/80 text-sm line-through">
-                    $XX.XX/month
+                    Rs.{monthlyPlan.price * 2}/month
                   </span>
                   <div className="text-3xl font-bold">
-                    Rs.XXX<span className="text-sm font-normal">/month</span>
+                    Rs.{monthlyPlan.price}<span className="text-sm font-normal">/month</span>
                   </div>
                   <p className="text-yellow-300 text-sm">
                     Limited time offer - 50% off!
@@ -505,7 +523,7 @@ function User() {
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     <Sparkles className="h-5 w-5" />
-                    Upgrade to gold monthly
+                    Upgrade to {monthlyPlan.name}
                   </span>
                   <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </button>
@@ -517,7 +535,7 @@ function User() {
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     <Sparkles className="h-5 w-5" />
-                    Upgrade to Platinum yearly
+                    Upgrade to {yearlyPlan.name}
                   </span>
                   <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </button>

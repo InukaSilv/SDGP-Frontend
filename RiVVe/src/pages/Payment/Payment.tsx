@@ -10,11 +10,11 @@ function Payment() {
   
   // Get plan info from location state (passed from email verification)
   const { planType, planDuration } = location.state || {};
-
+  console.log("✅ Received Payment Data:", { planType, planDuration }); 
   useEffect(() => {
     // If no plan info, redirect to dashboard or home
     if (!planType || !planDuration) {
-      navigate('/dashboard');
+      navigate('/login');
       return;
     }
 
