@@ -28,8 +28,8 @@ function Payment() {
       setLoading(true);
       setError(null);
       
-      // Call your backend endpoint
-      const response = await axios.post('/api/payment/create-checkout-session', {
+      // Call backend endpoint
+      const response = await axios.post('https://sdgp-backend-590336222818.us-central1.run.app/create-checkout-session', {
         planType,
         planDuration
       });
@@ -55,7 +55,7 @@ function Payment() {
               className="px-6 py-2 rounded-xl bg-[#2772A0] text-white hover:bg-[#3a85b3] transition-all"
               onClick={() => navigate('./pages/Login')}
             >
-              Return to Dashboard
+              Return to login
             </button>
           </>
         ) : (

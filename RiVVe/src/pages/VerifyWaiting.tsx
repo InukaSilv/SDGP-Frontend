@@ -45,9 +45,12 @@ function VerifyWaiting() {
         try {
           await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
           console.log("User data sent to backend successfully");
-
+          
           if (formData.paymentType !== "none") {
-            navigate("/payment");
+            const planType = formData.paymentType === "monthly" ? "gold" : "platinum";
+            navigate("/payment", { 
+              state: { planType, planDuration: formData.paymentType } 
+            });
           } else {
             navigate("/login");
           }
