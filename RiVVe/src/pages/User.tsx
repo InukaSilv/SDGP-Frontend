@@ -458,86 +458,89 @@ function User() {
       </div>
 
       {/* ad to show the premium info */}
-      <div className="max-w-6xl mx-auto px-4 mb-16">
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+      {!userdata.isPremium && (
+        <div className="max-w-6xl mx-auto px-4 mb-16">
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="text-yellow-300 h-6 w-6" />
-                <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
-                  Premium Offer
-                </span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                Join Premium and Experience the Power of RiVVE
-              </h3>
-              <p className="text-secondary/90 mb-6 max-w-xl">
-                Unlock exclusive features, priority support, and advanced tools
-                to take your experience to the next level. Upgrade today and see
-                the difference!
-              </p>
-              <ul className="text-white space-y-2 mb-6">
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Unlimited access to all premium features</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Priority customer support 24/7</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Advanced analytics and reporting tools</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
-            {!userdata.isPremium && (
-              <div className="flex flex-col items-center md:items-end ">
-                <div className="text-white text-center md:text-right mb-4">
-                  <span className="text-secondary/80 text-sm line-through">
-                    $XX.XX/month
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="text-yellow-300 h-6 w-6" />
+                  <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
+                    Premium Offer
                   </span>
-                  <div className="text-3xl font-bold">
-                    Rs.XXX<span className="text-sm font-normal">/month</span>
-                  </div>
-                  <p className="text-yellow-300 text-sm">
-                    Limited time offer - 50% off!
-                  </p>
                 </div>
-
-                {/* option 1 */}
-                <button
-                  onClick={() => handlepayment("monthly")}
-                  className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Upgrade to gold monthly
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                </button>
-
-                {/* option 2 */}
-                <button
-                  onClick={() => handlepayment("yearly")}
-                  className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Upgrade to Platinum yearly
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                </button>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Join Premium and Experience the Power of RiVVE
+                </h3>
+                <p className="text-secondary/90 mb-6 max-w-xl">
+                  Unlock exclusive features, priority support, and advanced
+                  tools to take your experience to the next level. Upgrade today
+                  and see the difference!
+                </p>
+                <ul className="text-white space-y-2 mb-6">
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Unlimited access to all premium features</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Priority customer support 24/7</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Advanced analytics and reporting tools</span>
+                  </li>
+                </ul>
               </div>
-            )}
+
+              {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
+              {!userdata.isPremium && (
+                <div className="flex flex-col items-center md:items-end ">
+                  <div className="text-white text-center md:text-right mb-4">
+                    <span className="text-secondary/80 text-sm line-through">
+                      $XX.XX/month
+                    </span>
+                    <div className="text-3xl font-bold">
+                      Rs.XXX<span className="text-sm font-normal">/month</span>
+                    </div>
+                    <p className="text-yellow-300 text-sm">
+                      Limited time offer - 50% off!
+                    </p>
+                  </div>
+
+                  {/* option 1 */}
+                  <button
+                    onClick={() => handlepayment("monthly")}
+                    className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Sparkles className="h-5 w-5" />
+                      Upgrade to gold monthly
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  </button>
+
+                  {/* option 2 */}
+                  <button
+                    onClick={() => handlepayment("yearly")}
+                    className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Sparkles className="h-5 w-5" />
+                      Upgrade to Platinum yearly
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
       <Footer />
     </>
   );

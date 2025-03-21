@@ -14,6 +14,7 @@ interface Ad {
     singleRoom: number;
     doubleRoom: number;
   };
+  adCount: number;
   residents: number;
   price: string;
   images: string[];
@@ -23,6 +24,8 @@ function MyAds() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [ads, setAds] = useState<Ad[]>([]);
   const navigate = useNavigate();
+  const user = localStorage.getItem("user");
+  const userData = user ? JSON.parse(user) : null;
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -55,13 +58,23 @@ function MyAds() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-semibold">My Listings</h1>
 
-          {/* { && Landlord.propertyCount === 3} */}
-          <button
-            className="flex items-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition"
-            onClick={() => navigate("/posting")}
-          >
-            <Plus size={20} /> Post a New Ad
-          </button>
+          {userData.role === "Landlord" &&
+          userData.adCount === 3 &&
+          !userData.isPremium ? (
+            <button
+              className="bg-yellow-500 text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition"
+              onClick={() => navigate("/user")}
+            >
+              Upgrade to Premium to Post New Ads
+            </button>
+          ) : (
+            <button
+              className="flex items-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition"
+              onClick={() => navigate("/posting")}
+            >
+              <Plus size={20} /> Post a New Ad
+            </button>
+          )}
         </div>
         <p className="mt-[-25px] mb-5">Manage your property</p>
 
