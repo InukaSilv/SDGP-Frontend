@@ -32,12 +32,34 @@ const HostelDisplay: React.FC = () => {
     lat: 0,
     lng: 0,
   });
+  const [mapClonePosition, setMapClonePosition] = useState<{
+    lat: number;
+    lng: number;
+  }>({
+    lat: 0,
+    lng: 0,
+  });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const [listing, setListing] = useState<AdDisplayer[]>([]);
   type Poi = { key: string; location: google.maps.LatLngLiteral };
   const [locations, setLocations] = useState<Poi[]>([]);
+  const [onApplyFilters, setOnApplyFilters] = useState<{
+    priceRange: number[];
+    selectedHousingType: string[];
+    selectedRoomType: string[];
+    selectedFacility: string[];
+    selectedResidents: number;
+    selectedOption: string;
+  }>({
+    priceRange: [0, 100000],
+    selectedHousingType: [],
+    selectedRoomType: [],
+    selectedFacility: [],
+    selectedResidents: 1,
+    selectedOption: "Date: Newest on Top",
+  });
 
   // default checking if the location is searched or if the location is get by default
   useEffect(() => {
@@ -61,33 +83,40 @@ const HostelDisplay: React.FC = () => {
     setTimeout(() => setMapLoaded(true), 500);
   }, [location.state]);
 
+  const fetchLisiting = async () => {
+    // asking for the ads based on the location from the backend
+    console.log("fetching listing", onApplyFilters);
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/listing/get-listing`,
+        {
+          params: {
+            lat: mapPosition.lat,
+            lng: mapPosition.lng,
+            radius,
+            ...onApplyFilters,
+          },
+        }
+      );
+      setListing(response.data);
+      console.log(response.data);
+      console.log(listing.length);
+
+      const locationMarkers = response.data.map((record: ListingRecord) => ({
+        key: record._id,
+        location: {
+          lat: record.location.coordinates[1],
+          lng: record.location.coordinates[0],
+        },
+      }));
+      setLocations(locationMarkers);
+    } catch (error) {
+      console.error("Error fetching Listing:", error);
+    }
+  };
+
   // fetching the ads
   useEffect(() => {
-    console.log("triggered with radius chnage");
-    const fetchLisiting = async () => {
-      // asking for the ads based on the location from the backend
-
-      try {
-        const response = await axios.get(
-          `${API_BASE_URL}/api/listing/get-listing`,
-          { params: { lat: mapPosition.lat, lng: mapPosition.lng, radius } }
-        );
-        setListing(response.data);
-        console.log(response.data);
-        console.log(listing.length);
-
-        const locationMarkers = response.data.map((record: ListingRecord) => ({
-          key: record._id,
-          location: {
-            lat: record.location.coordinates[1],
-            lng: record.location.coordinates[0],
-          },
-        }));
-        setLocations(locationMarkers);
-      } catch (error) {
-        console.error("Error fetching Listing:", error);
-      }
-    };
     if (mapPosition.lat && mapPosition.lng) {
       fetchLisiting();
     }
@@ -101,7 +130,7 @@ const HostelDisplay: React.FC = () => {
   // on select of an university the map will be updated with the center
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     if (place?.geometry?.location) {
-      setMapPosition({
+      setMapClonePosition({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
@@ -110,6 +139,11 @@ const HostelDisplay: React.FC = () => {
 
   const showmapToggle = () => {
     setShowmap(!showmap);
+  };
+
+  const handleSubmit = () => {
+    setMapPosition(mapClonePosition);
+    fetchLisiting();
   };
 
   return (
@@ -121,7 +155,10 @@ const HostelDisplay: React.FC = () => {
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div className="flex items-center gap-3 bg-none">
               <SearchBar onPlaceSelect={onPlaceSelect} />
-              <button className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300">
+              <button
+                className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300"
+                onClick={handleSubmit}
+              >
                 Search
               </button>
             </div>
@@ -168,6 +205,8 @@ const HostelDisplay: React.FC = () => {
               <FilterContent
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
+                setOnApplyFilters={setOnApplyFilters}
+                currentFilters={onApplyFilters}
               />
             </div>
           </div>
