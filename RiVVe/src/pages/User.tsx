@@ -163,16 +163,6 @@ function User() {
   const handlepayment = async (paymentType: string) => {
     try {
       const planType = paymentType === "monthly" ? "gold" : "platinum"; 
-      await axios.put(
-        `${API_BASE_URL}/api/auth/updatepayment`,
-        { paymentType, userId: userdata._id },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
       navigate("/payment",{
         state: { planType, planDuration: paymentType }
       });

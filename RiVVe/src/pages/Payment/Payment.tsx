@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Payment() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
@@ -10,14 +11,12 @@ function Payment() {
   
   // Get plan info from location state (passed from email verification)
   const { planType, planDuration } = location.state || {};
-  console.log("✅ Received Payment Data:", { planType, planDuration }); 
   useEffect(() => {
     // If no plan info, redirect to dashboard or home
     if (!planType || !planDuration) {
-      navigate('/login');
+      navigate('/user');
       return;
     }
-
     // Automatically initiate checkout
     handlePayment(planType, planDuration);
   }, [planType, planDuration, navigate]);
@@ -29,14 +28,24 @@ function Payment() {
       setError(null);
       
       // Call backend endpoint
-      const response = await axios.post('https://sdgp-backend-590336222818.us-central1.run.app/create-checkout-session', {
+      const response = await axios.post(`${API_BASE_URL}/api/payments/create-checkout-session`, {
         planType,
         planDuration
-      });
-      
-      // Redirect to Stripe checkout page
-      window.location.href = response.data.url;
-    } catch (err: any) {
+      },
+      {
+        headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Include JWT token
+        "Content-Type": "application/json",
+        }
+      }
+      );
+      if (response.data.url) {
+        window.location.href = response.data.url; //Redirect to Stripe
+      } else {
+        console.error("No Payment URL received!");
+        setError("No payment URL received. Please try again.");
+      }
+    }catch (err: any) {
       setError(err.response?.data?.error || 'Payment initialization failed');
       console.error('Payment error:', err);
       setLoading(false);
@@ -53,9 +62,9 @@ function Payment() {
             <p className="text-white mb-6">{error}</p>
             <button 
               className="px-6 py-2 rounded-xl bg-[#2772A0] text-white hover:bg-[#3a85b3] transition-all"
-              onClick={() => navigate('./pages/Login')}
+              onClick={() => navigate('/user')}
             >
-              Return to login
+              Return to profile
             </button>
           </>
         ) : (
