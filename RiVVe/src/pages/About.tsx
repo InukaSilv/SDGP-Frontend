@@ -463,7 +463,9 @@ const About = () => {
               suffix="+"
               title="Verified Landlords"
             />
-            <AnimatedCounter endValue={15} title="Universities Covered" />
+            <AnimatedCounter 
+            endValue={15} 
+            title="Universities Covered" />
             <AnimatedCounter
               endValue={98}
               suffix="%"
