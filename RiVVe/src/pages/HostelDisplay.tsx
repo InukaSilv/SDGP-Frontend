@@ -60,6 +60,8 @@ const HostelDisplay: React.FC = () => {
     selectedResidents: 1,
     selectedOption: "Date: Newest on Top",
   });
+  const user = localStorage.getItem("user");
+  const userData = JSON.parse(user || "{}");
 
   // default checking if the location is searched or if the location is get by default
   useEffect(() => {
@@ -151,12 +153,12 @@ const HostelDisplay: React.FC = () => {
       <Navbar />
       {/* top searchbar and filter */}
       <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-transparent shadow-lg py-2 backdrop-blur-md z-10">
-        <div className="flex items-center gap-2 md:gap-4 w-100 px-10 bg-white border border-white/30 shadow-2xl p-1 rounded-3xl transition-all duration-300 hover:shadow-blue-500/50">
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white border border-white/30 shadow-2xl p-1 rounded-md md:rounded-3xl transition-all duration-300 hover:shadow-blue-500/50">
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div className="flex items-center gap-3 bg-none">
               <SearchBar onPlaceSelect={onPlaceSelect} />
               <button
-                className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300"
+                className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-lg md:rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300"
                 onClick={handleSubmit}
               >
                 Search
@@ -164,10 +166,10 @@ const HostelDisplay: React.FC = () => {
             </div>
           </APIProvider>
           <div
-            className="bg-white/10 p-2 rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all cursor-pointer hover:scale-110 hover:shadow-[0px_0px_15px_#94a3b8]"
+            className="bg-gray-200 sm:bg-white/10 mb-1 sm:mb-0 p-1 sm:p-2 w-80 sm:w-auto rounded-lg md:rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all cursor-pointer hover:scale-110 hover:shadow-[0px_0px_15px_#94a3b8]"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <Filter size={30} className="text-black " />
+            <Filter size={30} className="text-black ml-auto mr-auto" />
           </div>
         </div>
 
@@ -214,9 +216,9 @@ const HostelDisplay: React.FC = () => {
       )}
 
       {/* map and ads */}
-      <div className="flex flex-col md:flex-row pt-40 px-4 gap-6 relative">
+      <div className="flex flex-col md:flex-row pt-55 md:pt-40 px-4 gap-6 relative">
         <div
-          className={`w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-auto h-screen scrollbar-hidden${
+          className={`w-full md:w-1/2 grid md:pr-2 grid-cols-1 sm:grid-cols-2 gap-3 overflow-auto h-screen scrollbar-hidden${
             showmap ? "pointer-events-none opacity-50" : ""
           }`}
         >
@@ -228,8 +230,8 @@ const HostelDisplay: React.FC = () => {
         </div>
 
         <div
-          className={`w-full md:w-1/2 pl-5 fixed right-0 top-[160px] bottom-0 bg-gray-800 shadow-lg transition-all duration-300 ${
-            showmap ? "block md:block w-full h-full" : "hidden md:block"
+          className={`w-full md:w-1/2 fixed inset-0 ml-auto top-[160px] bg-gray-800 shadow-lg transition-all duration-300 ${
+            showmap ? " mt-8 w-screen" : "hidden md:block"
           }`}
         >
           <GoogleMapComponent
@@ -266,7 +268,7 @@ const HostelDisplay: React.FC = () => {
           <Map size={25} />
         </div>
       </div>
-      <Chatbot />
+      {userData.role === "Student" && userData.isPremium && <Chatbot />}
     </>
   );
 };

@@ -175,7 +175,7 @@ function Listing2() {
   const toggleWishlist = async (userId: string, adId: string) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/listing/adwishlist`,
+        `${API_BASE_URL}/api/wishlist/adwishlist`,
         { userId, adId },
         {
           headers: {

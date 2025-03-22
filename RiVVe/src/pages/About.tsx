@@ -441,8 +441,8 @@ const About = () => {
           style={{ animationDelay: "1s" }}
         ></div>
 
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
+        <div className="relative z-10 max-w-4xl mt-20 md:mt-0">
+          <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
             About RiVVE
           </h1>
 
