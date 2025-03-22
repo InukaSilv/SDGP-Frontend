@@ -69,10 +69,10 @@ function MyAds() {
             </button>
           ) : (
             <button
-              className="flex items-center gap-2 bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition"
+              className="flex items-center gap-1.5 sm:gap-2 bg-blue-600 text-white text-sm sm:text-base font-medium px-3 sm:px-4 py-1.5 sm:py-2 rounded-md shadow-md hover:bg-blue-700 transition mt-2"
               onClick={() => navigate("/posting")}
             >
-              <Plus size={20} /> Post a New Ad
+              <Plus size={16} className="sm:w-5 sm:h-5" /> Post a New Ad
             </button>
           )}
         </div>

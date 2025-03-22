@@ -372,7 +372,9 @@ function User() {
                 Phone
               </label>
               <input
-                type="tel"
+                type="text"
+                maxLength={10}
+                pattern="\d{0,10}"
                 name="phone"
                 value={formData.phone && formData.phone}
                 placeholder={!formData.phone ? "Update phone number" : ""}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Camera, Phone, Wind } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Camera, Phone, Wind, ArrowLeft } from "lucide-react";
 import { Shield } from "lucide-react";
 import { BookOpen } from "lucide-react";
 import { Wifi } from "lucide-react";
@@ -207,36 +207,40 @@ function EditAd() {
     <>
       <div className="min-h-screen bg-gray-200">
         <Navbar />
-        <div className="container mx-auto py-8 px-4 mt-20">
-          <div className="rounded-2xl p-5">
-            <div className="bg-[#1e5f8a] p-5 rounded-t-md gap-2">
-              <h1 className="text-3xl text-amber-50 font-semibold">
+        <div className="container mx-auto py-8 px-4 mt-18">
+          <div className="rounded-2xl">
+            <Link
+              to="/MyAds"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium mb-4 transition-colors duration-200"
+            >
+              <ArrowLeft size={18} />
+              Back to My Ads
+            </Link>
+            <div className="bg-[#1e5f8a] p-5 rounded-t-md">
+              <h1 className="text-2xl md:text-3xl text-amber-50 font-semibold">
                 Edit Post
               </h1>
-              <h5 className="text-md text-white mt-1">
+              <h5 className="text-sm md:text-md text-white mt-1">
                 Update your property listing details
               </h5>
             </div>
 
-            {/* main div */}
-            <div className="w-full drop-shadow-2xl bg-white p-3 rounded-b-md">
+            <div className="w-full drop-shadow-2xl bg-white p-3 md:p-6 rounded-b-md">
               <form onSubmit={handleSubmit}>
-                <div className="flex flex-row gap-3 border-b-1 border-gray-500 pb-3">
-                  <div className="md:w-1/2">
-                    {/* title */}
-                    <div className="flex flex-col gap-2 ">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="lg:w-1/2 w-full">
+                    <div className="flex flex-col gap-2">
                       <label className="text-md text-gray-600">Title</label>
                       <input
                         name="title"
                         type="text"
                         onChange={handleChange}
                         value={formData.title}
-                        className="border-1 border-gray-400 p-2 rounded-md"
+                        className="border border-gray-400 p-2 rounded-md w-full"
                       />
                     </div>
 
-                    {/* description */}
-                    <div className="flex flex-col  gap-2 mt-4">
+                    <div className="flex flex-col gap-2 mt-4">
                       <label className="text-md text-gray-600">
                         Description
                       </label>
@@ -249,9 +253,8 @@ function EditAd() {
                       />
                     </div>
 
-                    {/* single room and double room */}
-                    <div className="flex  gap-1 mt-4">
-                      <div className="flex flex-col w-1/3">
+                    <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                      <div className="flex flex-col flex-1">
                         <label className="text-md text-gray-600">
                           Single room
                         </label>
@@ -260,10 +263,10 @@ function EditAd() {
                           onChange={handleChange}
                           name="singleRoom"
                           value={formData.singleRoom}
-                          className="border-1 border-gray-400 p-2 rounded-md"
+                          className="border border-gray-400 p-2 rounded-md"
                         />
                       </div>
-                      <div className="flex flex-col w-1/3">
+                      <div className="flex flex-col flex-1">
                         <label className="text-md text-gray-600">
                           Double room
                         </label>
@@ -272,10 +275,10 @@ function EditAd() {
                           onChange={handleChange}
                           name="doubleRoom"
                           value={formData.doubleRoom}
-                          className="border-1 border-gray-400 p-2 rounded-md"
+                          className="border border-gray-400 p-2 rounded-md"
                         />
                       </div>
-                      <div className="flex flex-col w-1/3">
+                      <div className="flex flex-col flex-1">
                         <label className="text-md text-gray-600">Price</label>
                         <input
                           type="number"
@@ -284,61 +287,67 @@ function EditAd() {
                           min="0"
                           step="1000"
                           value={formData.price}
-                          className="border-1 border-gray-400 p-2 rounded-md"
+                          className="border border-gray-400 p-2 rounded-md"
                         />
                       </div>
                     </div>
 
-                    {/* telephone */}
                     <div className="flex flex-col gap-2 mt-4">
-                      <label className="text-md text-gray-600 flex gap-2">
-                        {" "}
-                        <Phone className=" text-blue-400" />
+                      <label className="text-md text-gray-600 flex items-center gap-2">
+                        <Phone className="text-blue-400" />
                         Contact
                       </label>
                       <input
                         name="contact"
-                        type="tel"
+                        type="text"
+                        maxLength={10}
+                        pattern="\d{0,10}"
                         onChange={handleChange}
                         value={formData.contact}
-                        className="border-1 border-gray-400 p-2 rounded-md"
+                        className="border border-gray-400 p-2 rounded-md"
                       />
                     </div>
 
                     {/* facilities */}
-                    <div className="flex flex-col  gap-2">
+                    <div className="flex flex-col gap-3">
                       <label className="text-md text-gray-600">
                         Facilities
                       </label>
-                      <p className="text-sm">
+                      <p className="text-sm text-gray-500">
                         Add or remove facilities that you want to change
                       </p>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                         {facilitiess.map(({ name, icon }) => (
                           <div
                             key={name}
                             onClick={() => handleFacilities(name)}
-                            className={`cursor-pointer bg-[#2772A0]/50 font-semibold text-white border-1 border-gray-700 p-4 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center gap-2 hover:[bg-gray-700]/70 ${
+                            className={`cursor-pointer bg-[#2772A0]/50 font-semibold text-white border-1 border-gray-700 p-3 sm:p-4 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center justify-center gap-1.5 sm:gap-2 hover:[bg-gray-700]/70 ${
                               formData.facilities.includes(name)
                                 ? "bg-[#2772A0]/100 shadow-[0_0_20px_rgba(96,165,250,0.3)]"
                                 : ""
                             }`}
                           >
-                            <div>{icon}</div>
-                            <h1>{name}</h1>
+                            <div className="flex items-center justify-center">
+                              {icon}
+                            </div>
+                            <h1 className="text-sm sm:text-base text-center">
+                              {name}
+                            </h1>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     {/* images */}
-                    <div className="flex flex-col">
-                      <label className="text-md text-gray-600 mt-4 flex gap-2">
-                        <Camera className=" text-blue-400 mb-2" /> Photos
+                    <div className="flex flex-col mt-6">
+                      <label className="text-md text-gray-600 flex items-center gap-2 mb-2">
+                        <Camera className="text-blue-400" /> Photos
                       </label>
-                      <div className="border-2 border-dashed rounded-xl p-8 text-center items-center transition-all flex flex-col">
+                      <div className="border-2 border-dashed rounded-xl p-4 md:p-8 text-center">
                         {imageError && (
-                          <p className="text-red-500 mb-2">{imageError}</p>
+                          <p className="text-red-500 mb-2 text-sm">
+                            {imageError}
+                          </p>
                         )}
                         <input
                           type="file"
@@ -352,11 +361,11 @@ function EditAd() {
                           htmlFor="images"
                           className="cursor-pointer flex flex-col items-center"
                         >
-                          <Upload className="w-12 h-12 text-blue-400 mb-4" />
-                          <p className="text-gray-300 mb-2">
+                          <Upload className="w-8 h-8 md:w-12 md:h-12 text-blue-400 mb-4" />
+                          <p className="text-gray-300 mb-2 text-sm md:text-base">
                             Drag & drop your images here or click to browse
                           </p>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-xs md:text-sm text-gray-400">
                             Supported formats: JPG, PNG
                           </p>
                         </label>
@@ -364,20 +373,18 @@ function EditAd() {
                     </div>
                   </div>
 
-                  {/* right side */}
-                  <div className="w-1/2">
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="lg:w-1/2 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {formData.images.map((img, index) => (
                         <div key={index} className="relative group">
                           <img
                             src={img}
                             alt="Image"
-                            className="w-full h-[200px] object-cover rounded-lg transition-all duration-300 
-                       group-hover:brightness-[0.95] group-hover:shadow-lg"
+                            className="w-full h-[200px] object-cover rounded-lg transition-all duration-300 group-hover:brightness-95 group-hover:shadow-lg"
                           />
                           <button
                             type="button"
-                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110 hover:cursor-pointer"
+                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110"
                             onClick={() => handleImageRemove(img, true)}
                           >
                             <X size={16} />
@@ -389,12 +396,11 @@ function EditAd() {
                           <img
                             src={preview}
                             alt="Image"
-                            className="w-full h-[200px] object-cover rounded-lg transition-all duration-300 
-                     group-hover:brightness-[0.95] group-hover:shadow-lg"
+                            className="w-full h-[200px] object-cover rounded-lg transition-all duration-300 group-hover:brightness-95 group-hover:shadow-lg"
                           />
                           <button
                             type="button"
-                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110 hover:cursor-pointer"
+                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transform transition-all duration-200 hover:scale-110"
                             onClick={() => handleImageRemove(preview, false)}
                           >
                             <X size={16} />
@@ -404,19 +410,23 @@ function EditAd() {
                     </div>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  className="p-3 bg-blue-900 text-white rounded-md font-bold mt-5"
-                >
-                  Update Post
-                </button>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-blue-900 text-white rounded-md font-bold hover:bg-blue-800 transition-colors"
+                  >
+                    Update Post
+                  </button>
+                  <button
+                    type="button"
+                    className="px-6 py-3 bg-red-600 text-white rounded-md font-bold hover:bg-red-700 transition-colors"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </button>
+                </div>
               </form>
-              <button
-                className="p-3 bg-red-600 text-white rounded-md font-bold w-30 mt-2"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
             </div>
           </div>
         </div>

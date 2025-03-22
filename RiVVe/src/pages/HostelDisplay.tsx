@@ -169,7 +169,10 @@ const HostelDisplay: React.FC = () => {
             className="bg-gray-200 sm:bg-white/10 mb-1 sm:mb-0 p-1 sm:p-2 w-80 sm:w-auto rounded-lg md:rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all cursor-pointer hover:scale-110 hover:shadow-[0px_0px_15px_#94a3b8]"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <Filter size={30} className="text-black ml-auto mr-auto" />
+            <Filter
+              size={30}
+              className="text-black ml-auto mr-auto text-gray-600 pt-1"
+            />
           </div>
         </div>
 
@@ -268,7 +271,7 @@ const HostelDisplay: React.FC = () => {
           <Map size={25} />
         </div>
       </div>
-      {userData.role === "Student" && userData.isPremium && <Chatbot />}
+      {userData.isPremium && <Chatbot />}
     </>
   );
 };
