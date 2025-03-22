@@ -29,6 +29,7 @@ function VerifyWaiting() {
           console.error("No ID Token found. User may not be logged in.");
           return;
         }
+        const planType = formData.paymentType === "monthly" ? "gold" : "platinum";
         const requestData = {
           fname: formData.fname,
           lname: formData.lname,
@@ -40,14 +41,18 @@ function VerifyWaiting() {
           idToken: idToken,
           role: formData.role || "student",
           paymentType: formData.paymentType || "none",
+          planType: formData.paymentType !== "none" ? planType : "none",
         };
         console.log(formData);
         try {
           await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
           console.log("User data sent to backend successfully");
-
+          
           if (formData.paymentType !== "none") {
-            navigate("/payment");
+            const planType = formData.paymentType === "monthly" ? "gold" : "platinum";
+            navigate("/payment", { 
+              state: { planType, planDuration: formData.paymentType } 
+            });
           } else {
             navigate("/login");
           }
