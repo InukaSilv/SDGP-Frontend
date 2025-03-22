@@ -110,7 +110,8 @@ function User() {
       }
       setError("Current password is wrong");
     }
-  };
+  }
+
 
   const navigate = useNavigate();
   const Logout = async () => {
@@ -192,8 +193,7 @@ function User() {
   const monthlyPlan = ROLE_PLANS[userRole].monthly;
   const yearlyPlan = ROLE_PLANS[userRole].yearly;
 
-  // Cancelling the subscription
-  const handelCancelSubscription = async () => {};
+
   return (
     <>
       <Navbar />
@@ -307,7 +307,7 @@ function User() {
               {userdata.isPremium && (
                 <>
                   <button
-                    onClick={handelCancelSubscription}
+                    
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
                   >
                     Cancel Subscription
