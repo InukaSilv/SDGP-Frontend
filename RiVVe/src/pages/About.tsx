@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import MouseGlowEffect from "../components/mouseGlowEffect/MouseGlowEffect";
-import Signup1 from "./Signup1";
 
 type TeamMember = {
   name: string;
@@ -487,6 +486,7 @@ const About = () => {
            </a>
           </div>
         </div>
+    
 
         {/* Scroll indicator */}
         <div
