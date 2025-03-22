@@ -501,7 +501,9 @@ function Listing2() {
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
-                {ownerDetail && <HostCardWithPopup host={ownerDetail} />}
+                {ownerDetail && (
+                  <HostCardWithPopup adId={ad._id} host={ownerDetail} />
+                )}
               </div>
             </div>
           </div>
