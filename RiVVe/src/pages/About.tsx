@@ -479,7 +479,7 @@ const About = () => {
                Find a Hostel 
             </button>
             <a 
-               href="D:\Projects\RiVVE frontend\SDGP-Frontend\RiVVe\src\pages\Signup1.tsx" 
+               href="/signup1" 
                className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300 inline-block text-center"
              >
                List Your Property
