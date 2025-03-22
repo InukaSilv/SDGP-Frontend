@@ -95,6 +95,8 @@ function Listing2() {
   const requser = storedUser ? JSON.parse(storedUser) : null;
   const location = useLocation();
   const ad: Property = location.state?.ad;
+  const [startTime, setStartTime] = useState<number | null>(null);
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -129,6 +131,31 @@ function Listing2() {
     fetchReviews();
     fetchOwnerDetail();
   }, [ad.reviews]);
+
+  // get the time where the user came to view the property and send to backend when the id is changed
+  useEffect(() => {
+    const startTime = Date.now();
+    setStartTime(startTime);
+
+    const sendTimeSpent = async () => {
+      if (startTime) {
+        const exitTime = Date.now();
+        const timeSpent = (exitTime - startTime) / 1000;
+
+        try {
+          await axios.post(`${API_BASE_URL}/api/listing/track-view`, {
+            listingId: ad._id,
+            duration: timeSpent,
+          });
+        } catch (error) {
+          console.error("Error sending time spent:", error);
+        }
+      }
+    };
+    return () => {
+      sendTimeSpent();
+    };
+  }, [ad._id]);
 
   if (!ad) {
     return <div>Ad not found</div>;
