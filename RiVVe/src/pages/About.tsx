@@ -12,7 +12,7 @@ type TeamMember = {
 const teamMembers: TeamMember[] = [
   {
     name: "Lasal Rathnayake",
-    role: "Front End Developer",
+    role: "UI/UX Developer",
     imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal",
   },
   {
