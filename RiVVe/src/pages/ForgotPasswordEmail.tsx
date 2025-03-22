@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import {
-  fetchSignInMethodsForEmail,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import axios from "axios";
 
 function ForgotPasswordEmail() {
@@ -46,6 +43,7 @@ function ForgotPasswordEmail() {
       setTimeout(() => {
         navigate("/login");
       }, 10000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.code === "auth/user-not-found") {
         setError("Email does not exist, try entering correct email");

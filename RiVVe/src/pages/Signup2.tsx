@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar/navbar";
+import { useLocation } from "react-router-dom";
+import Navbar from "../components/navbar/Navbar";
 import Signupform from "../components/forms/Signupform";
 
 // Define features for each role and plan type
@@ -81,7 +81,6 @@ const ROLE_PLANS = {
 
 function Signup2() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { role, id } = location.state || {};
   const [selectedPlan, setSelectedPlan] = useState("none");
   

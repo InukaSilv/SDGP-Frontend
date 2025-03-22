@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Star, MapPin, Users, User } from "lucide-react";
 
@@ -10,10 +9,10 @@ interface AdDisplayer {
   id: string;
   title: string;
   price: number;
-  images: [];
+  images: string[];
   address: string;
   roomTypes: roomTypes;
-  facilities: [];
+  facilities: string[];
   averageRating: number;
 }
 

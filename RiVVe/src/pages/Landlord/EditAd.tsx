@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../../components/navbar/navbar";
+import Navbar from "../../components/navbar/Navbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Camera, Phone, Wind } from "lucide-react";
 import { Shield } from "lucide-react";
@@ -56,8 +56,8 @@ function EditAd() {
     { name: "Food", icon: <Coffee size={20} /> },
   ];
 
-  const [imageError, setImageError] = useState<string>("");
   const [newPreview, setNewPreview] = useState<string[]>([]);
+  const [imageError, setImageError] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -113,7 +113,6 @@ function EditAd() {
         newImages: [...prev.newImages, ...files],
       }));
       setNewPreview((prev) => [...prev, ...newPreviews]);
-      setImageError("");
     }
   };
 
@@ -138,7 +137,7 @@ function EditAd() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
@@ -159,7 +158,7 @@ function EditAd() {
     formData.removeImages.forEach((removeing) => {
       data.append("removeImages", removeing);
     });
-    formData.newImages.forEach((file, index) => {
+    formData.newImages.forEach((file) => {
       data.append(`images`, file);
     });
 
@@ -191,15 +190,12 @@ function EditAd() {
       const data = {
         propertyId: ad._id,
       };
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/listing/delete-post`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          data,
-        }
-      );
+      await axios.delete(`${API_BASE_URL}/api/listing/delete-post`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        data,
+      });
       console.log("deleted Successfully");
       navigate("/MyAds");
     } catch (error) {
@@ -341,6 +337,9 @@ function EditAd() {
                         <Camera className=" text-blue-400 mb-2" /> Photos
                       </label>
                       <div className="border-2 border-dashed rounded-xl p-8 text-center items-center transition-all flex flex-col">
+                        {imageError && (
+                          <p className="text-red-500 mb-2">{imageError}</p>
+                        )}
                         <input
                           type="file"
                           id="images"

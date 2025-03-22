@@ -6,7 +6,6 @@ import {
   ShieldCheck,
   LogOut,
 } from "lucide-react";
-import { useState } from "react";
 function AdminNavbar() {
   const navigate = useNavigate();
 

@@ -1,11 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route,Navigate } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
+
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
-
-import Listing from "./pages/Listing";
-
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
 import Signup1 from "./pages/Signup1";
 import Signup2 from "./pages/Signup2";
@@ -16,13 +14,11 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
 import MyAds from "./pages/Landlord/MyAds";
 import EditAd from "./pages/Landlord/EditAd";
-import AdDisplayer from "./components/ads/AdDisplayer";
 import TargetPage from "./pages/TargetPage";
 import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
 import Chat from "./pages/Chat";
-import Testings from "./pages/Testings/testings";
 import Contact from "./pages/Contact";
 import Listing2 from "./pages/Listing2";
 import StudentReview from "./pages/Student/StudentReview";
@@ -45,8 +41,6 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<About />} />
-
-          <Route path="/listing" element={<Listing />} />
           <Route path="/listing2" element={<Listing2 />} />
 
           <Route path="/hostel" element={<HostelDisplay />} />
@@ -71,7 +65,7 @@ function App() {
             path="/edit-ad"
             element={<ProtectedRoute element={<EditAd />} />}
           />
-          <Route path="/testing" element={<Testings />} />
+
           <Route path="/contacts" element={<Contact />} />
           <Route path="/student-review" element={<StudentReview />} />
           <Route path="/feedback" element={<FeedbackPage />} />

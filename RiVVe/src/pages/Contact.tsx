@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Send,
   Building2,
   Mail,
   Phone,
-  Instagram,
   Facebook,
+  Instagram,
 } from "lucide-react";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
+declare global {
+  interface Window {
+    emailjs: any;
+  }
+}
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -38,7 +43,7 @@ function Contact() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -68,14 +73,16 @@ function Contact() {
         });
         setTimeout(() => setSubmitted(false), 3000);
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error("Email sending failed:", error);
         setIsLoading(false);
         alert("Failed to send message. Please try again later.");
       });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };

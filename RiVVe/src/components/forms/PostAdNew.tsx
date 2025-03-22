@@ -261,6 +261,10 @@ function PostAdNew() {
           },
         }
       );
+      const updatedUser = response.data.updatedUser;
+      if (updatedUser) {
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
       console.log("FormData Submitted Successfully", response.data);
       navigate("/MyAds");
     } catch (error) {

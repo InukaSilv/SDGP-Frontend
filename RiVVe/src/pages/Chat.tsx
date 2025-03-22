@@ -1,5 +1,4 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import React from "react";
 import ChatProfile from "../components/internalChatComp/ChatProfile";
 
 function Chat() {

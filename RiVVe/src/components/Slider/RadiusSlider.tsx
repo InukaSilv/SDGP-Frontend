@@ -4,7 +4,7 @@ interface RadiusSlider {
   setRadius: (value: number) => void;
 }
 function RadiusSlider({ radius, setRadius }: RadiusSlider) {
-  const changeRadius = (e: Event, newValue: number) => {
+  const changeRadius = (_: Event, newValue: number | number[]) => {
     setRadius(typeof newValue === "number" ? newValue : newValue[0]);
   };
 

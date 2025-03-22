@@ -6,20 +6,57 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
-function FilterContent({ isExpanded, setIsExpanded }) {
-  const [priceRange, setPriceRange] = useState<number[]>([30000, 60000]);
-  const [selectedHousingType, setSelectedHousingType] = useState<string[]>([]);
-  const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<string[]>([]);
+interface FilterContentProps {
+  isExpanded: boolean;
+  setIsExpanded: (value: boolean) => void;
+  setOnApplyFilters: (filters: {
+    priceRange: number[];
+    selectedHousingType: string[];
+    selectedRoomType: string[];
+    selectedFacility: string[];
+    selectedResidents: number;
+    selectedOption: string;
+  }) => void;
+  currentFilters: {
+    priceRange: number[];
+    selectedHousingType: string[];
+    selectedRoomType: string[];
+    selectedFacility: string[];
+    selectedResidents: number;
+    selectedOption: string;
+  };
+}
+
+function FilterContent({
+  isExpanded,
+  setIsExpanded,
+  setOnApplyFilters,
+  currentFilters,
+}: FilterContentProps) {
+  const [priceRange, setPriceRange] = useState<number[]>(
+    currentFilters.priceRange
+  );
+  const [selectedHousingType, setSelectedHousingType] = useState<string[]>(
+    currentFilters.selectedHousingType
+  );
+  const [selectedRoomType, setSelectedRoomType] = useState<string[]>(
+    currentFilters.selectedRoomType
+  );
+  const [selectedFacility, setSelectedFacility] = useState<string[]>(
+    currentFilters.selectedFacility
+  );
+  const [selectedResidents, setSelectedResidents] = useState<number>(
+    currentFilters.selectedResidents
+  );
+  const [selectedOption, setSelectedOption] = useState<string>(
+    currentFilters.selectedOption
+  );
   const options = [
     "Date: Newest on Top",
     "Date: Oldest on Top",
     "Price: High to Low",
     "Price: Low to High",
   ];
-  const [selectedOption, setSelectedOption] = useState<string>(
-    "Date: Newest on Top"
-  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const changePrice = (_event: Event, newValue: number | number[]) => {
@@ -50,6 +87,19 @@ function FilterContent({ isExpanded, setIsExpanded }) {
     );
   };
 
+  const handleApplyFilters = () => {
+    const filters = {
+      selectedResidents,
+      priceRange,
+      selectedHousingType,
+      selectedRoomType,
+      selectedFacility,
+      selectedOption,
+    };
+    setOnApplyFilters(filters);
+    setIsExpanded(false);
+  };
+
   return (
     <div className="relative w-full h-full p-4 sm:p-6 bg-gray-300 text-gray-800 rounded-lg shadow-lg overflow-y-auto max-h-[90vh] mt-20 md:mt-0">
       <button className="absolute top-4 right-4 text-gray-600 hover:text-black">
@@ -64,7 +114,10 @@ function FilterContent({ isExpanded, setIsExpanded }) {
         <label className="block text-sm sm:text-base font-semibold mb-2">
           Number of Residents
         </label>
-        <select className="w-full p-2 bg-white rounded-md text-gray-800 border border-gray-400">
+        <select
+          className="w-full p-2 bg-white rounded-md text-gray-800 border border-gray-400"
+          onChange={(e) => setSelectedResidents(parseInt(e.target.value))}
+        >
           {[...Array(10)].map((_, i) => (
             <option key={i} value={i + 1}>
               {i + 1}
@@ -101,7 +154,7 @@ function FilterContent({ isExpanded, setIsExpanded }) {
           Housing Type
         </label>
         <div className="flex gap-1 flex-wrap">
-          {["Hostel", "Houses", "Apartment"].map((type) => (
+          {["Hostel", "House", "Apartment"].map((type) => (
             <TypeButton
               key={type}
               type={type}
@@ -184,6 +237,7 @@ function FilterContent({ isExpanded, setIsExpanded }) {
       <button
         type="submit"
         className="items-center w-full bg-blue-950 text-white p-2 rounded-2xl"
+        onClick={handleApplyFilters}
       >
         Apply Filters
       </button>
