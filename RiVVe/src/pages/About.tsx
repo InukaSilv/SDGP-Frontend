@@ -454,7 +454,7 @@ const About = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <AnimatedCounter
-              endValue={5000}
+              endValue={500}
               suffix="+"
               title="Happy Students"
             />
@@ -476,7 +476,7 @@ const About = () => {
 
           <div className="mt-16 flex flex-wrap justify-center gap-4">
             <button className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              Find a Hostel
+              Find a Hostel 
             </button>
             <button className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300">
               List Your Property
