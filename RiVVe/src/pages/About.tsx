@@ -475,9 +475,11 @@ const About = () => {
           </div>
 
           <div className="mt-16 flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-               Find a Hostel 
-            </button>
+            <a 
+              href="/hosteldisplay"
+              className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                 Find a Hostel 
+              </a>
             <a 
                href="/signup1" 
                className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300 inline-block text-center"
