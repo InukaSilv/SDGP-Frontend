@@ -110,8 +110,7 @@ function User() {
       }
       setError("Current password is wrong");
     }
-  }
-
+  };
 
   const navigate = useNavigate();
   const Logout = async () => {
@@ -167,12 +166,10 @@ function User() {
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
   const handlepayment = async (paymentType: string) => {
     try {
-
-      const planType = paymentType === "monthly" ? "gold" : "platinum"; 
-      navigate("/payment",{
-        state: { planType, planDuration: paymentType }
+      const planType = paymentType === "monthly" ? "gold" : "platinum";
+      navigate("/payment", {
+        state: { planType, planDuration: paymentType },
       });
-
     } catch (error) {
       console.error("payment selection error; ", error);
     }
@@ -180,19 +177,38 @@ function User() {
 
   const ROLE_PLANS = {
     student: {
-      monthly: { name: "Gold Plan", price: "500", duration: "month", type: "gold" },
-      yearly: { name: "Platinum Plan", price: "5000", duration: "year", type: "platinum" },
+      monthly: {
+        name: "Gold Plan",
+        price: "500",
+        duration: "month",
+        type: "gold",
+      },
+      yearly: {
+        name: "Platinum Plan",
+        price: "5000",
+        duration: "year",
+        type: "platinum",
+      },
     },
     landlord: {
-      monthly: { name: "Gold Plan", price: "800", duration: "month", type: "gold" },
-      yearly: { name: "Platinum Plan", price: "8000", duration: "year", type: "platinum" },
+      monthly: {
+        name: "Gold Plan",
+        price: "800",
+        duration: "month",
+        type: "gold",
+      },
+      yearly: {
+        name: "Platinum Plan",
+        price: "8000",
+        duration: "year",
+        type: "platinum",
+      },
     },
   };
 
   const userRole = userdata?.role?.toLowerCase() || "student"; // Get user role
   const monthlyPlan = ROLE_PLANS[userRole].monthly;
   const yearlyPlan = ROLE_PLANS[userRole].yearly;
-
 
   return (
     <>
@@ -306,10 +322,7 @@ function User() {
               {/* cancel subscription accessible to all premium members */}
               {userdata.isPremium && (
                 <>
-                  <button
-                    
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
-                  >
+                  <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200">
                     Cancel Subscription
                   </button>
                 </>
@@ -505,18 +518,16 @@ function User() {
                   </li>
                 </ul>
               </div>
-
-
-            {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
-            {!userdata.isPremium && (
               <div className="flex flex-col items-center md:items-end ">
                 <div className="text-white text-center md:text-right mb-4">
                   <span className="text-secondary/80 text-sm line-through">
                     Rs.{monthlyPlan.price * 2}/month
                   </span>
                   <div className="text-3xl font-bold">
-                    Rs.{monthlyPlan.price}<span className="text-sm font-normal">/month</span>
+                    Rs.{monthlyPlan.price}
+                    <span className="text-sm font-normal">/month</span>
                   </div>
+                </div>
 
                 {/* option 1 */}
                 <button
@@ -542,8 +553,7 @@ function User() {
                   <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </button>
               </div>
-            )}
-
+            </div>
           </div>
         </div>
       )}
