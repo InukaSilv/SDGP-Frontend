@@ -1,4 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route,Navigate } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar";
+
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
@@ -29,6 +32,7 @@ import Adminads from "./pages/Admin/Adminads";
 import Payment from "./pages/Payment/Payment";
 import ProtectedStudentRoute from "./components/protectedRoute/ProtectedStudentRoute";
 import PremiumWishList from "./pages/Student/PremiumWishList";
+import PaymentSuccess from './pages/Payment/PaymentSuccess';
 
 function App() {
   return (
@@ -71,7 +75,14 @@ function App() {
           <Route path="/admin-users" element={<AdminUsers />} />
           <Route path="/admin-verify" element={<AdminVerification />} />
           <Route path="/admin-ads" element={<Adminads />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route
+            path="/payment"
+            element={<ProtectedRoute element={<Payment />} />}
+          />
+          <Route path="/success" element={<PaymentSuccess />} />
+          <Route path="/cancel" element={<Navigate to="/user" />} />
+        
+
           <Route
             path="/wishlist"
             element={<ProtectedStudentRoute element={<PremiumWishList />} />}

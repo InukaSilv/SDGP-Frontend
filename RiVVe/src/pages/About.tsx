@@ -12,7 +12,7 @@ type TeamMember = {
 const teamMembers: TeamMember[] = [
   {
     name: "Lasal Rathnayake",
-    role: "Front End Developer",
+    role: "UI/UX Developer",
     imageUrl: "https://storage.googleapis.com/rivve-web-trial/lasal",
   },
   {
@@ -454,19 +454,20 @@ const About = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <AnimatedCounter
-              endValue={500}
-              suffix="+"
-              title="Happy Students"
+              endValue={100}
+              suffix="%"
+              title="Transparency"
             />
             <AnimatedCounter
-              endValue={200}
-              suffix="+"
+              endValue={0}
+              suffix=""
               title="Verified Landlords"
             />
             <AnimatedCounter 
               endValue={50} 
               suffix="+"
-              title="Universities Covered" />
+              title="Universities Covered" 
+            />
             <AnimatedCounter
               endValue={98}
               suffix="%"
@@ -475,14 +476,20 @@ const About = () => {
           </div>
 
           <div className="mt-16 flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              Find a Hostel 
-            </button>
-            <button className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300">
-              List Your Property
-            </button>
+            <a 
+              href="/hostel"
+              className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                 Find a Hostel 
+              </a>
+            <a 
+               href="/signup1" 
+               className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300 inline-block text-center"
+             >
+               List Your Property
+           </a>
           </div>
         </div>
+    
 
         {/* Scroll indicator */}
         <div
@@ -778,8 +785,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      
       <Footer />
     </div>
   );

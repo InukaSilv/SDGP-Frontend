@@ -164,26 +164,52 @@ function User() {
   };
 
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
-  const handlepayment = async (action: string) => {
+  const handlepayment = async (paymentType: string) => {
     try {
-      await axios.put(
-        `${API_BASE_URL}/api/auth/updatepayment`,
-        { action, userId: userdata._id },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      navigate("/payment");
+      const planType = paymentType === "monthly" ? "gold" : "platinum";
+      navigate("/payment", {
+        state: { planType, planDuration: paymentType },
+      });
     } catch (error) {
       console.error("payment selection error; ", error);
     }
   };
 
-  // Cancelling the subscription
-  const handelCancelSubscription = async () => {};
+  const ROLE_PLANS = {
+    student: {
+      monthly: {
+        name: "Gold Plan",
+        price: "500",
+        duration: "month",
+        type: "gold",
+      },
+      yearly: {
+        name: "Platinum Plan",
+        price: "5000",
+        duration: "year",
+        type: "platinum",
+      },
+    },
+    landlord: {
+      monthly: {
+        name: "Gold Plan",
+        price: "800",
+        duration: "month",
+        type: "gold",
+      },
+      yearly: {
+        name: "Platinum Plan",
+        price: "8000",
+        duration: "year",
+        type: "platinum",
+      },
+    },
+  };
+
+  const userRole = userdata?.role?.toLowerCase() || "student"; // Get user role
+  const monthlyPlan = ROLE_PLANS[userRole].monthly;
+  const yearlyPlan = ROLE_PLANS[userRole].yearly;
+
   return (
     <>
       <Navbar />
@@ -296,10 +322,7 @@ function User() {
               {/* cancel subscription accessible to all premium members */}
               {userdata.isPremium && (
                 <>
-                  <button
-                    onClick={handelCancelSubscription}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
-                  >
+                  <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200">
                     Cancel Subscription
                   </button>
                 </>
@@ -497,47 +520,41 @@ function User() {
                   </li>
                 </ul>
               </div>
-
-              {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
-              {!userdata.isPremium && (
-                <div className="flex flex-col items-center md:items-end ">
-                  <div className="text-white text-center md:text-right mb-4">
-                    <span className="text-secondary/80 text-sm line-through">
-                      $XX.XX/month
-                    </span>
-                    <div className="text-3xl font-bold">
-                      Rs.XXX<span className="text-sm font-normal">/month</span>
-                    </div>
-                    <p className="text-yellow-300 text-sm">
-                      Limited time offer - 50% off!
-                    </p>
+              <div className="flex flex-col items-center md:items-end ">
+                <div className="text-white text-center md:text-right mb-4">
+                  <span className="text-secondary/80 text-sm line-through">
+                    Rs.{monthlyPlan.price * 2}/month
+                  </span>
+                  <div className="text-3xl font-bold">
+                    Rs.{monthlyPlan.price}
+                    <span className="text-sm font-normal">/month</span>
                   </div>
-
-                  {/* option 1 */}
-                  <button
-                    onClick={() => handlepayment("monthly")}
-                    className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      Upgrade to gold monthly
-                    </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  </button>
-
-                  {/* option 2 */}
-                  <button
-                    onClick={() => handlepayment("yearly")}
-                    className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      Upgrade to Platinum yearly
-                    </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  </button>
                 </div>
-              )}
+
+                {/* option 1 */}
+                <button
+                  onClick={() => handlepayment("monthly")}
+                  className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Upgrade to {monthlyPlan.name}
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                </button>
+
+                {/* option 2 */}
+                <button
+                  onClick={() => handlepayment("yearly")}
+                  className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Upgrade to {yearlyPlan.name}
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
