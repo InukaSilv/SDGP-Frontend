@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/navbar/Navbar";
 import Contacts from "../components/internalChatComp/Contacts";
 import ChatContainer from "../components/internalChatComp/ChatContainer";
 import { allUsersRoute, host } from "../utils/APIRoutes";
@@ -70,6 +71,8 @@ function Chat() {
   };
 
   return (
+    <>
+    <Navbar/>
     <Container>
       <div className="container">
         <Contacts 
@@ -93,10 +96,12 @@ function Chat() {
         )}
       </div>
     </Container>
+    </>
   );
 }
 
 const Container = styled.div`
+  margin-top: 25px;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -105,6 +110,7 @@ const Container = styled.div`
   gap: 1rem;
   align-items: center;
   background-color: #131324;
+  overflow: hidden;
   
   .container {
     height: 85vh;
