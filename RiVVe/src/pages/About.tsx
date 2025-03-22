@@ -454,9 +454,9 @@ const About = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <AnimatedCounter
-              endValue={500}
-              suffix="+"
-              title="Happy Students"
+              endValue={100}
+              suffix="%"
+              title="Transparency"
             />
             <AnimatedCounter
               endValue={200}
