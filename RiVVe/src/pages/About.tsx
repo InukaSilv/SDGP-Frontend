@@ -779,36 +779,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Contact & Social Media */}
-      <section className="flex flex-col items-center mt-16 p-10 bg-gray-800 rounded-lg mx-4 mb-16 border-r-4 border-[#2772A0]">
-        <h2 className="text-3xl font-semibold text-[#CCDDEA]">Get in Touch</h2>
-        <p className="text-gray-300 max-w-2xl text-center mt-4">
-          Have questions or feedback? Connect with us on social media or drop us
-          an email.
-        </p>
-        <div className="flex flex-wrap justify-center gap-6 mt-6">
-          <SocialIcon
-            name="LinkedIn"
-            link="https://linkedin.com"
-            color="bg-[#2772A0]"
-          />
-          <SocialIcon
-            name="Twitter"
-            link="https://twitter.com"
-            color="bg-[#3a85b3]"
-          />
-          <SocialIcon
-            name="Facebook"
-            link="https://facebook.com"
-            color="bg-[#1e5f8a]"
-          />
-          <SocialIcon
-            name="Instagram"
-            link="https://instagram.com"
-            color="bg-[#3a85b3]"
-          />
-        </div>
-      </section>
+      
       <Footer />
     </div>
   );
