@@ -265,32 +265,32 @@ const AmenitiesSlideshow = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   const totalItems = commonAmenities.length;
-  
+
   useEffect(() => {
     if (!autoplay) return;
-    
+
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % totalItems);
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, [autoplay, totalItems]);
-  
+
   const handleMouseEnter = () => setAutoplay(false);
   const handleMouseLeave = () => setAutoplay(true);
-  
-  const handleItemClick = (index) => {
+
+  const handleItemClick = (index: number) => {
     setActiveIndex(index);
     setAutoplay(false);
     setTimeout(() => setAutoplay(true), 5000);
   };
 
   return (
-    <div 
+    <div
       className="w-full mt-16 overflow-hidden bg-gradient-to-r from-[#0d192b] to-[#172c47] py-16 px-6 rounded-xl relative shadow-xl"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-    >      
+    >
       <h3 className="text-4xl font-bold text-center mb-16 relative z-10 tracking-wide text-[#8eafd1]">
         Common Amenities
       </h3>
@@ -301,14 +301,13 @@ const AmenitiesSlideshow = () => {
             // Calculate position relative to active item
             const position = (index - activeIndex + totalItems) % totalItems;
             const isActive = position === 0;
-            const isVisible = position <= 2 || position >= totalItems - 2;
-            
+
             // Calculate transform properties
             let translateX = 0;
             let scale = 0.8;
             let opacity = 0.5;
             let zIndex = 0;
-            
+
             if (isActive) {
               scale = 1;
               opacity = 1;
@@ -327,22 +326,32 @@ const AmenitiesSlideshow = () => {
               translateX = position < totalItems / 2 ? 600 : -600;
               opacity = 0;
             }
-            
+
             return (
               <div
                 key={index}
-                className={`absolute bg-[#172c47] p-8 rounded-lg shadow-lg flex items-center gap-6 min-w-80 h-40 transition-all duration-500 cursor-pointer ${isActive ? 'shadow-[#8eafd1]/40' : 'shadow-[#8eafd1]/10'} border border-[#8eafd1]/20`}
+                className={`absolute bg-[#172c47] p-8 rounded-lg shadow-lg flex items-center gap-6 min-w-80 h-40 transition-all duration-500 cursor-pointer ${
+                  isActive ? "shadow-[#8eafd1]/40" : "shadow-[#8eafd1]/10"
+                } border border-[#8eafd1]/20`}
                 style={{
                   transform: `translateX(${translateX}px) scale(${scale})`,
                   opacity,
-                  zIndex
+                  zIndex,
                 }}
                 onClick={() => handleItemClick(index)}
               >
-                <div className={`text-5xl ${isActive ? 'text-[#8eafd1]' : 'text-[#8eafd1]/80'}`}>
+                <div
+                  className={`text-5xl ${
+                    isActive ? "text-[#8eafd1]" : "text-[#8eafd1]/80"
+                  }`}
+                >
                   {amenity.icon}
                 </div>
-                <span className={`whitespace-nowrap font-medium text-xl ${isActive ? 'text-[#8eafd1]' : 'text-[#8eafd1]/80'}`}>
+                <span
+                  className={`whitespace-nowrap font-medium text-xl ${
+                    isActive ? "text-[#8eafd1]" : "text-[#8eafd1]/80"
+                  }`}
+                >
                   {amenity.name}
                 </span>
                 {isActive && (
@@ -353,14 +362,14 @@ const AmenitiesSlideshow = () => {
           })}
         </div>
       </div>
-      
+
       {/* Navigation dots */}
       <div className="flex justify-center gap-2 mt-12">
         {commonAmenities.map((_, index) => (
           <button
             key={index}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === activeIndex ? 'bg-[#8eafd1] w-8' : 'bg-[#8eafd1]/40'
+              index === activeIndex ? "bg-[#8eafd1] w-8" : "bg-[#8eafd1]/40"
             }`}
             onClick={() => handleItemClick(index)}
           />
@@ -418,7 +427,7 @@ const About = () => {
   return (
     <div className="bg-gray-900 text-gray-100 relative overflow-hidden">
       <ParallaxBackground />
-      <MouseGlowEffect/>
+      <MouseGlowEffect />
       <Navbar />
 
       {/* Hero Section with animated gradient */}
@@ -426,14 +435,14 @@ const About = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#2772A0]/20 to-gray-900/70 z-0"></div>
 
         {/* Animated circles in background */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute  top-1/4 left-1/4 w-64 h-64 bg-[#3a85b3]/20 rounded-full filter blur-3xl animate-pulse"></div>
         <div
           className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1e5f8a]/20 rounded-full filter blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
 
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
+        <div className="relative z-10 max-w-4xl mt-20 md:mt-0">
+          <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-6">
             About RiVVE
           </h1>
 
@@ -445,16 +454,19 @@ const About = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <AnimatedCounter
-              endValue={5000}
+              endValue={500}
               suffix="+"
               title="Happy Students"
             />
             <AnimatedCounter
               endValue={200}
               suffix="+"
-              title="Verified Hostels"
+              title="Verified Landlords"
             />
-            <AnimatedCounter endValue={15} title="Universities Covered" />
+            <AnimatedCounter 
+              endValue={50} 
+              suffix="+"
+              title="Universities Covered" />
             <AnimatedCounter
               endValue={98}
               suffix="%"
@@ -464,7 +476,7 @@ const About = () => {
 
           <div className="mt-16 flex flex-wrap justify-center gap-4">
             <button className="px-8 py-3 bg-gradient-to-r from-[#2772A0] to-[#3a85b3] rounded-full font-medium text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              Find a Hostel
+              Find a Hostel 
             </button>
             <button className="px-8 py-3 bg-transparent border-2 border-[#2772A0] rounded-full font-medium text-[#CCDDEA] hover:bg-[#2772A0]/30 transition-all duration-300">
               List Your Property
@@ -473,23 +485,23 @@ const About = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div 
+        <div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer"
-           onClick={() => {
+          onClick={() => {
             window.scrollTo({
               top: window.innerHeight,
-              behavior: 'smooth'
-           });
-         }}
-      >
-        <svg
-          className="w-6 h-6 text-[#CCDDEA]"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+              behavior: "smooth",
+            });
+          }}
         >
-           <path
+          <svg
+            className="w-6 h-6 text-[#CCDDEA]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
@@ -767,36 +779,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Contact & Social Media */}
-      <section className="flex flex-col items-center mt-16 p-10 bg-gray-800 rounded-lg mx-4 mb-16 border-r-4 border-[#2772A0]">
-        <h2 className="text-3xl font-semibold text-[#CCDDEA]">Get in Touch</h2>
-        <p className="text-gray-300 max-w-2xl text-center mt-4">
-          Have questions or feedback? Connect with us on social media or drop us
-          an email.
-        </p>
-        <div className="flex flex-wrap justify-center gap-6 mt-6">
-          <SocialIcon
-            name="LinkedIn"
-            link="https://linkedin.com"
-            color="bg-[#2772A0]"
-          />
-          <SocialIcon
-            name="Twitter"
-            link="https://twitter.com"
-            color="bg-[#3a85b3]"
-          />
-          <SocialIcon
-            name="Facebook"
-            link="https://facebook.com"
-            color="bg-[#1e5f8a]"
-          />
-          <SocialIcon
-            name="Instagram"
-            link="https://instagram.com"
-            color="bg-[#3a85b3]"
-          />
-        </div>
-      </section>
+      
       <Footer />
     </div>
   );

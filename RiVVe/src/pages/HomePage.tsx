@@ -1,7 +1,4 @@
 import { motion } from "framer-motion";
-
-import Navbar from "../components/navbar/navbar";
-import Homesearchbutton from "../components/buttons/Homesearchbutton";
 import SearchBar from "../components/googlemap/SearchBar";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
@@ -36,12 +33,12 @@ function HomePage() {
   };
   return (
     <>
-      <section className="h-screen bg-cover bg-center bg-no-repeat bg-[url('src/assets/main-background.jpeg')]">
+      <section className="min-h-screen bg-cover bg-center bg-no-repeat bg-[url('src/assets/main-background.jpeg')] relative">
         <div className="absolute inset-0 bg-gradient-to-b from-[#27729A]/70 via-[#27729A]/60 to-[#1e5f8a]/90 z-10"></div>
-        <div className="h-full w-full flex flex-col items-center justify-center bg-black/50 text-center px-4">
+        <div className="min-h-screen w-full flex flex-col items-center justify-center bg-black/50 text-center px-4 py-25">
           {/* Animate Heading */}
           <motion.h1
-            className="text-white text-5xl md:text-7xl font-bold mb-4 z-11"
+            className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-6 z-20"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -53,7 +50,7 @@ function HomePage() {
 
           {/* Animate Subheading */}
           <motion.h2
-            className="text-[#e8f8fa] text-xl md:text-3xl font-medium max-w-3xl mx-auto leading-relaxed z-11"
+            className="text-[#e8f8fa] text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium max-w-3xl mx-auto leading-relaxed z-20 mb-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
@@ -63,7 +60,7 @@ function HomePage() {
 
           {/* Animate Search Button */}
           <motion.div
-            className="mt-10 w-full max-w-3xl mx-auto z-11"
+            className="w-full max-w-3xl mx-auto z-20 px-4"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
@@ -72,8 +69,8 @@ function HomePage() {
               <div className="relative flex items-center bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-xl overflow-hidden group hover:bg-white/15 transition-all duration-300">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#3a8bb3] to-[#1e8f8a] opacity-30 blur-md group-hover:opacity-40 transition-opacity duration-300"></div>
 
-                <div className="relative flex w-full items-center justify-between bg-white rounded-xl p-2 md:p-3">
-                  <div className="flex items-center flex-1">
+                <div className="relative flex flex-col sm:flex-row w-full items-center justify-between bg-white rounded-xl p-2 md:p-3 gap-3">
+                  <div className="flex items-center w-full flex-1">
                     <MapPin className="h-5 w-5 text-[#27729A] mr-2 flex-shrink-0" />
                     <SearchBar onPlaceSelect={onPlaceSelect} />
                   </div>
@@ -81,7 +78,7 @@ function HomePage() {
                     type="submit"
                     onClick={handleSubmit}
                     disabled={!selectedPlace}
-                    className="ml-2 bg-gradient-to-r from-[#27729A] to-[#1e8f8a] text-white font-medium py-2 px-6 rounded-lg flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#1e8f8a]/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
+                    className="bg-gradient-to-r w-full sm:w-auto from-[#27729A] to-[#1e8f8a] text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#1e8f8a]/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     <Search className="h-4 w-4" />
                     <span>Search</span>
@@ -92,7 +89,7 @@ function HomePage() {
           </motion.div>
 
           <motion.div
-            className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto z-11"
+            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto z-20 px-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}

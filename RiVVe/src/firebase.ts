@@ -1,7 +1,7 @@
 // Import the required Firebase modules
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,RecaptchaVerifier  } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -16,7 +16,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 auth.useDeviceLanguage(); 
 const googleProvider = new GoogleAuthProvider();

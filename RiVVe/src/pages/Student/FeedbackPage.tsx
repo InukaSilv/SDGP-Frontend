@@ -10,11 +10,6 @@ interface FeedbackForm {
   recommend: string | null;
 }
 
-interface OwnerDetail {
-  firstName: string;
-  lastName: string;
-}
-
 function FeedbackPage() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
@@ -23,6 +18,32 @@ function FeedbackPage() {
     firstName: string;
     lastName: string;
   } | null>(null);
+  const [formData, setFormData] = useState<FeedbackForm>({
+    rating: 0,
+    review: "",
+    recommend: null,
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+
+  useEffect(() => {
+    const fetchOwnerDetail = async () => {
+      try {
+        const { data } = await axios.get(
+          `${API_BASE_URL}/api/listing/getowner`,
+          {
+            params: { propertyId: property._id },
+          }
+        );
+        setOwnerDetail(data);
+      } catch (error) {
+        console.error("Failed to fetch owner details:", error);
+      }
+    };
+    fetchOwnerDetail();
+  }, [property?._id]);
 
   if (!property) {
     return (
@@ -38,16 +59,6 @@ function FeedbackPage() {
       </div>
     );
   }
-
-  const [formData, setFormData] = useState<FeedbackForm>({
-    rating: 0,
-    review: "",
-    recommend: null,
-  });
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
 
   const handleRatingChange = (value: number) => {
     setFormData((prev) => ({
@@ -70,7 +81,7 @@ function FeedbackPage() {
     const authToken = localStorage.getItem("authToken");
 
     try {
-      const respond = await axios.post(
+      await axios.post(
         `${API_BASE_URL}/api/listing/post-review`,
         { ...formData, propertyId: property._id },
         {
@@ -89,23 +100,6 @@ function FeedbackPage() {
       setIsSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    const fetchOwnerDetail = async () => {
-      try {
-        const { data } = await axios.get(
-          `${API_BASE_URL}/api/listing/getowner`,
-          {
-            params: { propertyId: property._id },
-          }
-        );
-        setOwnerDetail(data);
-      } catch (error) {
-        console.error("Failed to fetch owner details:", error);
-      }
-    };
-    fetchOwnerDetail();
-  }, [property?._id]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">

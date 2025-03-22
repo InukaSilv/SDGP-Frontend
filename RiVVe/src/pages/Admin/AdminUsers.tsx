@@ -4,6 +4,7 @@ import AdminNavbar from "../../components/navbar/AdminNavbar";
 import axios from "axios";
 
 interface User {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -54,7 +55,7 @@ function AdminUsers() {
       user.lastName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleRemove = async (userId) => {
+  const handleRemove = async (userId: string) => {
     try {
       await axios.delete(`${API_BASE_URL}/api/admin/delete-user`, {
         headers: {
@@ -63,8 +64,9 @@ function AdminUsers() {
         data: { id: userId },
       });
       getUsers();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error fetching users:", err);
+      console.error("Error deleting user:", error);
       setIsLoading(false);
     }
   };

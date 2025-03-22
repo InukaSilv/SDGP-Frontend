@@ -4,25 +4,24 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { useRef, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import {
   Mail,
   Phone,
   Shield,
   ShieldCheck,
-  User2,
   UserRoundPen,
   Camera,
+  Power,
+  Save,
+  Sparkles,
+  Zap,
+  BadgeCheck,
 } from "lucide-react";
-import { Power } from "lucide-react";
-import { Save } from "lucide-react";
-import { Sparkles } from "lucide-react";
-import { Zap } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import axios from "axios";
 import Footer from "../components/footer/Footer";
-import { Pencil } from "lucide-react";
 
 interface User {
   firstName: string;
@@ -38,7 +37,7 @@ function User() {
   const [isEditing, setIsEdit] = useState<boolean>(false);
   const [defaultpassword, setDefaultPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [, setError] = useState<string>("");
   const [Message, setMessage] = useState<string>("");
   const [formData, setFormData] = useState<User>({
     firstName: userdata?.firstName || "",
@@ -101,11 +100,14 @@ function User() {
         defaultpassword
       );
       const user = credentials.user;
-      const token = await user.getIdToken();
       await updatePassword(user, newPassword);
       setMessage("Password changed Successfully");
     } catch (error) {
-      console.error("Error updating password", error.message);
+      if (error instanceof Error) {
+        console.error("Error updating password", error.message);
+      } else {
+        console.error("Error updating password", error);
+      }
       setError("Current password is wrong");
     }
   };
@@ -123,8 +125,10 @@ function User() {
   };
 
   // profile photo gets changed and refreshes the page
-  const handleProfilePhotoChange = async (event) => {
-    const file = event.target.files[0];
+  const handleProfilePhotoChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
     if (!file) {
       return;
     }
@@ -162,12 +166,14 @@ function User() {
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
   const handlepayment = async (paymentType: string) => {
     try {
+
       const planType = paymentType === "monthly" ? "gold" : "platinum"; 
       navigate("/payment",{
         state: { planType, planDuration: paymentType }
       });
+
     } catch (error) {
-      console.error("payment selection error");
+      console.error("payment selection error; ", error);
     }
   };
 
@@ -237,6 +243,14 @@ function User() {
                 {userdata?.firstName} {userdata?.lastName}
               </h2>
               <p className="text-[#e0ebf3] text-sm">{userdata?.role}</p>
+              {userdata.role === "Landlord" &&
+                userdata.isEmailVerified &&
+                userdata.isIdVerified && (
+                  <div className="flex items-center gap-2">
+                    <BadgeCheck size={30} className="text-blue-400 mt-2" />
+                    <h1 className="text-blue-400 mt-2">Verified</h1>
+                  </div>
+                )}
             </div>
 
             {/* user detils and actions to edit signout and cancel subscription */}
@@ -371,7 +385,7 @@ function User() {
                 type="tel"
                 name="phone"
                 value={formData.phone && formData.phone}
-                placeholder={!formData.phone && "Update phone number"}
+                placeholder={!formData.phone ? "Update phone number" : ""}
                 disabled={!isEditing}
                 onChange={handleInputChange}
                 className={`flex-1 px-4 py-2 rounded-md border ${
@@ -454,42 +468,44 @@ function User() {
       </div>
 
       {/* ad to show the premium info */}
-      <div className="max-w-6xl mx-auto px-4 mb-16">
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+      {!userdata.isPremium && (
+        <div className="max-w-6xl mx-auto px-4 mb-16">
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="text-yellow-300 h-6 w-6" />
-                <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
-                  Premium Offer
-                </span>
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="text-yellow-300 h-6 w-6" />
+                  <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
+                    Premium Offer
+                  </span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Join Premium and Experience the Power of RiVVE
+                </h3>
+                <p className="text-secondary/90 mb-6 max-w-xl">
+                  Unlock exclusive features, priority support, and advanced
+                  tools to take your experience to the next level. Upgrade today
+                  and see the difference!
+                </p>
+                <ul className="text-white space-y-2 mb-6">
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Unlimited access to all premium features</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Priority customer support 24/7</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="text-yellow-300 h-4 w-4" />
+                    <span>Advanced analytics and reporting tools</span>
+                  </li>
+                </ul>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                Join Premium and Experience the Power of RiVVE
-              </h3>
-              <p className="text-secondary/90 mb-6 max-w-xl">
-                Unlock exclusive features, priority support, and advanced tools
-                to take your experience to the next level. Upgrade today and see
-                the difference!
-              </p>
-              <ul className="text-white space-y-2 mb-6">
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Unlimited access to all premium features</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Priority customer support 24/7</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Advanced analytics and reporting tools</span>
-                </li>
-              </ul>
-            </div>
+
 
             {/* if user is not premium user can select the option as they wish and will take to the payment there after */}
             {!userdata.isPremium && (
@@ -501,10 +517,6 @@ function User() {
                   <div className="text-3xl font-bold">
                     Rs.{monthlyPlan.price}<span className="text-sm font-normal">/month</span>
                   </div>
-                  <p className="text-yellow-300 text-sm">
-                    Limited time offer - 50% off!
-                  </p>
-                </div>
 
                 {/* option 1 */}
                 <button
@@ -531,9 +543,11 @@ function User() {
                 </button>
               </div>
             )}
+
           </div>
         </div>
-      </div>
+      )}
+
       <Footer />
     </>
   );

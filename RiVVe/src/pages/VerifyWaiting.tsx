@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth, sendEmailVerification } from "../firebase";
 import axios from "axios";
@@ -57,10 +57,7 @@ function VerifyWaiting() {
             navigate("/login");
           }
         } catch (error) {
-          console.error(
-            "Error saving to MongoDB:",
-            error.response?.data || error
-          );
+          console.error("Error saving to MongoDB:", error);
         }
       }
     }, 3000);
@@ -83,6 +80,7 @@ function VerifyWaiting() {
         await sendEmailVerification(auth.currentUser);
         setResendCount(resendCount + 1);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.code === "auth/too-many-requests") {
         setErrorMessge("Too many requests, Please try again later");

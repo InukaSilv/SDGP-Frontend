@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User, AlertCircle } from "lucide-react";
@@ -10,7 +10,7 @@ function Admin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${API_BASE_URL}/api/admin/login`, {
@@ -20,7 +20,11 @@ function Admin() {
       localStorage.setItem("adminToken", response.data.token);
       navigate("/admin-main");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      if (err instanceof AxiosError) {
+        setError(err.response?.data?.message || "Login failed");
+      } else {
+        setError("Login failed");
+      }
     }
   };
 

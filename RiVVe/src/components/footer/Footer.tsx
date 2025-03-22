@@ -1,6 +1,4 @@
-// src/components/Footer.js
-import React from "react";
-import { Facebook, Music2, Instagram, Mail } from "lucide-react";
+import { Music2, Mail, Facebook, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (

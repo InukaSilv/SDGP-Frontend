@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Pencil, Minus, Plus, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 const socket = io("http://localhost:5001");
 
 interface AdCardProps {
@@ -51,7 +51,7 @@ function AdCard({ ad }: AdCardProps) {
     }
   };
 
-  const handleAddSubmit = async (e) => {
+  const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email) {
       setError("PLease enter email");
@@ -75,7 +75,12 @@ function AdCard({ ad }: AdCardProps) {
       }
     } catch (err) {
       console.error(err);
-      if (err.response && err.response.data && err.response.data.error) {
+      if (
+        err instanceof AxiosError &&
+        err.response &&
+        err.response.data &&
+        err.response.data.error
+      ) {
         setError(err.response.data.error);
       } else {
         setError("Failed to add student. Please try again later.");
@@ -84,12 +89,15 @@ function AdCard({ ad }: AdCardProps) {
   };
 
   useEffect(() => {
-    socket.on("slotsUpdated", ({ adId, residents }) => {
-      console.log("Received slotsUpdated event:", adId, residents);
-      if (adId === ad._id) {
-        setSlots(residents);
+    socket.on(
+      "slotsUpdated",
+      ({ adId, residents }: { adId: string; residents: number }) => {
+        console.log("Received slotsUpdated event:", adId, residents);
+        if (adId === ad._id) {
+          setSlots(residents);
+        }
       }
-    });
+    );
     return () => {
       socket.off("slotsUpdated");
     };

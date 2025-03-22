@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import {
@@ -7,42 +7,95 @@ import {
   Wifi,
   ChefHat,
   Car,
-  Phone,
-  Mail,
-  MessageCircle,
   Heart,
   Cctv,
   Users,
   BookOpen,
-  X,
   AirVent,
   CookingPot,
   WashingMachine,
   User,
+  House,
 } from "lucide-react";
 import Footer from "../components/footer/Footer";
 import axios from "axios";
 import SimilarHostelCard from "../components/ads/SimilarHostelCard";
 import HostCardWithPopup from "../components/ads/HostCardWithPopup";
 
+interface Review {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  rating: number;
+  review: string;
+  createdAt: string;
+}
+
+interface Property {
+  _id: string;
+  title: string;
+  images: string[];
+  description: string;
+  address: string;
+  housingType: string;
+  price: number;
+  averageRating: number;
+  reviews: string[];
+  roomTypes: {
+    singleRoom: number;
+    doubleRoom: number;
+  };
+  facilities: string[];
+  location: {
+    coordinates: [number, number];
+  };
+  starsCount: Record<number, number>;
+}
+
+interface OwnerDetail {
+  _id: string;
+  name: string;
+  contact: string;
+  email: string;
+  profilePhoto: string;
+  firstName: string;
+  lastName: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isIdVerified: boolean;
+  isAddressVerified: boolean;
+  joinedDate: string;
+  createdAt: string;
+  phone: string;
+}
+
+interface SimilarProperty {
+  _id: string;
+  title: string;
+  price: number;
+  images: string[];
+  rating: number;
+  address: string;
+  averageRating: number;
+  totalRatingCount: number;
+}
+
 function Listing2() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const authToken = localStorage.getItem("authToken");
-  const storedUser = localStorage.getItem("user");
-  const requser = JSON.parse(storedUser);
-  const location = useLocation();
-  const ad = location.state?.ad;
-
-  if (!ad) {
-    return <div>Ad not found</div>;
-  }
-
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [isInWishlist, setIsInWishlist] = useState(false);
 
-  const [reviews, setReviews] = useState([]);
-  const [similarProperties, setSimilarProperties] = useState([]);
-  const [ownerDetail, setOwnerDetail] = useState(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [similarProperties, setSimilarProperties] = useState<SimilarProperty[]>(
+    []
+  );
+  const [ownerDetail, setOwnerDetail] = useState<OwnerDetail | null>(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const authToken = localStorage.getItem("authToken");
+  const storedUser = localStorage.getItem("user");
+  const requser = storedUser ? JSON.parse(storedUser) : null;
+  const location = useLocation();
+  const ad: Property = location.state?.ad;
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -78,6 +131,35 @@ function Listing2() {
     fetchReviews();
     fetchOwnerDetail();
   }, [ad.reviews]);
+
+  // get the time where the user came to view the property and send to backend when the id is changed
+  useEffect(() => {
+    const startTime = Date.now();
+    setStartTime(startTime);
+
+    const sendTimeSpent = async () => {
+      if (startTime) {
+        const exitTime = Date.now();
+        const timeSpent = (exitTime - startTime) / 1000;
+
+        try {
+          await axios.post(`${API_BASE_URL}/api/listing/track-view`, {
+            listingId: ad._id,
+            duration: timeSpent,
+          });
+        } catch (error) {
+          console.error("Error sending time spent:", error);
+        }
+      }
+    };
+    return () => {
+      sendTimeSpent();
+    };
+  }, [ad._id]);
+
+  if (!ad) {
+    return <div>Ad not found</div>;
+  }
 
   const StarRating = ({ rating }: { rating: number }) => {
     return (
@@ -120,7 +202,7 @@ function Listing2() {
   const toggleWishlist = async (userId: string, adId: string) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/listing/adwishlist`,
+        `${API_BASE_URL}/api/wishlist/adwishlist`,
         { userId, adId },
         {
           headers: {
@@ -184,27 +266,35 @@ function Listing2() {
                     <h1 className="text-3xl font-bold text-gray-100">
                       {ad.title}
                     </h1>
-                    <div className="flex items-center mt-2">
-                      <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+                    <div className="flex items-center gap-2 mt-2">
+                      <MapPin className="h-5 w-5 text-gray-400" />
                       <span className="text-gray-300">{ad.address}</span>
                     </div>
-                    {ad.roomTypes.singleRoom !== 0 && (
-                      <div className="flex items-center text-gray-300 mb-1">
-                        <Users className="w-4 h-4 mr-2" />
-                        <span className="text-sm">
-                          {ad.roomTypes.doubleRoom} Double rooms
-                        </span>
-                      </div>
-                    )}
 
-                    {ad.roomTypes.doubleRoom !== 0 && (
-                      <div className="flex items-center text-gray-300 mb-4">
-                        <User className="w-4 h-4 mr-2" />
-                        <span className="text-sm">
-                          {ad.roomTypes.singleRoom} Single rooms
-                        </span>
+                    <div className="mt-2">
+                      {ad.roomTypes.singleRoom !== 0 && (
+                        <div className="flex items-center text-gray-300 mb-1">
+                          <Users className="w-4 h-4 mr-2" />
+                          <span className="text-sm">
+                            {ad.roomTypes.doubleRoom} Double rooms
+                          </span>
+                        </div>
+                      )}
+
+                      {ad.roomTypes.doubleRoom !== 0 && (
+                        <div className="flex items-center text-gray-300 mb-4">
+                          <User className="w-4 h-4 mr-2" />
+                          <span className="text-sm">
+                            {ad.roomTypes.singleRoom} Single rooms
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-center text-gray-300 gap-2">
+                        {ad.housingType === "House" && <House />}
+                        {ad.housingType}
                       </div>
-                    )}
+                    </div>
                   </div>
                   <button className="p-2 rounded-full hover:bg-gray-700">
                     <Heart className="h-6 w-6 text-red-400" />
@@ -411,8 +501,7 @@ function Listing2() {
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
-                {/* <HostCardWithPopup host={hostel.host} /> */}
-                <HostCardWithPopup host={ownerDetail} />
+                {ownerDetail && <HostCardWithPopup host={ownerDetail} />}
               </div>
             </div>
           </div>

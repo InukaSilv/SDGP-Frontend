@@ -1,6 +1,6 @@
 import { Check, Upload, X } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../../components/navbar/Navbar";
 
@@ -14,14 +14,6 @@ function LandLordVerification() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const user = location.state;
-  if (!user || !user.userdata) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-red-500">User data not available.</p>
-      </div>
-    );
-  }
-
   const [formData, setFormData] = useState<LandveriProps>({
     email: user?.userdata?.email || "",
     phone: user?.userdata?.phone || "",
@@ -29,6 +21,13 @@ function LandLordVerification() {
   });
 
   const [error, setError] = useState<string>("");
+  if (!user || !user.userdata) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-red-500">User data not available.</p>
+      </div>
+    );
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.type === "file") {
@@ -55,8 +54,6 @@ function LandLordVerification() {
       id: formData.id.filter((_, i) => i !== index),
     });
   };
-
-  const navigate = useNavigate();
   const handleUpload = async () => {
     if (formData.id.length === 0) {
       setError("Please upload at least one image.");
