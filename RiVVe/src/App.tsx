@@ -10,6 +10,7 @@ import Navbar from "./components/navbar/Navbar";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
+import HostelReviewPage from './pages/FeedbackPage';
 import Signup1 from "./pages/Signup1";
 import Signup2 from "./pages/Signup2";
 import User from "./pages/User";
@@ -23,6 +24,7 @@ import TargetPage from "./pages/TargetPage";
 import { HostelDetails } from "./pages/HostelDetails";
 import Posting from "./pages/Landlord/Posting";
 import ProtectedLandlordRoute from "./components/protectedRoute/ProtectedLandlordRoute";
+
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";
 import Listing2 from "./pages/Listing2";
