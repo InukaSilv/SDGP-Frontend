@@ -473,7 +473,7 @@ function Listing2() {
                     </div>
                   </div>
 
-                  {authToken && requser && (
+                  {authToken && requser && requser.isPremium && (
                     <button
                       className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
                       onClick={() => toggleWishlist(requser._id, ad._id)}
@@ -501,7 +501,7 @@ function Listing2() {
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
-                {ownerDetail && (
+                {authToken && requser && ownerDetail && (
                   <HostCardWithPopup adId={ad._id} host={ownerDetail} />
                 )}
               </div>

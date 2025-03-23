@@ -38,7 +38,7 @@ function HomePage() {
         <div className="min-h-screen w-full flex flex-col items-center justify-center bg-black/50 text-center px-4 sm:25-6 md:px-8 py-8 sm:py-12 md:py-16">
           {/* Animate Heading */}
           <motion.h1
-            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 z-20"
+            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 z-20 mt-20 md:mt-0"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}

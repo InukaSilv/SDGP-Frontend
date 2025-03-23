@@ -12,7 +12,7 @@ const ROLE_FEATURES = {
       "Priority Booking ",
       "Direct Chat with Landlords",
       "Early Access to New Listings ",
-      "Tenant Rating System"
+      "Tenant Rating System",
     ],
     platinum: [
       "Unlimited Property Searches & Filters",
@@ -21,8 +21,7 @@ const ROLE_FEATURES = {
       "Direct Chat with Landlords",
       "Early Access to New Listings",
       "Tenant Rating System",
-      "Exclusive Rent Discounts"
-      
+      "Exclusive Rent Discounts",
     ],
   },
   landlord: {
@@ -33,7 +32,6 @@ const ROLE_FEATURES = {
       "Verified Badge",
       "roperty Analytics ",
       "Featured Listing on Homepage",
-            
     ],
     platinum: [
       "Unlimited Property Listings ",
@@ -42,7 +40,7 @@ const ROLE_FEATURES = {
       "Verified Badge",
       "roperty Analytics ",
       "Featured Listing on Homepage",
-      "Discounted Renewal "
+      "Discounted Renewal ",
     ],
   },
 };
@@ -83,10 +81,10 @@ function Signup2() {
   const location = useLocation();
   const { role, id } = location.state || {};
   const [selectedPlan, setSelectedPlan] = useState("none");
-  
+
   // Convert role to lowercase for object mapping
   const roleKey = role?.toLowerCase() || "student";
-  
+
   // Determine which features to show based on role and selected plan
   const getPlanType = () => {
     if (selectedPlan === "monthly") return "gold";
@@ -96,7 +94,7 @@ function Signup2() {
 
   // Get features for the current role and plan type
   const features = ROLE_FEATURES[roleKey][getPlanType()] || [];
-  
+
   // Get monthly and yearly plan details for the current role
   const monthlyPlan = ROLE_PLANS[roleKey].monthly;
   const yearlyPlan = ROLE_PLANS[roleKey].yearly;
@@ -111,7 +109,8 @@ function Signup2() {
           </h1>
           <p className="text-xl text-[#3a85b3] text-center mb-8">
             Join our platform to unlock amazing features and find the best
-            {role?.toLowerCase() === "student" ? " accommodations" : " tenants"}.
+            {role?.toLowerCase() === "student" ? " accommodations" : " tenants"}
+            .
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <Signupform role={role} selectedPlan={selectedPlan} />
@@ -141,7 +140,9 @@ function Signup2() {
                     {monthlyPlan.name}
                   </h3>
                   <div className="flex justify-between items-center">
-                    <span className="text-lg">Rs.{monthlyPlan.price}/{monthlyPlan.duration}</span>
+                    <span className="text-lg">
+                      Rs.{monthlyPlan.price}/{monthlyPlan.duration}
+                    </span>
                     <button
                       className={`px-6 py-2 rounded-xl transition-all ${
                         selectedPlan === "monthly"
@@ -183,9 +184,9 @@ function Signup2() {
                 </div>
               </div>
               <p className="text-sm text-[#1e5f8a] mt-6 text-center">
-                Enjoy uninterrupted access to premium features and 
-                {roleKey === "student" 
-                  ? " find your perfect hostel effortlessly." 
+                Enjoy uninterrupted access to premium features and
+                {roleKey === "student"
+                  ? " find your perfect hostel effortlessly."
                   : " connect with quality tenants easily."}
               </p>
             </div>

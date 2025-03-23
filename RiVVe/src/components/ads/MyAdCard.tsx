@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { Pencil, Minus, Plus, Users, X } from "lucide-react";
+import { Pencil, Minus, Plus, Users, X, Rocket } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
@@ -17,6 +17,7 @@ interface AdCardProps {
     residents: number;
     price: string;
     images: string[];
+    boostStatus: boolean;
   };
 }
 
@@ -28,9 +29,11 @@ function AdCard({ ad }: AdCardProps) {
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const authToken = localStorage.getItem("authToken");
+  const user = localStorage.getItem("user");
+  const userData = JSON.parse(user || "{}");
 
   const IncreaseSlots = async (operation: string) => {
-    const authToken = localStorage.getItem("authToken");
     try {
       await axios.put(
         `${API_BASE_URL}/api/listing/add-slot`,
@@ -102,6 +105,23 @@ function AdCard({ ad }: AdCardProps) {
       socket.off("slotsUpdated");
     };
   }, [ad._id]);
+
+  const handleBoostStatus = async (adId: string) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/api/listing/boost-ad`,
+        { adId },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -188,6 +208,16 @@ function AdCard({ ad }: AdCardProps) {
           >
             <Users size={20} />
           </button>
+          {userData.role === "Landlord" && userData.isPremium && (
+            <button
+              className={`p-2.5 bg-gray-200 text-blue-500 rounded-full hover:bg-gray-300 transition-colors ${
+                ad.boostStatus ? "bg-green-500 text-white" : ""
+              }`}
+              onClick={() => handleBoostStatus(ad._id)}
+            >
+              <Rocket size={20} />
+            </button>
+          )}
         </div>
       </div>
 
