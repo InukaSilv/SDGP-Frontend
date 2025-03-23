@@ -23,16 +23,20 @@ function StudentReview() {
   useEffect(() => {
     const fetchStudentReviews = async () => {
       const authToken = localStorage.getItem("authToken");
+      const userId = localStorage.getItem("user");
+      const user = JSON.parse(userId || "{}");
       if (!authToken) {
         navigate("/login");
         return;
       }
-
       try {
         setLoading(true);
         const response = await axios.get(
           `${API_BASE_URL}/api/listing/check-reviews`,
           {
+            params: {
+              userId: user._id,
+            },
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
