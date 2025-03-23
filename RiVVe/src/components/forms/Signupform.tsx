@@ -83,7 +83,9 @@ function Signupform({
       const cleanedPhone = value.replace(/\D/g, "");
       setFormData((record) => ({ ...record, phone: cleanedPhone }));
       if (!/^0\d{9}$/.test(cleanedPhone)) {
-        setPhoneError("Phone number should be in the correct format");
+        setPhoneError(
+          "Phone number should be in the correct format, should have 10 numbers"
+        );
       } else {
         setPhoneError("");
       }
@@ -189,6 +191,7 @@ function Signupform({
             <input
               id="fname"
               type="text"
+              required
               placeholder="First Name"
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -202,6 +205,7 @@ function Signupform({
             <input
               id="lname"
               type="text"
+              required
               placeholder="Last Name"
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -217,6 +221,7 @@ function Signupform({
           <input
             id="email"
             type="email"
+            required
             placeholder="john@example.com"
             className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleInput}
@@ -232,6 +237,7 @@ function Signupform({
           <input
             id="phone"
             type="tel"
+            required
             placeholder="0771234567"
             className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleInput}
@@ -262,6 +268,7 @@ function Signupform({
           <div className="relative">
             <input
               id="password"
+              required
               type={!showpass ? "password" : "text"}
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -285,6 +292,7 @@ function Signupform({
           <div className="relative">
             <input
               id="confirmpassword"
+              required
               type={!showpass2 ? "password" : "text"}
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
