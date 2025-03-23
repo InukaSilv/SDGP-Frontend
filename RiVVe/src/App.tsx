@@ -41,6 +41,8 @@ import PaymentSuccess from "./pages/Payment/PaymentSuccess";
 import ProtectedNorm from "./components/protectedRoute/ProtectedNorm";
 import ProtectedVerifies from "./components/protectedRoute/ProtectedVerifies";
 import ProtectedStudentPremium from "./components/protectedRoute/ProtectedStudentPremium";
+import TermsAndConditions from "./pages/Admin/TermsAndConditions";
+
 function App() {
   return (
     <Router>
@@ -121,6 +123,7 @@ function App() {
             path="/wishlist"
             element={<ProtectedStudentPremium element={<PremiumWishList />} />}
           />
+          <Route path="/terms" element={<TermsAndConditions />} />
         </Routes>
       </div>
     </Router>

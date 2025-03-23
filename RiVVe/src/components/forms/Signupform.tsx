@@ -304,7 +304,7 @@ function Signupform({
           />
           <p className="text-sm text-gray-700">
             I accept the{" "}
-            <Link to="" className="text-blue-600 hover:underline">
+            <Link to="/terms" className="text-blue-600 hover:underline">
               terms and conditions
             </Link>
           </p>
