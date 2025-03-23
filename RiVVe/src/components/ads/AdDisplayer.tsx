@@ -26,7 +26,7 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
   console.log(ad.roomTypes.singleRoom);
   return (
     <div className="block w-full transform transition-all duration-300 hover:scale-[1.02]">
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[430px] flex flex-col">
+      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[430px] flex flex-col">
         <div className="relative h-48">
           <img
             src={ad.images[0]}
