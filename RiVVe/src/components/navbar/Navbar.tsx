@@ -22,6 +22,7 @@ function Navbar() {
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("user");
+    const user = JSON.parse(storedUser);
 
     if (authToken && storedUser) {
       try {
@@ -156,9 +157,11 @@ function Navbar() {
       <div className="flex items-center space-x-2 md:space-x-6">
         {isLoggedIn ? (
           <div className="flex items-center space-x-3">
-            <Link to="message" className="text-xl">
-              <Mail />
-            </Link>
+            {issPremium && (
+              <Link to="/message" className="text-xl">
+                <Mail />
+              </Link>
+            )}
           </div>
         ) : (
           <>
