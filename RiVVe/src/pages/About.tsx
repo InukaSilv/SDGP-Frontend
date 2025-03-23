@@ -459,7 +459,7 @@ const About = () => {
               title="Transparency"
             />
             <AnimatedCounter
-              endValue={0}
+              endValue={5}
               suffix=""
               title="Verified Landlords"
             />
