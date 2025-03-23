@@ -20,7 +20,7 @@ function Chat() {
   useEffect(() => {
     // Check if user is authenticated
     const checkAuthentication = async () => {
-      // First try to get user data from localStorage
+      //Get user data from localStorage
       const authToken = localStorage.getItem("authToken");
       const userData = localStorage.getItem("user");
       
@@ -35,7 +35,7 @@ function Chat() {
         const parsedUserData = JSON.parse(userData);
         setCurrentUser(parsedUserData);
         
-        // Now also verify with the server (but don't block UI)
+        // Verify with the server
         axios.get(getUserProfileRoute, {
           headers: {
             Authorization: `Bearer ${authToken}`
@@ -69,19 +69,31 @@ function Chat() {
   useEffect(() => {
     if (currentUser && currentUser._id) {
       socket.current = io(host, {
-        transports: ['polling']
+        transports: ['polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
       });
       
       socket.current.on("connect", () => {
         console.log("Socket connected successfully!");
         socket.current.emit("add-user", currentUser._id);
       });
-      
+        
       socket.current.on("connect_error", (err) => {
         console.error("Socket connection error:", err);
       });
+        
+      socket.current.on("disconnect", (reason) => {
+        console.log("Socket disconnected:", reason);
+      });
+        
+      socket.current.on("reconnect", (attemptNumber) => {
+        console.log("Socket reconnected after", attemptNumber, "attempts");
+        // Re-register user ID after reconnection
+        socket.current.emit("add-user", currentUser._id);
+      });
     }
-    
+      
     return () => {
       if (socket.current) {
         socket.current.disconnect();

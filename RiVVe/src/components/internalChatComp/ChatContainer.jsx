@@ -24,11 +24,12 @@ export default function ChatContainer({ currentChat, currentUser, socket, draftM
 
   // Save draft message when user types
   useEffect(() => {
-    if (onDraftMessageChange && currentChat) {
+    if (onDraftMessageChange && currentChat && inputMessage !== draftMessage) {
       onDraftMessageChange(inputMessage);
     }
-  }, [inputMessage, currentChat, onDraftMessageChange]);
-
+  }, [inputMessage, currentChat, onDraftMessageChange, draftMessage]);
+  
+  
   // Reset messages when chat changes
   useEffect(() => {
     setMessages([]);
@@ -61,8 +62,8 @@ export default function ChatContainer({ currentChat, currentUser, socket, draftM
     }
   }, [currentChat, currentUser]);
 
-  const handleSendMessage = async (msg) => {
-    
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
     
     if (inputMessage.trim().length > 0) {
       try {

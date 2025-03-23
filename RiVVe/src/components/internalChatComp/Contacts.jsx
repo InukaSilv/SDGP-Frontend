@@ -51,10 +51,10 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         <p className="role">{contact.role}</p>
       </div>
     </div>
-  ))
-) : (
-  <div className="no-contacts">No contacts available</div>
-)}
+      ))
+    ) : (
+      <div className="no-contacts">No contacts available</div>
+    )}
           </div>
           <div className="current-user">
             <div className="avatar current-user-avatar">

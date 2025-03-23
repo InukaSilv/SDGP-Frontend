@@ -28,7 +28,7 @@ function Login() {
     localStorage.setItem("authToken", token);
     localStorage.setItem("userId", userData._id || userData.id);
     localStorage.setItem("user", JSON.stringify(userData));
-    // For chat app usage or consistent user session
+    // For chat app usage
     localStorage.setItem("chat-app-user", JSON.stringify(userData));
   };
 
