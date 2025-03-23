@@ -134,7 +134,11 @@ function Signup2() {
                       ? "bg-[#1e5f8a] text-white shadow-lg"
                       : "bg-[#e0ebf3] text-[#1e5f8a] hover:shadow-lg"
                   }`}
-                  onClick={() => setSelectedPlan("monthly")}
+                  onClick={() =>
+                    setSelectedPlan(
+                      selectedPlan === "monthly" ? "none" : "monthly"
+                    )
+                  }
                 >
                   <h3 className="text-2xl font-semibold mb-4 text-center">
                     {monthlyPlan.name}
@@ -162,7 +166,11 @@ function Signup2() {
                       ? "bg-[#1e5f8a] text-white shadow-lg"
                       : "bg-[#3a85b3] text-white hover:shadow-lg"
                   }`}
-                  onClick={() => setSelectedPlan("yearly")}
+                  onClick={() =>
+                    setSelectedPlan(
+                      selectedPlan === "yearly" ? "none" : "yearly"
+                    )
+                  }
                 >
                   <h3 className="text-2xl font-semibold mb-4 text-center">
                     {yearlyPlan.name}

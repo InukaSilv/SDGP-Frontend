@@ -18,6 +18,8 @@ function Login() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [showpass, setShowPass] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -36,6 +38,7 @@ function Login() {
       setLoginError("Please enter both email and password");
       return;
     }
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -66,11 +69,14 @@ function Login() {
     } catch (error) {
       console.log("loggin error");
       setLoginError("Email and password does not match");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // google Login handler
   const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
@@ -98,6 +104,8 @@ function Login() {
       setLoginError(
         "User dosent exist, please use other method or Signup if not registered yet"
       );
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -156,10 +164,19 @@ function Login() {
             <button
               type="submit"
               className="w-full bg-[#60A5FA]/10 text-[#60A5FA] border border-[#60A5FA]/30 py-3 rounded-xl font-medium flex items-center justify-center space-x-2 transition-all duration-300 transform hover:bg-[#60A5FA]/20 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#60A5FA]/50"
-              disabled={!formData.email || !formData.password}
+              disabled={!formData.email || !formData.password || isLoading}
             >
-              <LogIn className="h-5 w-5" />
-              <span>Sign In</span>
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-t-2 border-[#60A5FA] border-solid rounded-full animate-spin mr-2"></div>
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <LogIn className="h-5 w-5" />
+                  <span>Sign In</span>
+                </>
+              )}
             </button>
             <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
@@ -174,14 +191,24 @@ function Login() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554]"
+              disabled={isGoogleLoading}
+              className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554] disabled:opacity-70"
             >
-              <img
-                src="https://www.google.com/favicon.ico"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              <span>Sign in with Google</span>
+              {isGoogleLoading ? (
+                <>
+                  <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+                  Signing in with Google...
+                </>
+              ) : (
+                <>
+                  <img
+                    src="https://www.google.com/favicon.ico"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  <span>Sign in with Google</span>
+                </>
+              )}
             </button>
 
             {/* Footer Links */}

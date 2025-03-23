@@ -35,6 +35,8 @@ function Signupform({
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     fname: "",
     lname: "",
@@ -92,6 +94,7 @@ function Signupform({
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordMismatch || passwordError) return;
+    setIsLoading(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -114,6 +117,8 @@ function Signupform({
       } else {
         console.error("signup error", error.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,6 +128,7 @@ function Signupform({
       setExistingError("Please accept the terms and conditions");
       return;
     }
+    setIsGoogleLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -151,14 +157,15 @@ function Signupform({
 
       await axios.post(`${API_BASE_URL}/api/auth/signup`, userData);
       console.log("google signup success");
-      if (userData.paymentType !== "none") {
-        navigate("/payment");
+      if (selectedPlan !== "none") {
+        navigate("/payment2");
       } else {
         navigate("/login");
       }
-      navigate("/login");
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -316,22 +323,42 @@ function Signupform({
           </Link>
         </p>
         {existingError && <p className="text-red-500">{existingError}</p>}
-        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Sign Up
+        <button
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+              Signing up...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </button>
 
         <div className="w-full">
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554]"
+            disabled={isGoogleLoading}
+            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554] disabled:opacity-70"
           >
-            <img
-              src="https://www.google.com/favicon.ico"
-              alt="Google"
-              className="w-5 h-5"
-            />
-            <span>Sign Up with Google</span>
+            {isGoogleLoading ? (
+              <>
+                <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+                Signing up with Google...
+              </>
+            ) : (
+              <>
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  className="w-5 h-5"
+                />
+                <span>Sign Up with Google</span>
+              </>
+            )}
           </button>
         </div>
       </form>

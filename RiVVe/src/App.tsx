@@ -42,7 +42,7 @@ import ProtectedNorm from "./components/protectedRoute/ProtectedNorm";
 import ProtectedVerifies from "./components/protectedRoute/ProtectedVerifies";
 import ProtectedStudentPremium from "./components/protectedRoute/ProtectedStudentPremium";
 import TermsAndConditions from "./pages/Admin/TermsAndConditions";
-
+import Payment2 from "./pages/Payment/Payment2";
 function App() {
   return (
     <Router>
@@ -112,10 +112,8 @@ function App() {
           <Route path="/admin-users" element={<AdminUsers />} />
           <Route path="/admin-verify" element={<AdminVerification />} />
           <Route path="/admin-ads" element={<Adminads />} />
-          <Route
-            path="/payment"
-            element={<ProtectedRoute element={<Payment />} />}
-          />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment2" element={<Payment2 />} />
           <Route path="/success" element={<PaymentSuccess />} />
           <Route path="/cancel" element={<Navigate to="/user" />} />
 
