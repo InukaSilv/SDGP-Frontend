@@ -176,12 +176,12 @@ function Login() {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-t-2 border-[#60A5FA] border-solid rounded-full animate-spin mr-2"></div>
-                  logging in...
+                  loggin in...
                 </>
               ) : (
                 <>
                   <LogIn className="h-5 w-5" />
-                  <span>Sign In</span>
+                  <span>Log In</span>
                 </>
               )}
             </button>
@@ -204,7 +204,7 @@ function Login() {
               {isGoogleLoading ? (
                 <>
                   <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
-                  Signing in with Google...
+                  Login in with Google...
                 </>
               ) : (
                 <>
@@ -213,7 +213,7 @@ function Login() {
                     alt="Google"
                     className="w-5 h-5"
                   />
-                  <span>Sign in with Google</span>
+                  <span>Login in with Google</span>
                 </>
               )}
             </button>
