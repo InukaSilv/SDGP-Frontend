@@ -46,7 +46,7 @@ function VerifyWaiting() {
           await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
 
           if (requestData.paymentType !== "none") {
-            navigate("/payment2");
+            navigate("/payment2", { state: { email: formData.email } });
           } else {
             navigate("/login");
           }
