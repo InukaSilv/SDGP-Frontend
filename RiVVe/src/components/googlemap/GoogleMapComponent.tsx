@@ -39,7 +39,7 @@ function GoogleMapComponent({
   }, [mapPosition]);
 
   return (
-    <div className="h-full w-full">
+    <div className="bg-gray-800 h-full w-full">
       <div className="h-full w-full">
         {mapLoaded && (
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
