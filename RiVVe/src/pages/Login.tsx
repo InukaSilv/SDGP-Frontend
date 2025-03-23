@@ -125,7 +125,7 @@ function Login() {
             <h1 className="text-3xl font-bold text-[#60A5FA] mb-2">
               Welcome Back
             </h1>
-            <p className="text-[#8892B0]">Sign in to continue your journey</p>
+            <p className="text-[#8892B0]">Log in to continue your journey</p>
           </div>
 
           <form onSubmit={handleEmailLogin} className="space-y-6">
