@@ -271,7 +271,7 @@ const HostelDisplay: React.FC = () => {
           <Map size={25} />
         </div>
       </div>
-      {userData.isPremium && <Chatbot />}
+      {userData && userData.isPremium && <Chatbot />}
     </>
   );
 };

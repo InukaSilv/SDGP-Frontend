@@ -296,9 +296,6 @@ function Listing2() {
                       </div>
                     </div>
                   </div>
-                  <button className="p-2 rounded-full hover:bg-gray-700">
-                    <Heart className="h-6 w-6 text-red-400" />
-                  </button>
                 </div>
                 <div className="border-t border-gray-700 pt-4">
                   <h2 className="text-xl font-semibold mb-2 text-gray-100">
@@ -473,23 +470,26 @@ function Listing2() {
                     </div>
                   </div>
 
-                  {authToken && requser && requser.isPremium && (
-                    <button
-                      className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
-                      onClick={() => toggleWishlist(requser._id, ad._id)}
-                    >
-                      <div className="flex items-center justify-center">
-                        <Heart
-                          className={`h-5 w-5 mr-2 ${
-                            isInWishlist ? "fill-current" : ""
-                          }`}
-                        />
-                        {isInWishlist
-                          ? "Remove from Wishlist"
-                          : "Add to Wishlist"}
-                      </div>
-                    </button>
-                  )}
+                  {authToken &&
+                    requser &&
+                    requser.isPremium &&
+                    requser.role === "Student" && (
+                      <button
+                        className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
+                        onClick={() => toggleWishlist(requser._id, ad._id)}
+                      >
+                        <div className="flex items-center justify-center">
+                          <Heart
+                            className={`h-5 w-5 mr-2 ${
+                              isInWishlist ? "fill-current" : ""
+                            }`}
+                          />
+                          {isInWishlist
+                            ? "Remove from Wishlist"
+                            : "Add to Wishlist"}
+                        </div>
+                      </button>
+                    )}
 
                   {!authToken && (
                     <Link to="/signup1">

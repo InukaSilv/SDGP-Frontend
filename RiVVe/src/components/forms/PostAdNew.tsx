@@ -45,8 +45,8 @@ function PostAdNew() {
     price: "",
     housingType: "",
     roomType: [] as string[],
-    singleRoom: "0",
-    doubleRoom: "0",
+    singleRoom: 0,
+    doubleRoom: 0,
     address: "",
     coordinates: { lat: 6.9271, lng: 80.8612 },
     description: "",
@@ -60,12 +60,19 @@ function PostAdNew() {
   const navigate = useNavigate();
 
   const toggleRoomType = (type: string) => {
-    setFormData((prevType) => ({
-      ...prevType,
-      roomType: prevType.roomType.includes(type)
+    setFormData((prevType) => {
+      const newRoomTypes = prevType.roomType.includes(type)
         ? prevType.roomType.filter((typ) => typ !== type)
-        : [...prevType.roomType, type],
-    }));
+        : [...prevType.roomType, type];
+
+      // Reset room counts when room type is deselected
+      return {
+        ...prevType,
+        roomType: newRoomTypes,
+        singleRoom: newRoomTypes.includes("Single") ? prevType.singleRoom : 0,
+        doubleRoom: newRoomTypes.includes("shared") ? prevType.doubleRoom : 0,
+      };
+    });
   };
 
   useEffect(() => {
@@ -227,19 +234,29 @@ function PostAdNew() {
   };
 
   // when the post is submitted
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
-      console.log("Tocken not found, please login");
+      console.log("Token not found, please login");
     }
     const data = new FormData();
     data.append("title", formData.title);
     data.append("residents", formData.residents);
     data.append("price", formData.price);
     data.append("housingType", formData.housingType);
-    data.append("singleRoom", formData.singleRoom);
-    data.append("doubleRoom", formData.doubleRoom);
+    data.append(
+      "singleRoom",
+      formData.roomType.includes("Single")
+        ? formData.singleRoom.toString()
+        : "0"
+    );
+    data.append(
+      "doubleRoom",
+      formData.roomType.includes("shared")
+        ? formData.doubleRoom.toString()
+        : "0"
+    );
     data.append("address", formData.address);
     data.append("description", formData.description);
     data.append("contact", formData.contact);
