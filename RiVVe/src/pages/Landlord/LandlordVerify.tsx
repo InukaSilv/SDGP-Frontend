@@ -86,21 +86,24 @@ function LandLordVerification() {
   return (
     <>
       <Navbar />
-      <div className="h-screen flex items-center content-center justify-center">
-        <div className="w-[500px] h-[600px] bg-blue-300/30 shadow-2xl rounded-xl">
-          <div className="flex">
-            <Link to="/user" className="p-5 font-semibold">
+      <div className="h-screen flex items-center content-center justify-center p-4">
+        <div className="w-full max-w-[500px] min-h-[600px] bg-blue-300/30 shadow-2xl rounded-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center">
+            <Link to="/user" className="p-3 sm:p-5 font-semibold">
               <h2>Back</h2>
             </Link>
-            <h1 className="p-4 text-2xl font-bold text-gray-500 ml-5">
+            <h1 className="p-3 sm:p-4 text-xl sm:text-2xl font-bold text-gray-500 sm:ml-5">
               Landlord Verification
             </h1>
           </div>
 
           <hr className="w-[98%] mx-1 text-gray-500/50 rounded-2xl" />
-          <form className="mt-4 px-4" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="mt-4 px-3 sm:px-4"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <div className="mb-4">
-              <div className="flex gap-2 mb-2">
+              <div className="flex flex-wrap gap-2 mb-2">
                 <label className="block text-gray-700 font-medium">Email</label>
                 {user?.userdata?.isEmailVerified && (
                   <span className="px-2 text-sm rounded flex gap-1 text-green-600 bg-green-600/10">
@@ -115,12 +118,12 @@ function LandLordVerification() {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={user.userdata.isEmailVerified}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-sm sm:text-base"
               />
             </div>
 
             <div className="mt-5">
-              <div className="flex gap-2 mb-2">
+              <div className="flex flex-wrap gap-2 mb-2">
                 <label className="block text-gray-700 font-medium">Image</label>
                 <span
                   className={`px-2 text-sm rounded flex items-center gap-1 ${
@@ -146,7 +149,7 @@ function LandLordVerification() {
                 </span>
               </div>
 
-              <label className="border-2 border-dashed border-gray-300 p-4 rounded-lg cursor-pointer flex flex-col items-center gap-2 hover:bg-gray-100 transition">
+              <label className="border-2 border-dashed border-gray-300 p-3 sm:p-4 rounded-lg cursor-pointer flex flex-col items-center gap-2 hover:bg-gray-100 transition">
                 <input
                   type="file"
                   multiple
@@ -155,10 +158,12 @@ function LandLordVerification() {
                   className="hidden"
                   onChange={handleChange}
                 />
-                <Upload className="w-6 h-6 text-gray-600" />
-                <p className="text-gray-600">Upload images</p>
+                <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                <p className="text-sm sm:text-base text-gray-600">
+                  Upload images
+                </p>
               </label>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-xs sm:text-sm text-gray-500 mt-2">
                 Upload 2 images of the front and back of your ID
               </p>
 
@@ -169,7 +174,7 @@ function LandLordVerification() {
                       key={index}
                       className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
                     >
-                      <span className="text-sm text-gray-600 truncate">
+                      <span className="text-xs sm:text-sm text-gray-600 truncate">
                         {file.name}
                       </span>
                       <button
@@ -184,13 +189,15 @@ function LandLordVerification() {
                 </div>
               )}
 
-              {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+              {error && (
+                <p className="text-red-500 mt-2 text-xs sm:text-sm">{error}</p>
+              )}
 
               {!user.userdata.isIdVerified && (
                 <button
                   type="button"
                   onClick={handleUpload}
-                  className="mt-4 w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                   disabled={formData.id.length === 0}
                 >
                   Upload ID
@@ -202,8 +209,8 @@ function LandLordVerification() {
           {user.userdata.role === "Landlord" &&
             user.userdata.isEmailVerified &&
             user.userdata.isIdVerified && (
-              <div className="mt-6 px-4">
-                <p className="text-green-600 text-xl font-semibold text-center">
+              <div className="mt-6 px-3 sm:px-4">
+                <p className="text-green-600 text-lg sm:text-xl font-semibold text-center">
                   Congratulations! You are a verified landlord. You can now post
                   your property listings.
                 </p>
