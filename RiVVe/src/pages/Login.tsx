@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from "react";
 import Navbar from "../components/navbar/Navbar";
 import { EyeOff, Eye, LogIn, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   auth,
   signInWithPopup,
@@ -50,12 +51,10 @@ function Login() {
 
       console.log("Token from firebase", token);
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken: token }),
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        idToken: token,
       });
-      const data = await response.json();
+      const data = response.data;
       console.log("Backend response", data);
       if (data.success) {
         localStorage.setItem("authToken", data.token);
@@ -82,13 +81,11 @@ function Login() {
       const token = await result.user.getIdToken();
       console.log("Token from firebase", token);
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken: token }),
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        idToken: token,
       });
 
-      const data = await response.json();
+      const data = response.data;
       console.log("Backend response", data);
       if (data.success) {
         localStorage.setItem("authToken", data.token);
