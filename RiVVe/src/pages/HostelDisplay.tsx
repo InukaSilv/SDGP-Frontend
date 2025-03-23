@@ -220,10 +220,9 @@ const HostelDisplay: React.FC = () => {
 
       {/* map and ads */}
 
-      <div className="bg-gray-900 flex flex-col md:flex-row pt-55 md:pt-40 px-4 gap-6 relative">
-
+      <div className="bg-gray-900 flex flex-col md:flex-row pt-40 md:pt-32 px-4 gap-6 relative">
         <div
-          className={`w-full md:w-1/2 grid md:pr-2 grid-cols-1 sm:grid-cols-2 gap-3 overflow-auto h-screen scrollbar-hidden${
+          className={`w-full md:w-1/2 grid md:pr-2 grid-cols-1 sm:grid-cols-2 gap-3 mt-10 p-1 overflow-auto h-[calc(100vh-160px)] scrollbar-hidden${
             showmap ? "pointer-events-none opacity-50" : ""
           }`}
         >

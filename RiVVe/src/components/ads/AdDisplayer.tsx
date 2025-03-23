@@ -40,22 +40,25 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
 
         <div className="p-5 flex flex-col flex-grow">
           <div className="flex justify-between items-start mb-3">
-            <h3 className="text-xl font-bold text-white">{ad.title}</h3>
+            <h3 className="text-xl font-bold text-gray-900">{ad.title}</h3>
             <div className="flex items-center">
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
-              <span className="ml-1 text-blue-200">{ad.averageRating}</span>
+              <span className="ml-1 text-gray-700">{ad.averageRating}</span>
             </div>
           </div>
 
-          <div className="flex items-center text-blue-100 mb-3">
+          <div className="flex items-center text-gray-600 mb-3">
             <MapPin className="w-4 h-4 mr-2" />
             <span className="text-sm">{ad.address}</span>
           </div>
 
+          <div className="flex items-center text-gray-600 mb-3">
+            <Users2 className="w-4 h-4 mr-2" />
+            <span className="text-sm">{ad.residents} Residents</span>
+          </div>
 
           {ad.roomTypes.doubleRoom !== 0 && (
-            <div className="flex items-center text-blue-100 mb-1">
-
+            <div className="flex items-center text-gray-600 mb-1">
               <Users className="w-4 h-4 mr-2" />
               <span className="text-sm">
                 {ad.roomTypes.doubleRoom} Double rooms
@@ -63,9 +66,8 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
             </div>
           )}
 
-
           {ad.roomTypes.singleRoom !== 0 && (
-            <div className="flex items-center text-blue-100 mb-1">
+            <div className="flex items-center text-gray-600 mb-4">
               <User className="w-4 h-4 mr-2" />
               <span className="text-sm">
                 {ad.roomTypes.singleRoom} Single rooms
@@ -96,11 +98,11 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
                 ""
               )}
             </div>
-
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300">
-              View Details
-            </button>
-
+            <Link to="/listing2" state={{ ad }}>
+              <button className="bg-blue-950 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                View Details
+              </button>
+            </Link>
           </div>
         </div>
       </div>
