@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import Contacts from "../components/internalChatComp/Contacts";
 import ChatContainer from "../components/internalChatComp/ChatContainer";
-import { allUsersRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute, host, getUserProfileRoute } from "../utils/APIRoutes";
 import { io } from "socket.io-client";
 
 function Chat() {
@@ -18,37 +18,103 @@ function Chat() {
   const [draftMessages, setDraftMessages] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!localStorage.getItem("chat-app-user")){
+    // Check if user is authenticated
+    const checkAuthentication = async () => {
+      // First try to get user data from localStorage
+      const authToken = localStorage.getItem("authToken");
+      const userData = localStorage.getItem("user");
+      
+      if (!authToken || !userData) {
+        console.log("No authentication data found, redirecting to login");
         navigate("/login");
-      } else {
-        setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
+        return;
+      }
+      
+      try {
+        // Set the current user from localStorage immediately
+        const parsedUserData = JSON.parse(userData);
+        setCurrentUser(parsedUserData);
+        
+        // Now also verify with the server (but don't block UI)
+        axios.get(getUserProfileRoute, {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        }).then(response => {
+          // Optional: Update user data if server has newer info
+          if (response.data) {
+            setCurrentUser(response.data);
+            localStorage.setItem("user", JSON.stringify(response.data));
+            localStorage.setItem("chat-app-user", JSON.stringify(response.data));
+          }
+        }).catch(error => {
+          console.error("Error verifying authentication:", error);
+          // Only redirect if it's an auth error (401/403)
+          if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            navigate("/login");
+          }
+        });
+        
         setIsLoaded(true);
+      } catch (error) {
+        console.error("Error processing user data:", error);
+        navigate("/login");
       }
     };
-    fetchData();
+    
+    checkAuthentication();
   }, [navigate]);
 
+  // Set up socket connection once user is available
   useEffect(() => {
-    if(currentUser) {
-      socket.current = io(host);
-      socket.current.emit("add-user", currentUser._id);
+    if (currentUser && currentUser._id) {
+      socket.current = io(host, {
+        transports: ['polling']
+      });
+      
+      socket.current.on("connect", () => {
+        console.log("Socket connected successfully!");
+        socket.current.emit("add-user", currentUser._id);
+      });
+      
+      socket.current.on("connect_error", (err) => {
+        console.error("Socket connection error:", err);
+      });
     }
+    
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
   }, [currentUser]);
   
+  // Fetch contacts once user is loaded
   useEffect(() => {
     const fetchContacts = async () => {
-      if(currentUser && currentUser._id) {
+      if (currentUser && currentUser._id) {
         try {
-          const response = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          setContacts(response.data);
+          const authToken = localStorage.getItem("authToken");
+          const response = await axios.get(`${allUsersRoute}/${currentUser._id}`, {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          });
+          
+          console.log("Contacts API response:", response.data);
+          setContacts(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
           console.error("Error fetching contacts:", error);
+          // If unauthorized, but don't redirect immediately
+          if (error.response && error.response.status === 401) {
+            console.warn("Unauthorized when fetching contacts");
+          }
+          setContacts([]);
         }
       }
     };
     
-    if (isLoaded) {
+    if (isLoaded && currentUser) {
       fetchContacts();
     }
   }, [currentUser, isLoaded]);
@@ -57,7 +123,7 @@ function Chat() {
     setCurrentChat(chat);
   };
 
-  // Save draft message when user types
+  // Draft message handlers
   const handleDraftMessageChange = (chatId, message) => {
     setDraftMessages(prev => ({
       ...prev,
@@ -65,37 +131,48 @@ function Chat() {
     }));
   };
 
-  // Get draft message for current chat
   const getDraftMessage = (chatId) => {
     return draftMessages[chatId] || "";
   };
 
+  // Show loading state instead of redirecting
+  if (!isLoaded) {
+    return (
+      <>
+        <Navbar />
+        <Container>
+          <div className="loading">Loading chat data...</div>
+        </Container>
+      </>
+    );
+  }
+
   return (
     <>
-    <Navbar/>
-    <Container>
-      <div className="container">
-        <Contacts 
-          contacts={contacts} 
-          currentUser={currentUser} 
-          changeChat={handleChatChange}
-        />
-        {currentChat ? (
-          <ChatContainer 
-            currentChat={currentChat} 
-            currentUser={currentUser}
-            socket={socket}
-            draftMessage={getDraftMessage(currentChat._id)}
-            onDraftMessageChange={(message) => handleDraftMessageChange(currentChat._id, message)}
+      <Navbar />
+      <Container>
+        <div className="container">
+          <Contacts 
+            contacts={contacts} 
+            currentUser={currentUser} 
+            changeChat={handleChatChange}
           />
-        ) : (
-          <div className="welcome">
-            <h1>Welcome to RiVVe Chat!</h1>
-            <p>Select a chat to start messaging</p>
-          </div>
-        )}
-      </div>
-    </Container>
+          {currentChat ? (
+            <ChatContainer 
+              currentChat={currentChat} 
+              currentUser={currentUser}
+              socket={socket}
+              draftMessage={getDraftMessage(currentChat._id)}
+              onDraftMessageChange={(message) => handleDraftMessageChange(currentChat._id, message)}
+            />
+          ) : (
+            <div className="welcome">
+              <h1>Welcome to RiVVe Chat!</h1>
+              <p>Select a chat to start messaging</p>
+            </div>
+          )}
+        </div>
+      </Container>
     </>
   );
 }

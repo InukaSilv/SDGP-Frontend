@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-//import Logo from "../../assets/logo1";
 
 export default function Contacts({ contacts, currentUser, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
@@ -8,11 +7,10 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
 
   useEffect(() => {
     if (currentUser) {
-      // Use firstName and lastName if available, otherwise fall back to username
       if (currentUser.firstName && currentUser.lastName) {
         setCurrentUserName(`${currentUser.firstName} ${currentUser.lastName}`);
       } else {
-        setCurrentUserName(currentUser.username || currentUser.currentUserName);
+        setCurrentUserName(currentUser.email);
       }
     }
   }, [currentUser]);
@@ -27,27 +25,36 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
       {currentUserName && (
         <Container>
           <div className="brand">
-            {/* <img src={Logo} alt="logo" /> */}
             <h2>RiVVe Chat</h2>
           </div>
           <div className="contacts">
-            {contacts.map((contact, index) => (
-              <div
-                className={`contact ${index === currentSelected ? "selected" : ""}`}
-                key={index}
-                onClick={() => handleChangeCurrentChat(index, contact)}
-              >
-                <div className="avatar">{contact.firstName?.charAt(0) || contact.username?.charAt(0)}</div>
-                <div className="username">
-                  <h3>
-                    {contact.firstName && contact.lastName
-                      ? `${contact.firstName} ${contact.lastName}`
-                      : contact.username}
-                  </h3>
-                  <p className="role">{contact.role}</p>
-                </div>
-              </div>
-            ))}
+          {Array.isArray(contacts) && contacts.length > 0 ? (
+  contacts.map((contact, index) => (
+    <div
+      className={`contact ${index === currentSelected ? "selected" : ""}`}
+      key={index}
+      onClick={() => handleChangeCurrentChat(index, contact)}
+    >
+      <div className="avatar">
+        {contact.profilePhoto ? (
+          <img src={contact.profilePhoto} alt="avatar" />
+        ) : (
+          contact.firstName?.charAt(0) || contact.email?.charAt(0)
+        )}
+      </div>
+      <div className="username">
+        <h3>
+          {contact.firstName && contact.lastName
+            ? `${contact.firstName} ${contact.lastName}`
+            : contact.email}
+        </h3>
+        <p className="role">{contact.role}</p>
+      </div>
+    </div>
+  ))
+) : (
+  <div className="no-contacts">No contacts available</div>
+)}
           </div>
           <div className="current-user">
             <div className="avatar current-user-avatar">

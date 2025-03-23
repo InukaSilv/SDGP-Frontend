@@ -24,6 +24,14 @@ function Login() {
   });
   const [loginError, setLoginError] = useState<string>("");
 
+  const saveUserAuth = (userData: any, token: string) => {
+    localStorage.setItem("authToken", token);
+    localStorage.setItem("userId", userData._id || userData.id);
+    localStorage.setItem("user", JSON.stringify(userData));
+    // For chat app usage or consistent user session
+    localStorage.setItem("chat-app-user", JSON.stringify(userData));
+  };
+
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
@@ -68,6 +76,7 @@ function Login() {
       setLoginError("Email and password does not match");
     }
   };
+  
 
   // google Login handler
   const handleGoogleLogin = async () => {
@@ -85,6 +94,7 @@ function Login() {
       const data = await response.json();
       console.log("Backend response", data);
       if (data.success) {
+        saveUserAuth(data.data, data.token);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("user", JSON.stringify(data.data));
         navigate("/user");

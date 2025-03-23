@@ -39,9 +39,14 @@ export default function ChatContainer({ currentChat, currentUser, socket, draftM
     const fetchMessages = async () => {
       if (currentChat && currentUser) {
         try {
+          const authToken = localStorage.getItem("authToken");
           const response = await axios.post(getAllMessagesRoute, {
             from: currentUser._id,
             to: currentChat._id,
+          }, {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
           });
           
           setMessages(response.data);
@@ -51,19 +56,26 @@ export default function ChatContainer({ currentChat, currentUser, socket, draftM
       }
     };
     
-    fetchMessages();
+    if (currentChat) {
+      fetchMessages();
+    }
   }, [currentChat, currentUser]);
 
-  const handleSendMessage = async (e) => {
-    if (e) e.preventDefault();
+  const handleSendMessage = async (msg) => {
+    
     
     if (inputMessage.trim().length > 0) {
       try {
+        const authToken = localStorage.getItem("authToken");
         // Send to server
         await axios.post(sendMessageRoute, {
           from: currentUser._id,
           to: currentChat._id,
           message: inputMessage,
+        },{
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
         });
         
         // Format timestamp
