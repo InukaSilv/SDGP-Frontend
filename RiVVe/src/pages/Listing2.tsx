@@ -95,6 +95,8 @@ function Listing2() {
   const requser = storedUser ? JSON.parse(storedUser) : null;
   const location = useLocation();
   const ad: Property = location.state?.ad;
+  const [startTime, setStartTime] = useState<number | null>(null);
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -129,6 +131,31 @@ function Listing2() {
     fetchReviews();
     fetchOwnerDetail();
   }, [ad.reviews]);
+
+  // get the time where the user came to view the property and send to backend when the id is changed
+  useEffect(() => {
+    const startTime = Date.now();
+    setStartTime(startTime);
+
+    const sendTimeSpent = async () => {
+      if (startTime) {
+        const exitTime = Date.now();
+        const timeSpent = (exitTime - startTime) / 1000;
+
+        try {
+          await axios.post(`${API_BASE_URL}/api/listing/track-view`, {
+            listingId: ad._id,
+            duration: timeSpent,
+          });
+        } catch (error) {
+          console.error("Error sending time spent:", error);
+        }
+      }
+    };
+    return () => {
+      sendTimeSpent();
+    };
+  }, [ad._id]);
 
   if (!ad) {
     return <div>Ad not found</div>;
@@ -175,7 +202,7 @@ function Listing2() {
   const toggleWishlist = async (userId: string, adId: string) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/listing/adwishlist`,
+        `${API_BASE_URL}/api/wishlist/adwishlist`,
         { userId, adId },
         {
           headers: {
@@ -269,9 +296,6 @@ function Listing2() {
                       </div>
                     </div>
                   </div>
-                  <button className="p-2 rounded-full hover:bg-gray-700">
-                    <Heart className="h-6 w-6 text-red-400" />
-                  </button>
                 </div>
                 <div className="border-t border-gray-700 pt-4">
                   <h2 className="text-xl font-semibold mb-2 text-gray-100">
@@ -446,23 +470,26 @@ function Listing2() {
                     </div>
                   </div>
 
-                  {authToken && requser && (
-                    <button
-                      className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
-                      onClick={() => toggleWishlist(requser._id, ad._id)}
-                    >
-                      <div className="flex items-center justify-center">
-                        <Heart
-                          className={`h-5 w-5 mr-2 ${
-                            isInWishlist ? "fill-current" : ""
-                          }`}
-                        />
-                        {isInWishlist
-                          ? "Remove from Wishlist"
-                          : "Add to Wishlist"}
-                      </div>
-                    </button>
-                  )}
+                  {authToken &&
+                    requser &&
+                    requser.isPremium &&
+                    requser.role === "Student" && (
+                      <button
+                        className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors mb-4"
+                        onClick={() => toggleWishlist(requser._id, ad._id)}
+                      >
+                        <div className="flex items-center justify-center">
+                          <Heart
+                            className={`h-5 w-5 mr-2 ${
+                              isInWishlist ? "fill-current" : ""
+                            }`}
+                          />
+                          {isInWishlist
+                            ? "Remove from Wishlist"
+                            : "Add to Wishlist"}
+                        </div>
+                      </button>
+                    )}
 
                   {!authToken && (
                     <Link to="/signup1">
@@ -474,7 +501,9 @@ function Listing2() {
                 </div>
 
                 {/* Host Card with Popup - Replaced the original Host Card */}
-                {ownerDetail && <HostCardWithPopup host={ownerDetail} />}
+                {authToken && requser && ownerDetail && (
+                  <HostCardWithPopup adId={ad._id} host={ownerDetail} />
+                )}
               </div>
             </div>
           </div>

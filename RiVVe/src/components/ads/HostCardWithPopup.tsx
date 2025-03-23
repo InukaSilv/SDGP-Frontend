@@ -8,6 +8,7 @@ import {
   Star,
   BadgeCheck,
 } from "lucide-react";
+import axios from "axios";
 
 interface Host {
   profilePhoto: string;
@@ -21,13 +22,21 @@ interface Host {
   phone: string;
   email: string;
 }
-const HostCardWithPopup = ({ host }: { host: Host }) => {
+const HostCardWithPopup = ({ host, adId }: { host: Host; adId: string }) => {
   const authToken = localStorage.getItem("authToken");
 
   const [showDetails, setShowDetails] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const toggleDetails = () => {
+  const toggleDetails = async () => {
     setShowDetails(!showDetails);
+    try {
+      await axios.post(`${API_BASE_URL}/api/listing/track-contact-click`, {
+        listingId: adId,
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   };
   if (!host) {
     return <div className="text-red-500">Host data is not available.</div>;

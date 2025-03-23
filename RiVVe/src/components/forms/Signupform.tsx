@@ -21,6 +21,7 @@ interface FormData {
   password: string;
   confirmpassword: string;
   paymentType: string;
+  terms: boolean;
 }
 
 function Signupform({
@@ -34,6 +35,8 @@ function Signupform({
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     fname: "",
     lname: "",
@@ -43,6 +46,7 @@ function Signupform({
     password: "",
     confirmpassword: "",
     paymentType: selectedPlan,
+    terms: false,
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
@@ -53,6 +57,7 @@ function Signupform({
     setFormData((prevData) => ({ ...prevData, paymentType: selectedPlan }));
   }, [selectedPlan]);
 
+  // on input changes do the alterations
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
@@ -78,16 +83,20 @@ function Signupform({
       const cleanedPhone = value.replace(/\D/g, "");
       setFormData((record) => ({ ...record, phone: cleanedPhone }));
       if (!/^0\d{9}$/.test(cleanedPhone)) {
-        setPhoneError("Phone number should be in the correct format");
+        setPhoneError(
+          "Phone number should be in the correct format, should have 10 numbers"
+        );
       } else {
         setPhoneError("");
       }
     }
   };
 
+  // direct to verify waiting page
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordMismatch || passwordError) return;
+    setIsLoading(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -101,6 +110,12 @@ function Signupform({
       });
       await sendEmailVerification(user);
 
+      // Store email and password temporarily for auto-login after payment
+      if (formData.paymentType !== "none") {
+        localStorage.setItem("tempUserEmail", formData.email);
+        localStorage.setItem("tempUserPassword", formData.password);
+      }
+
       navigate("/verifyWaiting", {
         state: { formData: { ...formData, role } },
       });
@@ -110,10 +125,18 @@ function Signupform({
       } else {
         console.error("signup error", error.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // google signup
   const handleGoogleSignUp = async () => {
+    if (!formData.terms) {
+      setExistingError("Please accept the terms and conditions");
+      return;
+    }
+    setIsGoogleLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -142,14 +165,15 @@ function Signupform({
 
       await axios.post(`${API_BASE_URL}/api/auth/signup`, userData);
       console.log("google signup success");
-      if (userData.paymentType !== "none") {
-        navigate("/payment");
+      if (selectedPlan !== "none") {
+        navigate("/payment2");
       } else {
         navigate("/login");
       }
-      navigate("/login");
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -167,6 +191,7 @@ function Signupform({
             <input
               id="fname"
               type="text"
+              required
               placeholder="First Name"
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -180,6 +205,7 @@ function Signupform({
             <input
               id="lname"
               type="text"
+              required
               placeholder="Last Name"
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -195,6 +221,7 @@ function Signupform({
           <input
             id="email"
             type="email"
+            required
             placeholder="john@example.com"
             className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleInput}
@@ -210,6 +237,7 @@ function Signupform({
           <input
             id="phone"
             type="tel"
+            required
             placeholder="0771234567"
             className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleInput}
@@ -240,6 +268,7 @@ function Signupform({
           <div className="relative">
             <input
               id="password"
+              required
               type={!showpass ? "password" : "text"}
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -263,6 +292,7 @@ function Signupform({
           <div className="relative">
             <input
               id="confirmpassword"
+              required
               type={!showpass2 ? "password" : "text"}
               className="w-full border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={handleInput}
@@ -286,10 +316,16 @@ function Signupform({
             type="checkbox"
             required
             className="w-4 h-4 mr-2 rounded border-gray-300 focus:ring-blue-500"
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                terms: e.target.checked,
+              }))
+            }
           />
           <p className="text-sm text-gray-700">
             I accept the{" "}
-            <Link to="" className="text-blue-600 hover:underline">
+            <Link to="/terms" className="text-blue-600 hover:underline">
               terms and conditions
             </Link>
           </p>
@@ -301,22 +337,42 @@ function Signupform({
           </Link>
         </p>
         {existingError && <p className="text-red-500">{existingError}</p>}
-        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Sign Up
+        <button
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+              Signing up...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </button>
 
         <div className="w-full">
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554]"
+            disabled={isGoogleLoading}
+            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554] disabled:opacity-70"
           >
-            <img
-              src="https://www.google.com/favicon.ico"
-              alt="Google"
-              className="w-5 h-5"
-            />
-            <span>Sign Up with Google</span>
+            {isGoogleLoading ? (
+              <>
+                <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+                Signing up with Google...
+              </>
+            ) : (
+              <>
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  className="w-5 h-5"
+                />
+                <span>Sign Up with Google</span>
+              </>
+            )}
           </button>
         </div>
       </form>
