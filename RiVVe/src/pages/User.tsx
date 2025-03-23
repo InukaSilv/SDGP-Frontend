@@ -175,6 +175,24 @@ function User() {
     }
   };
 
+  const handleCancelSubscription = async () => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/payments/cancel-subscription`, {}, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+  
+      alert("Subscription cancelled successfully.");
+      localStorage.setItem("user", JSON.stringify({ ...userdata, isPremium: false }));
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to cancel subscription:", error);
+      alert("Error cancelling subscription.");
+    }
+  };
+  
+
   const ROLE_PLANS = {
     student: {
       monthly: {
@@ -206,7 +224,7 @@ function User() {
     },
   };
 
-  const userRole = userdata?.role?.toLowerCase() || "student"; // Get user role
+  const userRole = (userdata?.role?.toLowerCase() as "student" | "landlord") || "student"; 
   const monthlyPlan = ROLE_PLANS[userRole].monthly;
   const yearlyPlan = ROLE_PLANS[userRole].yearly;
 
@@ -322,7 +340,9 @@ function User() {
               {/* cancel subscription accessible to all premium members */}
               {userdata.isPremium && (
                 <>
-                  <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200">
+                  <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
+                  onClick={handleCancelSubscription}
+                  >
                     Cancel Subscription
                   </button>
                 </>

@@ -10,16 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
     "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^6.4.1",
     "@mui/material": "^6.4.2",
     "@react-google-maps/api": "^2.20.5",
     "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.0",
     "@vis.gl/react-google-maps": "^1.5.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",

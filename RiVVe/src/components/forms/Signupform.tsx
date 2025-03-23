@@ -105,6 +105,12 @@ function Signupform({
       });
       await sendEmailVerification(user);
 
+      // Store email and password temporarily for auto-login after payment
+      if (formData.paymentType !== "none") {
+        localStorage.setItem("tempUserEmail", formData.email);
+        localStorage.setItem("tempUserPassword", formData.password);
+      }
+
       navigate("/verifyWaiting", {
         state: { formData: { ...formData, role } },
       });
