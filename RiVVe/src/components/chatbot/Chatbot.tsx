@@ -73,15 +73,8 @@ function Chatbot() {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
 
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          // Enable credentials
-          withCredentials: false,
         }
+      }
       );
 
       console.log("API Response:", response.data);

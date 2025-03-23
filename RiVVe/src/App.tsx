@@ -79,10 +79,8 @@ function App() {
 
           <Route path="/testd" element={<HostelDetails />} />
 
-          <Route
-            path="/message"
-            element={<ProtectedVerifies element={<Chat />} />}
-          />
+          <Route path="/message" element={<Chat />} />
+
 
           <Route
             path="/posting"
