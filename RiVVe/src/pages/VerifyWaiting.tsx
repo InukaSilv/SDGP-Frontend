@@ -14,6 +14,7 @@ function VerifyWaiting() {
   const [errorMessage, setErrorMessge] = useState<string>("");
 
   useEffect(() => {
+    console.log("Received formData in VerifyWaiting:", formData);
     if (!formData) {
       console.error("No form data found. Redirecting...");
       navigate("/");
@@ -41,9 +42,9 @@ function VerifyWaiting() {
           role: formData.role || "student",
           paymentType: formData.paymentType || "none",
         };
-        console.log(formData);
         try {
           await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
+
           if (requestData.paymentType !== "none") {
             navigate("/payment2");
           } else {
