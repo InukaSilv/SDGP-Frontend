@@ -3,10 +3,101 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import Signupform from "../components/forms/Signupform";
 
+// Define features for each role and plan type
+const ROLE_FEATURES = {
+  student: {
+    gold: [
+      "Unlimited Property Searches & Filters ",
+      "Ad-Free Experience ",
+      "Priority Booking ",
+      "Direct Chat with Landlords",
+      "Early Access to New Listings ",
+      "Tenant Rating System",
+    ],
+    platinum: [
+      "Unlimited Property Searches & Filters",
+      "Ad-Free Experience ",
+      "Priority Booking ",
+      "Direct Chat with Landlords",
+      "Early Access to New Listings",
+      "Tenant Rating System",
+      "Exclusive Rent Discounts",
+    ],
+  },
+  landlord: {
+    gold: [
+      "Unlimited Property Listings ",
+      "Boosted Ads",
+      "Direct Chat with Tenants ",
+      "Verified Badge",
+      "roperty Analytics ",
+      "Featured Listing on Homepage",
+    ],
+    platinum: [
+      "Unlimited Property Listings ",
+      "Boosted Ads",
+      "Direct Chat with Tenants ",
+      "Verified Badge",
+      "roperty Analytics ",
+      "Featured Listing on Homepage",
+      "Discounted Renewal ",
+    ],
+  },
+};
+
+// Define plans for each role
+const ROLE_PLANS = {
+  student: {
+    monthly: {
+      name: "Gold Plan",
+      price: "500",
+      duration: "month",
+      type: "gold",
+    },
+    yearly: {
+      name: "Platinum Plan",
+      price: "5000",
+      duration: "year",
+      type: "platinum",
+    },
+  },
+  landlord: {
+    monthly: {
+      name: "Gold Plan",
+      price: "800",
+      duration: "month",
+      type: "gold",
+    },
+    yearly: {
+      name: "Platinum Plan",
+      price: "8000",
+      duration: "year",
+      type: "platinum",
+    },
+  },
+};
+
 function Signup2() {
   const location = useLocation();
   const { role, id } = location.state || {};
   const [selectedPlan, setSelectedPlan] = useState("none");
+
+  // Convert role to lowercase for object mapping
+  const roleKey = role?.toLowerCase() || "student";
+
+  // Determine which features to show based on role and selected plan
+  const getPlanType = () => {
+    if (selectedPlan === "monthly") return "gold";
+    if (selectedPlan === "yearly") return "platinum";
+    return "gold"; // Default to gold features when no plan is selected
+  };
+
+  // Get features for the current role and plan type
+  const features = ROLE_FEATURES[roleKey][getPlanType()] || [];
+
+  // Get monthly and yearly plan details for the current role
+  const monthlyPlan = ROLE_PLANS[roleKey].monthly;
+  const yearlyPlan = ROLE_PLANS[roleKey].yearly;
 
   return (
     <>
@@ -18,7 +109,8 @@ function Signup2() {
           </h1>
           <p className="text-xl text-[#3a85b3] text-center mb-8">
             Join our platform to unlock amazing features and find the best
-            accommodations or tenants.
+            {role?.toLowerCase() === "student" ? " accommodations" : " tenants"}
+            .
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <Signupform role={role} selectedPlan={selectedPlan} />
@@ -27,22 +119,12 @@ function Signup2() {
                 Unlock Premium Features
               </h2>
               <ul className="space-y-5 text-lg">
-                <li className="flex items-center">
-                  <span className="mr-3 text-[#2772A0] text-2xl">✔</span>
-                  {id === 1 ? "Access to Exclusive Chat Forum" : "Ads boost"}
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-3 text-[#2772A0] text-2xl">✔</span>
-                  {id === 1
-                    ? "Get Notified Based on Availability"
-                    : "Exclusive insights and reports"}
-                </li>
-                {id === 1 && (
-                  <li className="flex items-center">
+                {features.map((feature, index) => (
+                  <li key={index} className="flex items-center">
                     <span className="mr-3 text-[#2772A0] text-2xl">✔</span>
-                    Save Listings for Later
+                    {feature}
                   </li>
-                )}
+                ))}
               </ul>
               <div className="mt-8 space-y-6">
                 {/* Monthly Plan */}
@@ -52,13 +134,19 @@ function Signup2() {
                       ? "bg-[#1e5f8a] text-white shadow-lg"
                       : "bg-[#e0ebf3] text-[#1e5f8a] hover:shadow-lg"
                   }`}
-                  onClick={() => setSelectedPlan("monthly")}
+                  onClick={() =>
+                    setSelectedPlan(
+                      selectedPlan === "monthly" ? "none" : "monthly"
+                    )
+                  }
                 >
                   <h3 className="text-2xl font-semibold mb-4 text-center">
-                    Monthly Plan
+                    {monthlyPlan.name}
                   </h3>
                   <div className="flex justify-between items-center">
-                    <span className="text-lg">Rs.XXX/month</span>
+                    <span className="text-lg">
+                      Rs.{monthlyPlan.price}/{monthlyPlan.duration}
+                    </span>
                     <button
                       className={`px-6 py-2 rounded-xl transition-all ${
                         selectedPlan === "monthly"
@@ -78,14 +166,18 @@ function Signup2() {
                       ? "bg-[#1e5f8a] text-white shadow-lg"
                       : "bg-[#3a85b3] text-white hover:shadow-lg"
                   }`}
-                  onClick={() => setSelectedPlan("yearly")}
+                  onClick={() =>
+                    setSelectedPlan(
+                      selectedPlan === "yearly" ? "none" : "yearly"
+                    )
+                  }
                 >
                   <h3 className="text-2xl font-semibold mb-4 text-center">
-                    Annual Plan
+                    {yearlyPlan.name}
                   </h3>
                   <div className="flex justify-between items-center">
                     <span className="text-lg">
-                      Rs.XXX/month (Rs.XXXX total)
+                      Rs.{yearlyPlan.price}/{yearlyPlan.duration}
                     </span>
                     <button
                       className={`px-6 py-2 rounded-xl transition-all ${
@@ -99,9 +191,11 @@ function Signup2() {
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-[#b8cfe1] mt-6 text-center">
-                Enjoy uninterrupted access to premium features and find your
-                perfect hostel effortlessly.
+              <p className="text-sm text-[#1e5f8a] mt-6 text-center">
+                Enjoy uninterrupted access to premium features and
+                {roleKey === "student"
+                  ? " find your perfect hostel effortlessly."
+                  : " connect with quality tenants easily."}
               </p>
             </div>
           </div>

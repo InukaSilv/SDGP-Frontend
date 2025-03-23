@@ -75,7 +75,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/Contact"
+                  href="/contacts"
                   className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Contact Us

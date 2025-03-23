@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { MessageCircle, Phone, Mail, Users, X, Star } from "lucide-react";
+import {
+  MessageCircle,
+  Phone,
+  Mail,
+  Users,
+  X,
+  Star,
+  BadgeCheck,
+} from "lucide-react";
+import axios from "axios";
 
 interface Host {
   profilePhoto: string;
@@ -13,13 +22,21 @@ interface Host {
   phone: string;
   email: string;
 }
-const HostCardWithPopup = ({ host }: { host: Host }) => {
+const HostCardWithPopup = ({ host, adId }: { host: Host; adId: string }) => {
   const authToken = localStorage.getItem("authToken");
 
   const [showDetails, setShowDetails] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const toggleDetails = () => {
+  const toggleDetails = async () => {
     setShowDetails(!showDetails);
+    try {
+      await axios.post(`${API_BASE_URL}/api/listing/track-contact-click`, {
+        listingId: adId,
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   };
   if (!host) {
     return <div className="text-red-500">Host data is not available.</div>;
@@ -38,9 +55,16 @@ const HostCardWithPopup = ({ host }: { host: Host }) => {
             alt={host.name}
             className="h-12 w-12 rounded-full mr-4"
           />
-          <div>
-            <h3 className="font-medium text-gray-100">{host.firstName}</h3>
-            <p className="text-gray-400">LandLord</p>
+          <div className="flex justify-between w-full">
+            <div>
+              <h3 className="font-medium text-gray-100">{host.firstName}</h3>
+              <p className="text-gray-400">LandLord</p>
+            </div>
+            <div>
+              {host.isEmailVerified && host.isIdVerified && (
+                <BadgeCheck size={30} className="text-blue-400 mt-2" />
+              )}
+            </div>
           </div>
         </div>
         <div className="space-y-3">
@@ -48,14 +72,24 @@ const HostCardWithPopup = ({ host }: { host: Host }) => {
             <MessageCircle className="h-5 w-5" />
             <span>Message Host</span>
           </button>
-          <button className="w-full flex items-center justify-center space-x-2 border border-gray-600 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-            <Phone className="h-5 w-5" />
-            <span>Call Host</span>
-          </button>
-          <button className="w-full flex items-center justify-center space-x-2 border border-gray-600 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-            <Mail className="h-5 w-5" />
-            <span>Email Host</span>
-          </button>
+          <a
+            href={`mailto:${host.email}`}
+            className="flex items-center hover:text-blue-400 transition-colors cursor-pointer"
+          >
+            <button className="w-full flex items-center justify-center space-x-2 border border-gray-600 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+              <Phone className="h-5 w-5" />
+              <span>Call Host</span>
+            </button>
+          </a>
+          <a
+            href={`mailto:${host.email}`}
+            className="flex items-center hover:text-blue-400 transition-colors cursor-pointer"
+          >
+            <button className="w-full flex items-center justify-center space-x-2 border border-gray-600 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+              <Mail className="h-5 w-5" />
+              <span>Email Host</span>
+            </button>
+          </a>
 
           {/* View More Button */}
           <button
@@ -97,10 +131,13 @@ const HostCardWithPopup = ({ host }: { host: Host }) => {
                   <h3 className="text-xl font-semibold text-gray-100 mb-2">
                     {host.name}
                   </h3>
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-2 gap-2">
                     <Star className="h-5 w-5 text-yellow-400 fill-current" />
                     {host.isEmailVerified && host.isIdVerified && (
-                      <span className="text-gray-400 ml-2">SuperLandlord</span>
+                      <div className="flex items-center gap-2">
+                        <BadgeCheck size={30} className="text-blue-400 " />
+                        <h1 className="text-blue-400 ">Verified</h1>
+                      </div>
                     )}
                   </div>
                   <p className="text-gray-300">
@@ -116,12 +153,22 @@ const HostCardWithPopup = ({ host }: { host: Host }) => {
                 </h3>
                 <div className="space-y-2">
                   <div className="flex items-center">
-                    <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                    <span className="text-gray-300">{host.phone}</span>
+                    <a
+                      href={`tel:${host.phone}`}
+                      className="flex items-center hover:text-blue-400 transition-colors cursor-pointer"
+                    >
+                      <Phone className="h-5 w-5 text-gray-400 mr-3" />
+                      <span className="text-gray-300">{host.phone}</span>
+                    </a>
                   </div>
                   <div className="flex items-center">
-                    <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                    <span className="text-gray-300">{host.email}</span>
+                    <a
+                      href={`mailto:${host.email}`}
+                      className="flex items-center hover:text-blue-400 transition-colors cursor-pointer"
+                    >
+                      <Mail className="h-5 w-5 text-gray-400 mr-3" />
+                      <span className="text-gray-300">{host.email}</span>
+                    </a>
                   </div>
                 </div>
               </div>
