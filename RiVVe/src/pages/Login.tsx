@@ -176,7 +176,7 @@ function Login() {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-t-2 border-[#60A5FA] border-solid rounded-full animate-spin mr-2"></div>
-                  Signing in...
+                  logging in...
                 </>
               ) : (
                 <>
