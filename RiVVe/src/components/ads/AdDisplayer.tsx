@@ -25,8 +25,8 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
   console.log(ad.roomTypes.doubleRoom);
   console.log(ad.roomTypes.singleRoom);
   return (
-    <div className="block w-full transform transition-all duration-300 hover:scale-[1.02]">
-      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[430px] flex flex-col">
+    <div className="block  w-full transform transition-all duration-300 hover:scale-[1.02]">
+      <div className="bg-gray-100  rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[430px] flex flex-col">
         <div className="relative h-48">
           <img
             src={ad.images[0]}
@@ -38,7 +38,7 @@ function AdDisplayer({ ad }: AdDisplayerProps) {
           </div>
         </div>
 
-        <div className="p-5 flex flex-col flex-grow">
+        <div className="p-5  flex flex-col flex-grow">
           <div className="flex justify-between items-start mb-3">
             <h3 className="text-xl font-bold text-gray-900">{ad.title}</h3>
             <div className="flex items-center">
