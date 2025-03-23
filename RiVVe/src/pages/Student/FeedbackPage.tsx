@@ -1,6 +1,6 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
-import { Star, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { Star, CheckCircle2, XCircle, Loader2, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -105,6 +105,13 @@ function FeedbackPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
       <div className="container mx-auto px-4 py-8 max-w-4xl pt-24">
+        <Link
+          to="/student-review"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300 mb-6 group"
+        >
+          <ArrowLeft className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" />
+          <span className="font-medium">Back to Reviews</span>
+        </Link>
         {/* Property Card */}
         <div className="bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mb-8">
           <div className="flex flex-col md:flex-row">

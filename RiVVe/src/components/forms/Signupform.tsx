@@ -21,6 +21,7 @@ interface FormData {
   password: string;
   confirmpassword: string;
   paymentType: string;
+  terms: boolean;
 }
 
 function Signupform({
@@ -43,6 +44,7 @@ function Signupform({
     password: "",
     confirmpassword: "",
     paymentType: selectedPlan,
+    terms: false,
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
@@ -53,6 +55,7 @@ function Signupform({
     setFormData((prevData) => ({ ...prevData, paymentType: selectedPlan }));
   }, [selectedPlan]);
 
+  // on input changes do the alterations
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
@@ -85,6 +88,7 @@ function Signupform({
     }
   };
 
+  // direct to verify waiting page
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordMismatch || passwordError) return;
@@ -113,7 +117,12 @@ function Signupform({
     }
   };
 
+  // google signup
   const handleGoogleSignUp = async () => {
+    if (!formData.terms) {
+      setExistingError("Please accept the terms and conditions");
+      return;
+    }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -286,6 +295,12 @@ function Signupform({
             type="checkbox"
             required
             className="w-4 h-4 mr-2 rounded border-gray-300 focus:ring-blue-500"
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                terms: e.target.checked,
+              }))
+            }
           />
           <p className="text-sm text-gray-700">
             I accept the{" "}
