@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye } from "lucide-react";
@@ -20,12 +20,23 @@ interface FormData {
   dob: string;
   password: string;
   confirmpassword: string;
+  paymentType: string;
+  terms: boolean;
 }
 
-function Signupform({ role }: { role: string }) {
+function Signupform({
+  role,
+  selectedPlan,
+}: {
+  role: string;
+  selectedPlan: string;
+}) {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState<boolean>(false);
   const [showpass2, setShowpass2] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     fname: "",
     lname: "",
@@ -34,13 +45,19 @@ function Signupform({ role }: { role: string }) {
     dob: "",
     password: "",
     confirmpassword: "",
+    paymentType: selectedPlan,
+    terms: false,
   });
   const [passwordMismatch, setpassWordMismatch] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [existingError, setExistingError] = useState<string>("");
+  useEffect(() => {
+    setFormData((prevData) => ({ ...prevData, paymentType: selectedPlan }));
+  }, [selectedPlan]);
 
+  // on input changes do the alterations
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
@@ -73,9 +90,11 @@ function Signupform({ role }: { role: string }) {
     }
   };
 
+  // direct to verify waiting page
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordMismatch || passwordError) return;
+    setIsLoading(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -89,6 +108,12 @@ function Signupform({ role }: { role: string }) {
       });
       await sendEmailVerification(user);
 
+      // Store email and password temporarily for auto-login after payment
+      if (formData.paymentType !== "none") {
+        localStorage.setItem("tempUserEmail", formData.email);
+        localStorage.setItem("tempUserPassword", formData.password);
+      }
+
       navigate("/verifyWaiting", {
         state: { formData: { ...formData, role } },
       });
@@ -98,10 +123,18 @@ function Signupform({ role }: { role: string }) {
       } else {
         console.error("signup error", error.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // google signup
   const handleGoogleSignUp = async () => {
+    if (!formData.terms) {
+      setExistingError("Please accept the terms and conditions");
+      return;
+    }
+    setIsGoogleLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -125,19 +158,26 @@ function Signupform({ role }: { role: string }) {
         isPremium: false,
         idToken: idToken,
         role: role || "Student",
+        paymentType: selectedPlan || "none",
       };
 
-      await axios.post("http://localhost:5001/api/auth/signup", userData);
+      await axios.post(`${API_BASE_URL}/api/auth/signup`, userData);
       console.log("google signup success");
-      navigate("/login");
+      if (selectedPlan !== "none") {
+        navigate("/payment2");
+      } else {
+        navigate("/login");
+      }
     } catch (error: any) {
       console.error("Google Sign-In Error", error.message);
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
   return (
-    <div className="bg-white/80 p-8 rounded-2xl shadow-xl w-120">
-      <h2 className="text-3xl font-bold text-blue-600 mb-6">
+    <div className="bg-white/90 p-8 rounded-l-2xl shadow-xl w-full">
+      <h2 className="text-3xl font-bold text-[#2772A0] mb-6">
         Create Your Account
       </h2>
       <form className="space-y-6" onSubmit={handleSignup}>
@@ -268,10 +308,16 @@ function Signupform({ role }: { role: string }) {
             type="checkbox"
             required
             className="w-4 h-4 mr-2 rounded border-gray-300 focus:ring-blue-500"
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                terms: e.target.checked,
+              }))
+            }
           />
           <p className="text-sm text-gray-700">
             I accept the{" "}
-            <Link to="" className="text-blue-600 hover:underline">
+            <Link to="/terms" className="text-blue-600 hover:underline">
               terms and conditions
             </Link>
           </p>
@@ -283,17 +329,42 @@ function Signupform({ role }: { role: string }) {
           </Link>
         </p>
         {existingError && <p className="text-red-500">{existingError}</p>}
-        <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Sign Up
+        <button
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+              Signing up...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </button>
 
         <div className="w-full">
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+            disabled={isGoogleLoading}
+            className="w-full bg-[#112240] text-[#CCD6F6] py-3 rounded-xl font-medium hover:bg-[#1E293B] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 border border-[#233554] disabled:opacity-70"
           >
-            Sign up with google
+            {isGoogleLoading ? (
+              <>
+                <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div>
+                Signing up with Google...
+              </>
+            ) : (
+              <>
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  className="w-5 h-5"
+                />
+                <span>Sign Up with Google</span>
+              </>
+            )}
           </button>
         </div>
       </form>

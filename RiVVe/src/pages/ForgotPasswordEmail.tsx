@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import {
-  fetchSignInMethodsForEmail,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import axios from "axios";
 
 function ForgotPasswordEmail() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [email, setEmail] = useState<string>("");
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
@@ -23,7 +21,7 @@ function ForgotPasswordEmail() {
     setMessage("");
     try {
       const { data } = await axios.post(
-        "http://localhost:5001/api/auth/checkforforget",
+        `${API_BASE_URL}/api/auth/checkforforget`,
         { email }
       );
 
@@ -45,6 +43,7 @@ function ForgotPasswordEmail() {
       setTimeout(() => {
         navigate("/login");
       }, 10000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.code === "auth/user-not-found") {
         setError("Email does not exist, try entering correct email");

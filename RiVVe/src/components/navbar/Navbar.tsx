@@ -5,12 +5,14 @@ import { IoMenu } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { Mail } from "lucide-react";
 
 function Navbar() {
   const [mobileView, setMobileView] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [issPremium, setIsPremium] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const changeMobView = () => {
@@ -26,6 +28,7 @@ function Navbar() {
         const user = JSON.parse(storedUser);
         setIsLoggedIn(true);
         setUserRole(user?.role || null);
+        setIsPremium(user?.isPremium || false);
       } catch (error) {
         console.error("Error parsing user data:", error);
         setIsLoggedIn(false);
@@ -52,76 +55,139 @@ function Navbar() {
   };
 
   return (
-    <nav className="w-full h-20 fixed top-0 flex items-center justify-between md:px-10 bg-gray-700 text-white shadow-lg z-999">
-      <div className="flex items-center space-x-10">
-        <h1 className="text-4xl ml-3 sm:text-3xl font-semibold hover:scale-105 transition-transform cursor-pointer">
+    <nav className="w-full h-20 fixed top-0 flex items-center justify-between px-4 md:px-10 bg-[#2772A0] text-white shadow-lg z-50">
+      <div className="flex items-center space-x-4 md:space-x-10">
+        <h1 className="text-2xl md:text-4xl font-semibold hover:scale-105 transition-transform cursor-pointer">
           RiVVE
         </h1>
-        <ul
-          className={
-            mobileView
-              ? "flex-col h-full w-full bg-gray-700 fixed top-20 items-center justify-items-center space-y-10 text-2xl"
-              : "hidden md:flex space-x-8 text-lg font-medium"
-          }
-        >
-          <li
-            className={
-              mobileView
-                ? "mt-9"
-                : "hover:text-gray-400 cursor-pointer transition"
-            }
-          >
+
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex items-center space-x-4 lg:space-x-8 text-base lg:text-lg font-medium">
+          <li className="hover:text-gray-400 cursor-pointer transition">
             <Link to="/"> Home </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
             <Link to="/about"> About </Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-
-
             <Link to="/hostel">Hostels</Link>
           </li>
           <li className="hover:text-gray-400 cursor-pointer transition">
-            Contact
+            <Link to="/contacts"> Contact</Link>
           </li>
           {isLoggedIn && userRole === "Landlord" && (
             <li className="hover:text-gray-400 cursor-pointer transition">
               <Link to="/MyAds">MyAds</Link>
             </li>
           )}
+          {isLoggedIn && userRole === "Student" && (
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/student-review">Add Review</Link>
+            </li>
+          )}
+          {isLoggedIn && userRole === "Student" && issPremium && (
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/wishlist">WishList</Link>
+            </li>
+          )}
         </ul>
       </div>
 
-      <div className="flex items-center space-x-3 sm:ml-7 md:space-x-6">
+      {/* Mobile Menu */}
+      {mobileView && (
+        <div className="fixed inset-0 top-20 bg-[#2772A0] z-40 md:hidden">
+          <ul className="flex flex-col items-center space-y-6 pt-8 text-xl">
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/" onClick={changeMobView}>
+                {" "}
+                Home{" "}
+              </Link>
+            </li>
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/about" onClick={changeMobView}>
+                {" "}
+                About{" "}
+              </Link>
+            </li>
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/hostel" onClick={changeMobView}>
+                Hostels
+              </Link>
+            </li>
+            <li className="hover:text-gray-400 cursor-pointer transition">
+              <Link to="/contacts" onClick={changeMobView}>
+                {" "}
+                Contact
+              </Link>
+            </li>
+            {isLoggedIn && userRole === "Landlord" && (
+              <li className="hover:text-gray-400 cursor-pointer transition">
+                <Link to="/MyAds" onClick={changeMobView}>
+                  MyAds
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && userRole === "Student" && (
+              <li className="hover:text-gray-400 cursor-pointer transition">
+                <Link to="/student-review" onClick={changeMobView}>
+                  Add Review
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && userRole === "Student" && issPremium && (
+              <li className="hover:text-gray-400 cursor-pointer transition">
+                <Link to="/wishlist" onClick={changeMobView}>
+                  WishList
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="hover:text-gray-400 cursor-pointer transition">
+                <Link to="/user" onClick={changeMobView}>
+                  Profile
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
+      {/* Auth Buttons and Icons */}
+      <div className="flex items-center space-x-2 md:space-x-6">
         {isLoggedIn ? (
-          <></>
+          <div className="flex items-center space-x-3">
+            <Link to="message" className="text-xl">
+              <Mail />
+            </Link>
+          </div>
         ) : (
           <>
-            <p className="hidden md:block text-gray-300">Already a member?</p>
-            <button className="w-20 sm:w-32 md:w-36 bg-gradient-to-r from-blue-600 to-blue-800 px-4 md:py-2 sm:px-5 py-2 rounded-full text-white font-medium hover:scale-105 cursor-pointer transition">
-              <Link to="/login"> Login </Link>
+            <p className="hidden lg:block text-gray-300">Already a member?</p>
+            <button className="text-sm md:text-base w-16 md:w-32 bg-gradient-to-r from-blue-600 to-blue-800 px-2 md:px-4 py-2 rounded-full text-white font-medium hover:scale-105 transition">
+              <Link to="/login">Login</Link>
             </button>
-            <button className="w-20 sm:w-32 md:w-36 bg-gradient-to-r from-green-500 to-green-700 px-4 md:py-2 sm:px-5 py-2 rounded-full text-white font-medium hover:scale-105 cursor-pointer transition">
-              <Link to="/Signup1"> Signup </Link>
+            <button className="text-sm md:text-base w-16 md:w-32 bg-gradient-to-r from-green-500 to-green-700 px-2 md:px-4 py-2 rounded-full text-white font-medium hover:scale-105 transition">
+              <Link to="/Signup1">Signup</Link>
             </button>
           </>
         )}
 
-        <div className="relative">
+        {/* Profile Icon */}
+        <div className="relative hidden sm:block">
           <div
-            className="hidden sm:block p-2 text-5xl bg-gray-700 rounded-full hover:bg-gray-600 transition cursor-pointer"
+            className="p-2 text-4xl md:text-5xl bg-[#2772A0] rounded-full hover:bg-gray-600 transition cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           >
             <IoPersonCircleOutline />
           </div>
           {isOpen && isLoggedIn && (
-            <div className="absolute mt-1 right-0 w-48 bg-gray-700 border-none text-white rounded-lg shadow-lg border">
+            <div className="absolute mt-1 right-0 w-48 bg-gray-700 text-white rounded-lg shadow-lg">
               <ul className="flex flex-col text-lg text-center">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <Link to="/user">Profile </Link>
+                <li className="px-4 py-2 hover:bg-gray-600 cursor-pointer transition">
+                  <Link to="/user">Profile</Link>
                 </li>
                 <li
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-gray-600 cursor-pointer transition"
                   onClick={Logout}
                 >
                   Logout
@@ -130,21 +196,21 @@ function Navbar() {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Mobile Menu Button */}
-      <div className="sm:hidden block text-4xl mr-1 z-50">
-        {!mobileView ? (
-          <IoMenu
-            onClick={changeMobView}
-            className="text-white cursor-pointer"
-          />
-        ) : (
-          <IoCloseSharp
-            onClick={changeMobView}
-            className="text-white cursor-pointer"
-          />
-        )}
+        {/* Mobile Menu Button */}
+        <div className="md:hidden text-3xl">
+          {!mobileView ? (
+            <IoMenu
+              onClick={changeMobView}
+              className="text-white cursor-pointer"
+            />
+          ) : (
+            <IoCloseSharp
+              onClick={changeMobView}
+              className="text-white cursor-pointer"
+            />
+          )}
+        </div>
       </div>
     </nav>
   );

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth, sendEmailVerification } from "../firebase";
 import axios from "axios";
 
 function VerifyWaiting() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const location = useLocation();
   const { formData } = location.state || {};
@@ -13,6 +14,7 @@ function VerifyWaiting() {
   const [errorMessage, setErrorMessge] = useState<string>("");
 
   useEffect(() => {
+    console.log("Received formData in VerifyWaiting:", formData);
     if (!formData) {
       console.error("No form data found. Redirecting...");
       navigate("/");
@@ -35,22 +37,22 @@ function VerifyWaiting() {
           phone: formData.phone,
           dob: formData.dob,
           registerType: "password",
-          isPremium: formData.isPremium || false,
+          isPremium: false,
           idToken: idToken,
-          role: formData.role || "student", // Default to student if not provided
+          role: formData.role || "student",
+          paymentType: formData.paymentType || "none",
         };
         try {
-          await axios.post(
-            "http://localhost:5001/api/auth/signup",
-            requestData
-          );
+          await axios.post(`${API_BASE_URL}/api/auth/signup`, requestData);
+
+          if (requestData.paymentType !== "none") {
+            navigate("/payment2");
+          } else {
+            navigate("/login");
+          }
           console.log("User data sent to backend successfully");
-          navigate("/login");
         } catch (error) {
-          console.error(
-            "Error saving to MongoDB:",
-            error.response?.data || error
-          );
+          console.error("Error saving to MongoDB:", error);
         }
       }
     }, 3000);
@@ -73,6 +75,7 @@ function VerifyWaiting() {
         await sendEmailVerification(auth.currentUser);
         setResendCount(resendCount + 1);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.code === "auth/too-many-requests") {
         setErrorMessge("Too many requests, Please try again later");

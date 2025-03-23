@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import GoogleMapComponent from "../components/googlemap/GoogleMapComponent";
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/navbar/Navbar";
 import AdDisplayer from "../components/ads/AdDisplayer";
 import { Filter } from "lucide-react";
 import { motion } from "framer-motion";
@@ -11,31 +11,128 @@ import { useLocation } from "react-router-dom";
 import { Map } from "lucide-react";
 import RadiusSlider from "../components/Slider/RadiusSlider";
 import { Radius } from "lucide-react";
+import axios from "axios";
+import Chatbot from "../components/chatbot/Chatbot";
+
+interface ListingRecord {
+  _id: string;
+  location: {
+    coordinates: [number, number];
+  };
+}
 
 const HostelDisplay: React.FC = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
-    lat: 6.9271,
-    lng: 79.8612,
-  });
   const [radius, setRadius] = useState<number>(5);
   const [showmap, setShowmap] = useState<boolean>(false);
   const [radiusControl, setRadiusControl] = useState<boolean>(false);
   const [radiusSmallControl, setRadiusSmallControl] = useState<boolean>(false);
-
+  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
+    lat: 0,
+    lng: 0,
+  });
+  const [mapClonePosition, setMapClonePosition] = useState<{
+    lat: number;
+    lng: number;
+  }>({
+    lat: 0,
+    lng: 0,
+  });
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const location = useLocation();
+  const [listing, setListing] = useState<AdDisplayer[]>([]);
+  type Poi = { key: string; location: google.maps.LatLngLiteral };
+  const [locations, setLocations] = useState<Poi[]>([]);
+  const [onApplyFilters, setOnApplyFilters] = useState<{
+    priceRange: number[];
+    selectedHousingType: string[];
+    selectedRoomType: string[];
+    selectedFacility: string[];
+    selectedResidents: number;
+    selectedOption: string;
+  }>({
+    priceRange: [0, 100000],
+    selectedHousingType: [],
+    selectedRoomType: [],
+    selectedFacility: [],
+    selectedResidents: 1,
+    selectedOption: "Date: Newest on Top",
+  });
+  const user = localStorage.getItem("user");
+  const userData = JSON.parse(user || "{}");
+
+  // default checking if the location is searched or if the location is get by default
   useEffect(() => {
     if (location.state?.place?.lat && location.state?.place?.lng) {
-      setMapCenter({
+      setMapPosition({
         lat: location.state.place.lat,
         lng: location.state.place.lng,
       });
+    } else {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) =>
+            setMapPosition({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            }),
+          (error) => setError(error.message)
+        );
+      }
     }
+    setTimeout(() => setMapLoaded(true), 500);
   }, [location.state]);
 
+  const fetchLisiting = async () => {
+    // asking for the ads based on the location from the backend
+    console.log("fetching listing", onApplyFilters);
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/listing/get-listing`,
+        {
+          params: {
+            lat: mapPosition.lat,
+            lng: mapPosition.lng,
+            radius,
+            ...onApplyFilters,
+          },
+        }
+      );
+      setListing(response.data);
+      console.log(response.data);
+      console.log(listing.length);
+
+      const locationMarkers = response.data.map((record: ListingRecord) => ({
+        key: record._id,
+        location: {
+          lat: record.location.coordinates[1],
+          lng: record.location.coordinates[0],
+        },
+      }));
+      setLocations(locationMarkers);
+    } catch (error) {
+      console.error("Error fetching Listing:", error);
+    }
+  };
+
+  // fetching the ads
+  useEffect(() => {
+    if (mapPosition.lat && mapPosition.lng) {
+      fetchLisiting();
+    }
+  }, [mapPosition, radius]);
+
+  useEffect(() => {
+    console.log("Updated listings: ", listing.length);
+    console.log("Updated locations: ", locations);
+  }, [listing, locations]);
+
+  // on select of an university the map will be updated with the center
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     if (place?.geometry?.location) {
-      setMapCenter({
+      setMapClonePosition({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
@@ -46,25 +143,36 @@ const HostelDisplay: React.FC = () => {
     setShowmap(!showmap);
   };
 
+  const handleSubmit = () => {
+    setMapPosition(mapClonePosition);
+    fetchLisiting();
+  };
+
   return (
     <>
       <Navbar />
       {/* top searchbar and filter */}
-      <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-white/10 shadow-lg py-2 backdrop-blur-md z-10">
-        <div className="flex items-center gap-2 md:gap-4 bg-white border border-white/30 shadow-2xl p-2 rounded-3xl transition-all duration-300 hover:shadow-blue-500/50 md:w-120">
+      <div className="flex gap-50 justify-center items-center mt-20 w-full fixed bg-transparent shadow-lg py-2 backdrop-blur-md z-10">
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white border border-white/30 shadow-2xl p-1 rounded-md md:rounded-3xl transition-all duration-300 hover:shadow-blue-500/50">
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div className="flex items-center gap-3 bg-none">
               <SearchBar onPlaceSelect={onPlaceSelect} />
-              <button className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300">
+              <button
+                className="bg-blue-950 text-white font-semibold py-2 px-6 rounded-lg md:rounded-full hover:scale-110 hover:shadow-[0px_0px_15px_#6366f1] transition-all duration-300"
+                onClick={handleSubmit}
+              >
                 Search
               </button>
             </div>
           </APIProvider>
           <div
-            className="bg-white/10 p-2 rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all cursor-pointer hover:scale-110 hover:shadow-[0px_0px_15px_#94a3b8]"
+            className="bg-gray-200 sm:bg-white/10 mb-1 sm:mb-0 p-1 sm:p-2 w-80 sm:w-auto rounded-lg md:rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all cursor-pointer hover:scale-110 hover:shadow-[0px_0px_15px_#94a3b8]"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <Filter size={30} className="text-black " />
+            <Filter
+              size={30}
+              className="text-black ml-auto mr-auto text-gray-600 pt-1"
+            />
           </div>
         </div>
 
@@ -102,6 +210,8 @@ const HostelDisplay: React.FC = () => {
               <FilterContent
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
+                setOnApplyFilters={setOnApplyFilters}
+                currentFilters={onApplyFilters}
               />
             </div>
           </div>
@@ -109,25 +219,32 @@ const HostelDisplay: React.FC = () => {
       )}
 
       {/* map and ads */}
-      <div className="flex flex-col md:flex-row pt-40 px-4 gap-6 relative">
+      <div className="flex flex-col md:flex-row pt-55 md:pt-40 px-4 gap-6 relative">
         <div
-          className={`w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-5 overflow-auto h-screen scrollbar-hidden${
+          className={`w-full md:w-1/2 grid md:pr-2 grid-cols-1 sm:grid-cols-2 gap-3 overflow-auto h-screen scrollbar-hidden${
             showmap ? "pointer-events-none opacity-50" : ""
           }`}
         >
-          {[...Array(10)].map((_, index) => (
-            <div key={index} className="flex justify-center">
-              <AdDisplayer />
+          {listing.map((listing) => (
+            <div key={listing.id} className="flex justify-center">
+              <AdDisplayer ad={listing} />
             </div>
           ))}
         </div>
 
         <div
-          className={`w-full md:w-1/2 h-[65vh] fixed right-0 top-[160px] bg-white shadow-lg transition-all duration-300 ${
-            showmap ? "block md:block w-full h-screen" : "hidden md:block"
+          className={`w-full md:w-1/2 fixed inset-0 ml-auto top-[160px] bg-gray-800 shadow-lg transition-all duration-300 ${
+            showmap ? " mt-8 w-screen" : "hidden md:block"
           }`}
         >
-          <GoogleMapComponent mapCenter={mapCenter} radius={radius} />
+          <GoogleMapComponent
+            radius={radius}
+            mapPosition={mapPosition}
+            setMapPosition={setMapPosition}
+            mapLoaded={mapLoaded}
+            error={error || ""}
+            locations={locations}
+          />
         </div>
 
         {/* small screen map icon */}
@@ -154,6 +271,7 @@ const HostelDisplay: React.FC = () => {
           <Map size={25} />
         </div>
       </div>
+      {userData && userData.isPremium && <Chatbot />}
     </>
   );
 };

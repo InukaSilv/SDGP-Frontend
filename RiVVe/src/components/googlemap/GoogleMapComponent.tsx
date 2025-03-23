@@ -1,95 +1,46 @@
-import Slider from "@mui/material/Slider";
 import {
   AdvancedMarker,
   APIProvider,
   Map,
   Pin,
-  useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { useEffect, useState } from "react";
-import { Circle } from "../circle/Circles";
-import SearchBar from "./SearchBar";
+import { useEffect } from "react";
+import { Circle } from "../circle/circles";
 
-type GoogleMapComponentProps = {
-  mapCenter: { lat: number; lng: number };
-  radius: number;
+type Location = {
+  key: string;
+  location: { lat: number; lng: number };
 };
 
-function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
-  const [error, setError] = useState<string | null>(null);
-  const [markerRef] = useAdvancedMarkerRef();
-  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number }>({
-    lat: mapCenter.lat,
-    lng: mapCenter.lng,
-  });
-  const [mapLoaded, setMapLoaded] = useState(false);
+type GoogleMapComponentProps = {
+  radius: number;
+  mapPosition: { lat: number; lng: number };
+  setMapPosition: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number }>
+  >;
+  mapLoaded: boolean;
+  setMapLoaded?: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number }>
+  >;
+  error: string;
+  locations: Location[];
+};
 
-  type Poi = { key: string; location: google.maps.LatLngLiteral };
-  const locations: Poi[] = [
-    { key: "galleFaceGreen", location: { lat: 6.9271, lng: 79.8424 } },
-    { key: "lotusTower", location: { lat: 6.927079, lng: 79.861244 } },
-    { key: "gangaramayaTemple", location: { lat: 6.9155, lng: 79.8561 } },
-  ];
-
+function GoogleMapComponent({
+  radius,
+  mapPosition,
+  setMapPosition,
+  mapLoaded,
+  error,
+  locations,
+}: GoogleMapComponentProps) {
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) =>
-          setMapPosition({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          }),
-        (error) => setError(error.message)
-      );
-    } else {
-      setError("Geolocation is not supported by this browser.");
-    }
-
-    // Force re-render to fix Google Maps not showing correctly
-    setTimeout(() => setMapLoaded(true), 500);
-  }, []);
-
-  useEffect(() => {
-    setMapPosition(mapCenter);
-  }, [mapCenter]);
-
-  const filteredLocations = locations.filter((poi) => {
-    if (
-      mapPosition &&
-      typeof google !== "undefined" &&
-      google.maps &&
-      google.maps.geometry
-    ) {
-      const userLatLng = new google.maps.LatLng(
-        mapPosition.lat,
-        mapPosition.lng
-      );
-      const propLatLng = new google.maps.LatLng(
-        poi.location.lat,
-        poi.location.lng
-      );
-      const distance =
-        google.maps.geometry.spherical.computeDistanceBetween(
-          userLatLng,
-          propLatLng
-        ) / 1000;
-      return distance <= radius;
-    }
-    return false;
-  });
-
-  const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
-    if (place?.geometry?.location) {
-      setMapPosition({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
-    }
-  };
+    setMapPosition(mapPosition);
+  }, [mapPosition]);
 
   return (
-    <div className="h-screen w-full">
-      <div className="h-180 w-full">
+    <div className="h-full w-full">
+      <div className="h-full w-full">
         {mapLoaded && (
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <Map defaultZoom={13} center={mapPosition} mapId="DEMO_MAP_ID">
@@ -101,7 +52,7 @@ function GoogleMapComponent({ mapCenter, radius }: GoogleMapComponentProps) {
                 />
               </AdvancedMarker>
 
-              {filteredLocations.map((poi) => (
+              {locations.map((poi) => (
                 <AdvancedMarker key={poi.key} position={poi.location}>
                   <Pin
                     background={"#FBBC04"}
