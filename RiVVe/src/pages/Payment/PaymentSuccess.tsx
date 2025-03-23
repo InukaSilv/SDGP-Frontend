@@ -9,7 +9,7 @@ function PaymentSuccess() {
   const authToken = queryParams.get("token");
 
   useEffect(() => {
-    if(authToken){
+    if(authToken && authToken ! == "{USER_TOKEN}"){
       localStorage.setItem("authToken",authToken);
     }
     const timer = setTimeout(() => {

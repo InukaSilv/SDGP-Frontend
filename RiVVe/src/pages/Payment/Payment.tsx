@@ -47,7 +47,7 @@ function Payment() {
       }
     }catch (err: any) {
       setError(err.response?.data?.error || 'Payment initialization failed');
-      console.error('Payment error:', err);
+    }finally{
       setLoading(false);
     }
   };

@@ -39,6 +39,8 @@ function User() {
   const [newPassword, setNewPassword] = useState<string>("");
   const [, setError] = useState<string>("");
   const [Message, setMessage] = useState<string>("");
+  const [cancellationLoading, setCancellationLoading] = useState(false);
+const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [formData, setFormData] = useState<User>({
     firstName: userdata?.firstName || "",
     lastName: userdata?.lastName || "",
@@ -176,22 +178,27 @@ function User() {
   };
 
   const handleCancelSubscription = async () => {
+    setCancellationLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/payments/cancel-subscription`, {}, {
+      await axios.delete(`${API_BASE_URL}/api/payments/cancel-subscription`, {
         headers: {
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json"
         }
       });
+
+      setMessage("Subscription cancelled successfully. You'll have access until the current period ends.");
   
-      alert("Subscription cancelled successfully.");
-      localStorage.setItem("user", JSON.stringify({ ...userdata, isPremium: false }));
-      window.location.reload();
+      const updateUserData = {...userdata};
+      localStorage.setItem("user", JSON.stringify(updateUserData));
+      setShowCancelConfirm(false);
     } catch (error) {
       console.error("Failed to cancel subscription:", error);
       alert("Error cancelling subscription.");
+    }finally{
+      setCancellationLoading(false);
     }
   };
-  
 
   const ROLE_PLANS = {
     student: {
@@ -502,86 +509,101 @@ function User() {
         </div>
       </div>
 
-      {/* ad to show the premium info */}
-      {!userdata.isPremium && (
-        <div className="max-w-6xl mx-auto px-4 mb-16">
-          <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+      <div className="max-w-6xl mx-auto px-4 mb-16">
+              <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="text-yellow-300 h-6 w-6" />
-                  <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
-                    Premium Offer
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                  Join Premium and Experience the Power of RiVVE
-                </h3>
-                <p className="text-secondary/90 mb-6 max-w-xl">
-                  Unlock exclusive features, priority support, and advanced
-                  tools to take your experience to the next level. Upgrade today
-                  and see the difference!
-                </p>
-                <ul className="text-white space-y-2 mb-6">
-                  <li className="flex items-center gap-2">
-                    <Zap className="text-yellow-300 h-4 w-4" />
-                    <span>Unlimited access to all premium features</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Zap className="text-yellow-300 h-4 w-4" />
-                    <span>Priority customer support 24/7</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Zap className="text-yellow-300 h-4 w-4" />
-                    <span>Advanced analytics and reporting tools</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="flex flex-col items-center md:items-end ">
-                <div className="text-white text-center md:text-right mb-4">
-                  <span className="text-secondary/80 text-sm line-through">
-                    Rs.{monthlyPlan.price * 2}/month
-                  </span>
-                  <div className="text-3xl font-bold">
-                    Rs.{monthlyPlan.price}
-                    <span className="text-sm font-normal">/month</span>
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="text-yellow-300 h-6 w-6" />
+                      <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
+                        Premium Offer
+                      </span>
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                      Join Premium and Experience the Power of RiVVE
+                    </h3>
+                    <p className="text-secondary/90 mb-6 max-w-xl">
+                      Unlock exclusive features, priority support, and advanced
+                      tools to take your experience to the next level. Upgrade today
+                      and see the difference!
+                    </p>
+                    <ul className="text-white space-y-2 mb-6">
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Unlimited access to all premium features</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Priority customer support 24/7</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Advanced analytics and reporting tools</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  {/* Show different content based on premium status */}
+                  <div className="flex flex-col items-center md:items-end">
+                    {!userdata.isPremium ? (
+                      <>
+                        <div className="text-white text-center md:text-right mb-4">
+                          <span className="text-secondary/80 text-sm line-through">
+                            Rs.{Number(monthlyPlan.price) * 2}/month
+                          </span>
+                          <div className="text-3xl font-bold">
+                            Rs.{monthlyPlan.price}
+                            <span className="text-sm font-normal">/month</span>
+                          </div>
+                        </div>
+
+                        {/* Payment buttons for non-premium users */}
+                        <button
+                          onClick={() => handlepayment("monthly")}
+                          className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                        >
+                          <span className="relative z-10 flex items-center gap-2">
+                            <Sparkles className="h-5 w-5" />
+                            Upgrade to {monthlyPlan.name}
+                          </span>
+                          <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        </button>
+
+                        <button
+                          onClick={() => handlepayment("yearly")}
+                          className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                        >
+                          <span className="relative z-10 flex items-center gap-2">
+                            <Sparkles className="h-5 w-5" />
+                            Upgrade to {yearlyPlan.name}
+                          </span>
+                          <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        </button>
+                      </>
+                    ) : (
+                      <div className="text-white text-center bg-[#1e5f8a]/80 p-4 rounded-lg">
+                        <BadgeCheck size={40} className="mx-auto text-yellow-300 mb-2" />
+                        <p className="font-bold text-xl mb-1">Premium Member</p>
+                        <p className="text-secondary/90 mb-2">Enjoying all premium benefits</p>
+                        <button
+                          onClick={handleCancelSubscription}
+                          className="mt-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-md hover:bg-white/20 transition-colors"
+                        >
+                          Manage Subscription
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                {/* option 1 */}
-                <button
-                  onClick={() => handlepayment("monthly")}
-                  className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Upgrade to {monthlyPlan.name}
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                </button>
-
-                {/* option 2 */}
-                <button
-                  onClick={() => handlepayment("yearly")}
-                  className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Upgrade to {yearlyPlan.name}
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      <Footer />
-    </>
-  );
-}
+            <Footer />
+          </>
+        );
+      }
+
 export default User;
