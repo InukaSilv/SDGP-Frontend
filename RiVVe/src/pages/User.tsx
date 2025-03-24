@@ -40,6 +40,8 @@ function User() {
   const [, setError] = useState<string>("");
   const [Message, setMessage] = useState<string>("");
   const [cancellationLoading, setCancellationLoading] = useState(false);
+  const [showSubscriptionOptions, setShowSubscriptionOptions] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [formData, setFormData] = useState<User>({
     firstName: userdata?.firstName || "",
     lastName: userdata?.lastName || "",
@@ -165,14 +167,29 @@ function User() {
   };
 
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
-  const handlepayment = async (paymentType: string) => {
+  const handlepayment = async (paymentType:"monthly" | "yearly") => {
     try {
+      // Map payment type to plan type
       const planType = paymentType === "monthly" ? "gold" : "platinum";
+      
+      // Check if user is trying to buy the same plan they already have
+      if (userdata.isPremium && userdata.planType === planType) {
+        setMessage("You are already subscribed to this plan.");
+        return;
+      }
+      
+      // Navigate to payment page
       navigate("/payment", {
-        state: { planType, planDuration: paymentType },
+        state: { 
+          planType,
+          planDuration: paymentType,
+          isChangingPlan: userdata.isPremium, // Flag indicating plan change vs. new subscription
+          currentPlan: userdata.planType
+        }
       });
     } catch (error) {
-      console.error("payment selection error; ", error);
+      console.error("Payment selection error:", error);
+      setError("Failed to process payment selection");
     }
   };
 
@@ -186,19 +203,28 @@ function User() {
         },
       });
 
-      setMessage(
-        "Subscription cancelled successfully. You'll have access until the current period ends."
-      );
-
-      const updateUserData = { ...userdata };
-      localStorage.setItem("user", JSON.stringify(updateUserData));
-    } catch (error) {
-      console.error("Failed to cancel subscription:", error);
-      alert("Error cancelling subscription.");
-    } finally {
-      setCancellationLoading(false);
-    }
-  };
+    const updatedUserData = {
+      ...userdata,
+      isPremium: false,
+      planType: null  // Clear the plan type
+    };
+    
+   
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+    
+    // Show success message
+    setMessage("Subscription cancelled successfully. You'll have access until the current period ends.");
+    setShowCancelConfirm(false);
+    
+    // Reload to reflect changes
+    window.location.reload();
+  } catch (error) {
+    console.error("Failed to cancel subscription:", error);
+    setError("Failed to cancel subscription. Please try again.");
+  } finally {
+    setCancellationLoading(false);
+  }
+};
 
   const ROLE_PLANS = {
     student: {
@@ -348,13 +374,38 @@ function User() {
               {/* cancel subscription accessible to all premium members */}
               {userdata.isPremium && (
                 <>
-                  <button
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
-                    onClick={handleCancelSubscription}
+                  <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
+                  onClick={()=> setShowCancelConfirm(true)}
                   >
                     Cancel Subscription
                   </button>
                 </>
+              )}
+              {/* Confirmation Modal */}
+              {showCancelConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                    <h3 className="text-xl font-bold text-[#2772A0] mb-4">Cancel Subscription?</h3>
+                    <p className="mb-6 text-gray-600">
+                      You'll continue to have access to premium features until your current billing period ends.
+                    </p>
+                    <div className="flex justify-end gap-4">
+                      <button 
+                        onClick={() => setShowCancelConfirm(false)}
+                        className="px-4 py-2 text-[#3a85b3] hover:bg-gray-100 rounded-md"
+                      >
+                        Keep Subscription
+                      </button>
+                      <button 
+                        onClick={handleCancelSubscription}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        disabled={cancellationLoading}
+                      >
+                        {cancellationLoading ? "Processing..." : "Confirm Cancellation"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* sign out  */}
@@ -516,97 +567,138 @@ function User() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="text-yellow-300 h-6 w-6" />
-                <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
-                  Premium Offer
-                </span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                Join Premium and Experience the Power of RiVVE
-              </h3>
-              <p className="text-secondary/90 mb-6 max-w-xl">
-                Unlock exclusive features, priority support, and advanced tools
-                to take your experience to the next level. Upgrade today and see
-                the difference!
-              </p>
-              <ul className="text-white space-y-2 mb-6">
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Unlimited access to all premium features</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Priority customer support 24/7</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="text-yellow-300 h-4 w-4" />
-                  <span>Advanced analytics and reporting tools</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Show different content based on premium status */}
-            <div className="flex flex-col items-center md:items-end">
-              {!userdata.isPremium ? (
-                <>
-                  <div className="text-white text-center md:text-right mb-4">
-                    <span className="text-secondary/80 text-sm line-through">
-                      Rs.{Number(monthlyPlan.price) * 2}/month
-                    </span>
-                    <div className="text-3xl font-bold">
-                      Rs.{monthlyPlan.price}
-                      <span className="text-sm font-normal">/month</span>
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="text-yellow-300 h-6 w-6" />
+                      <span className="text-yellow-300 font-bold uppercase tracking-wider text-sm">
+                        Premium Offer
+                      </span>
                     </div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                      Join Premium and Experience the Power of RiVVE
+                    </h3>
+                    <p className="text-secondary/90 mb-6 max-w-xl">
+                      Unlock exclusive features, priority support, and advanced
+                      tools to take your experience to the next level. Upgrade today
+                      and see the difference!
+                    </p>
+                    <ul className="text-white space-y-2 mb-6">
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Unlimited access to all premium features</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Priority customer support 24/7</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Zap className="text-yellow-300 h-4 w-4" />
+                        <span>Advanced analytics and reporting tools</span>
+                      </li>
+                    </ul>
                   </div>
+                  
+                  {/* Show different content based on premium status */}
+                  <div className="flex flex-col items-center md:items-end">
+                    {!userdata.isPremium ? (
+                      <>
+                        <div className="text-white text-center md:text-right mb-4">
+                          <span className="text-secondary/80 text-sm line-through">
+                            Rs.{Number(monthlyPlan.price) * 2}/month
+                          </span>
+                          <div className="text-3xl font-bold">
+                            Rs.{monthlyPlan.price}
+                            <span className="text-sm font-normal">/month</span>
+                          </div>
+                        </div>
 
-                  {/* Payment buttons for non-premium users */}
-                  <button
-                    onClick={() => handlepayment("monthly")}
-                    className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      Upgrade to {monthlyPlan.name}
-                    </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  </button>
+                        {/* Payment buttons for non-premium users */}
+                        <button
+                          onClick={() => handlepayment("monthly")}
+                          className="group relative bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                        >
+                          <span className="relative z-10 flex items-center gap-2">
+                            <Sparkles className="h-5 w-5" />
+                            Upgrade to {monthlyPlan.name}
+                          </span>
+                          <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        </button>
 
-                  <button
-                    onClick={() => handlepayment("yearly")}
-                    className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      Upgrade to {yearlyPlan.name}
-                    </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  </button>
-                </>
-              ) : (
-                <div className="text-white text-center bg-[#1e5f8a]/80 p-4 rounded-lg">
-                  <BadgeCheck
-                    size={40}
-                    className="mx-auto text-yellow-300 mb-2"
-                  />
-                  <p className="font-bold text-xl mb-1">Premium Member</p>
-                  <p className="text-secondary/90 mb-2">
-                    Enjoying all premium benefits
-                  </p>
-                  <button
-                    onClick={handleCancelSubscription}
-                    className="mt-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-md hover:bg-white/20 transition-colors"
-                  >
-                    Manage Subscription
-                  </button>
+                        <button
+                          onClick={() => handlepayment("yearly")}
+                          className="group relative mt-2 bg-white text-primary font-bold py-3 px-8 rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                        >
+                          <span className="relative z-10 flex items-center gap-2">
+                            <Sparkles className="h-5 w-5" />
+                            Upgrade to {yearlyPlan.name}
+                          </span>
+                          <span className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        </button>
+                      </>
+                    ) : (
+
+                      <div className="text-white text-center bg-[#1e5f8a]/80 p-4 rounded-lg">
+                      <BadgeCheck size={40} className="mx-auto text-yellow-300 mb-2" />
+                      <p className="font-bold text-xl mb-1">Premium Member</p>
+                      <p className="text-secondary/90 mb-2">Current Plan: {userdata.planType && userdata.planType.toLowerCase() === "platinum" ? "Platinum" : "Gold"}</p>
+                
+                      <div className="mt-4 flex flex-col gap-2">
+                        {/* Gold users can only upgrade to Platinum */}
+                        {userdata.planType === "gold" && (
+                          <button
+                            onClick={() => handlepayment("yearly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg 
+                                    hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Upgrade to Platinum Plan
+                          </button>
+                        )}
+                
+                        {/* Show upgrade button for Gold members - using more robust condition */}
+                        {userdata.isPremium && 
+                        (!userdata.planType || 
+                          userdata.planType.toLowerCase() === "gold" || 
+                          userdata.planType.toLowerCase() !== "platinum") && (
+                          <button
+                            onClick={() => handlepayment("yearly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg 
+                                    hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Upgrade to Platinum Plan
+                          </button>
+                        )}
+
+                        {/* Show downgrade button for Platinum members */}
+                        {userdata.isPremium && userdata.planType && userdata.planType.toLowerCase() === "platinum" && (
+                          <button
+                            onClick={() => handlepayment("monthly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg 
+                                    hover:from-blue-500 hover:to-blue-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Downgrade to Gold Plan
+                          </button>
+                        )}
+                
+                        {/* Always show cancel option for premium users */}
+                        <button
+                          onClick={() => setShowCancelConfirm(true)}
+                          className="w-full px-4 py-2.5 bg-white/15 backdrop-blur-sm text-white rounded-lg 
+                                  hover:bg-red-500/30 transition-all duration-300 flex items-center justify-center gap-2"
+                        >
+                          <Power className="h-4 w-4" />
+                          Cancel Subscription
+                        </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
 
       <Footer />
     </>
