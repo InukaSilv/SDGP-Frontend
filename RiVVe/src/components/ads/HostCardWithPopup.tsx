@@ -73,7 +73,7 @@ const HostCardWithPopup = ({ host, adId }: { host: Host; adId: string }) => {
             <span>Message Host</span>
           </button>
           <a
-            href={`mailto:${host.email}`}
+            href={`tel:${host.phone}`}
             className="flex items-center hover:text-blue-400 transition-colors cursor-pointer"
           >
             <button className="w-full flex items-center justify-center space-x-2 border border-gray-600 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">

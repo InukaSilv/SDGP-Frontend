@@ -79,7 +79,7 @@ const ROLE_PLANS = {
 
 function Signup2() {
   const location = useLocation();
-  const { role, id } = location.state || {};
+  const { role } = location.state || {};
   const [selectedPlan, setSelectedPlan] = useState("none");
 
   // Convert role to lowercase for object mapping
@@ -119,7 +119,7 @@ function Signup2() {
                 Unlock Premium Features
               </h2>
               <ul className="space-y-5 text-lg">
-                {features.map((feature, index) => (
+                {features.map((feature: string, index: number) => (
                   <li key={index} className="flex items-center">
                     <span className="mr-3 text-[#2772A0] text-2xl">✔</span>
                     {feature}

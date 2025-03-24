@@ -18,6 +18,7 @@ interface Ad {
   residents: number;
   price: string;
   images: string[];
+  boostStatus: boolean;
 }
 
 function MyAds() {

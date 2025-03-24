@@ -264,7 +264,7 @@ function PostAdNew() {
     data.append("facilities", JSON.stringify(formData.facilities));
     data.append("lat", formData.coordinates.lat.toString());
     data.append("lng", formData.coordinates.lng.toString());
-    formData.images.forEach((file, index) => {
+    formData.images.forEach((file) => {
       data.append(`images`, file);
     });
 

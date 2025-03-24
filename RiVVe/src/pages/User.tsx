@@ -40,7 +40,8 @@ function User() {
   const [, setError] = useState<string>("");
   const [Message, setMessage] = useState<string>("");
   const [cancellationLoading, setCancellationLoading] = useState(false);
-const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showSubscriptionOptions, setShowSubscriptionOptions] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [formData, setFormData] = useState<User>({
     firstName: userdata?.firstName || "",
     lastName: userdata?.lastName || "",
@@ -166,14 +167,29 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   };
 
   // on payment selection if the user is not premium the payment type changes to yearly, monthly
-  const handlepayment = async (paymentType: string) => {
+  const handlepayment = async (paymentType:"monthly" | "yearly") => {
     try {
+      // Map payment type to plan type
       const planType = paymentType === "monthly" ? "gold" : "platinum";
+      
+      // Check if user is trying to buy the same plan they already have
+      if (userdata.isPremium && userdata.planType === planType) {
+        setMessage("You are already subscribed to this plan.");
+        return;
+      }
+      
+      // Navigate to payment page
       navigate("/payment", {
-        state: { planType, planDuration: paymentType },
+        state: { 
+          planType,
+          planDuration: paymentType,
+          isChangingPlan: userdata.isPremium, // Flag indicating plan change vs. new subscription
+          currentPlan: userdata.planType
+        }
       });
     } catch (error) {
-      console.error("payment selection error; ", error);
+      console.error("Payment selection error:", error);
+      setError("Failed to process payment selection");
     }
   };
 
@@ -183,22 +199,32 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
       await axios.delete(`${API_BASE_URL}/api/payments/cancel-subscription`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
 
-      setMessage("Subscription cancelled successfully. You'll have access until the current period ends.");
-  
-      const updateUserData = {...userdata};
-      localStorage.setItem("user", JSON.stringify(updateUserData));
-      setShowCancelConfirm(false);
-    } catch (error) {
-      console.error("Failed to cancel subscription:", error);
-      alert("Error cancelling subscription.");
-    }finally{
-      setCancellationLoading(false);
-    }
-  };
+    const updatedUserData = {
+      ...userdata,
+      isPremium: false,
+      planType: null  // Clear the plan type
+    };
+    
+   
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+    
+    // Show success message
+    setMessage("Subscription cancelled successfully. You'll have access until the current period ends.");
+    setShowCancelConfirm(false);
+    
+    // Reload to reflect changes
+    window.location.reload();
+  } catch (error) {
+    console.error("Failed to cancel subscription:", error);
+    setError("Failed to cancel subscription. Please try again.");
+  } finally {
+    setCancellationLoading(false);
+  }
+};
 
   const ROLE_PLANS = {
     student: {
@@ -231,7 +257,8 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
     },
   };
 
-  const userRole = (userdata?.role?.toLowerCase() as "student" | "landlord") || "student"; 
+  const userRole =
+    (userdata?.role?.toLowerCase() as "student" | "landlord") || "student";
   const monthlyPlan = ROLE_PLANS[userRole].monthly;
   const yearlyPlan = ROLE_PLANS[userRole].yearly;
 
@@ -348,11 +375,37 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
               {userdata.isPremium && (
                 <>
                   <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#3a85b3] bg-[green]/30 rounded-lg hover:bg-[#ccdde8] transition duration-200"
-                  onClick={handleCancelSubscription}
+                  onClick={()=> setShowCancelConfirm(true)}
                   >
                     Cancel Subscription
                   </button>
                 </>
+              )}
+              {/* Confirmation Modal */}
+              {showCancelConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                    <h3 className="text-xl font-bold text-[#2772A0] mb-4">Cancel Subscription?</h3>
+                    <p className="mb-6 text-gray-600">
+                      You'll continue to have access to premium features until your current billing period ends.
+                    </p>
+                    <div className="flex justify-end gap-4">
+                      <button 
+                        onClick={() => setShowCancelConfirm(false)}
+                        className="px-4 py-2 text-[#3a85b3] hover:bg-gray-100 rounded-md"
+                      >
+                        Keep Subscription
+                      </button>
+                      <button 
+                        onClick={handleCancelSubscription}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        disabled={cancellationLoading}
+                      >
+                        {cancellationLoading ? "Processing..." : "Confirm Cancellation"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* sign out  */}
@@ -510,9 +563,9 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
       </div>
 
       <div className="max-w-6xl mx-auto px-4 mb-16">
-              <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#2772A0] to-[#1e5f8a] rounded-2xl shadow-neon">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 gap-6">
                   <div className="flex-1">
@@ -584,16 +637,62 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
                         </button>
                       </>
                     ) : (
+
                       <div className="text-white text-center bg-[#1e5f8a]/80 p-4 rounded-lg">
-                        <BadgeCheck size={40} className="mx-auto text-yellow-300 mb-2" />
-                        <p className="font-bold text-xl mb-1">Premium Member</p>
-                        <p className="text-secondary/90 mb-2">Enjoying all premium benefits</p>
+                      <BadgeCheck size={40} className="mx-auto text-yellow-300 mb-2" />
+                      <p className="font-bold text-xl mb-1">Premium Member</p>
+                      <p className="text-secondary/90 mb-2">Current Plan: {userdata.planType && userdata.planType.toLowerCase() === "platinum" ? "Platinum" : "Gold"}</p>
+                
+                      <div className="mt-4 flex flex-col gap-2">
+                        {/* Gold users can only upgrade to Platinum */}
+                        {userdata.planType === "gold" && (
+                          <button
+                            onClick={() => handlepayment("yearly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg 
+                                    hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Upgrade to Platinum Plan
+                          </button>
+                        )}
+                
+                        {/* Show upgrade button for Gold members - using more robust condition */}
+                        {userdata.isPremium && 
+                        (!userdata.planType || 
+                          userdata.planType.toLowerCase() === "gold" || 
+                          userdata.planType.toLowerCase() !== "platinum") && (
+                          <button
+                            onClick={() => handlepayment("yearly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg 
+                                    hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Upgrade to Platinum Plan
+                          </button>
+                        )}
+
+                        {/* Show downgrade button for Platinum members */}
+                        {userdata.isPremium && userdata.planType && userdata.planType.toLowerCase() === "platinum" && (
+                          <button
+                            onClick={() => handlepayment("monthly")}
+                            className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg 
+                                    hover:from-blue-500 hover:to-blue-600 transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Downgrade to Gold Plan
+                          </button>
+                        )}
+                
+                        {/* Always show cancel option for premium users */}
                         <button
-                          onClick={handleCancelSubscription}
-                          className="mt-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-md hover:bg-white/20 transition-colors"
+                          onClick={() => setShowCancelConfirm(true)}
+                          className="w-full px-4 py-2.5 bg-white/15 backdrop-blur-sm text-white rounded-lg 
+                                  hover:bg-red-500/30 transition-all duration-300 flex items-center justify-center gap-2"
                         >
-                          Manage Subscription
+                          <Power className="h-4 w-4" />
+                          Cancel Subscription
                         </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -601,9 +700,9 @@ const [showCancelConfirm, setShowCancelConfirm] = useState(false);
               </div>
             </div>
 
-            <Footer />
-          </>
-        );
-      }
+      <Footer />
+    </>
+  );
+}
 
 export default User;
