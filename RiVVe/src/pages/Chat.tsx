@@ -1,104 +1,259 @@
-// import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-// import ChatProfile from "../components/internalChatComp/ChatProfile";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/navbar/Navbar";
+import Contacts from "../components/internalChatComp/Contacts";
+import ChatContainer from "../components/internalChatComp/ChatContainer";
+import { allUsersRoute, host, getUserProfileRoute } from "../utils/APIRoutes";
+import { io } from "socket.io-client";
 
-// function Chat() {
-//   return (
-//     <>
-//       {/* Main container */}
-//       <div className="flex">
-//         {/* Left container */}
-//         <div className="w-1/3 h-screen p-5">
-//           <div className="h-full flex flex-col">
-//             {/* User Display */}
-//             <div className="flex mt-20 justify-between items-center">
-//               <figure className="w-[80px] h-[80px] rounded-full overflow-hidden">
-//                 <img
-//                   src="src/assets/perosn.jpg"
-//                   alt="person"
-//                   className="w-full h-full object-cover"
-//                 />
-//               </figure>
-//               <div className="mr-30">
-//                 <h1 className="text-2xl font-semibold">John Doe</h1>
-//                 <p className="text-gray-500">Chat anonymously</p>
-//               </div>
+function Chat() {
+  const socket = useRef();
+  const navigate = useNavigate();
+  const [contacts, setContacts] = useState([]);
+  const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentChat, setCurrentChat] = useState(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [draftMessages, setDraftMessages] = useState({});
 
-//               <div className="p-3 bg-[#3a85b3] text-white h-12 font-semibold rounded-2xl">
-//                 <select className="bg-transparent outline-none">
-//                   <option>Show Name</option>
-//                   <option>Don't Show Name</option>
-//                 </select>
-//               </div>
-//             </div>
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkAuthentication = async () => {
+      //Get user data from localStorage
+      const authToken = localStorage.getItem("authToken");
+      const userData = localStorage.getItem("user");
 
-//             {/* Searchbar */}
-//             <div className="h-auto bg-gray-600/40 mt-5 p-3 text-gray-900 text-[20px] font-semibold rounded-3xl px-6 mx-3">
-//               <input
-//                 type="text"
-//                 name="user"
-//                 placeholder="🔍 Search Chat"
-//                 className="w-full border-none outline-none bg-transparent"
-//               />
-//             </div>
+      if (!authToken || !userData) {
+        console.log("No authentication data found, redirecting to login");
+        navigate("/login");
+        return;
+      }
 
-//             {/* Tabs: Students & Landlords */}
-//             <Tabs>
-//               <TabList className="grid grid-cols-2 mt-5 border-b-2 border-t-2 border-gray-300 text-2xl text-gray-600 font-bold">
-//                 <Tab
-//                   className="pb-2 pt-2 cursor-pointer outline-none w-full text-center"
-//                   selectedClassName="border-b-4 border-[#1e5f8a] text-[#1e5f8a] bg-gray-700/10"
-//                 >
-//                   Students
-//                 </Tab>
-//                 <Tab
-//                   className="pb-2 pt-2 cursor-pointer outline-none w-full text-center"
-//                   selectedClassName="border-b-4 border-[#1e5f8a] text-[#1e5f8a] bg-gray-700/10"
-//                 >
-//                   Landlords
-//                 </Tab>
-//               </TabList>
+      try {
+        // Set the current user from localStorage immediately
+        const parsedUserData = JSON.parse(userData);
+        setCurrentUser(parsedUserData);
 
-//               {/* Students Panel */}
-//               <TabPanel className="flex flex-col p-2 gap-2 mt-5">
-//                 <ChatProfile />
-//                 <ChatProfile />
-//               </TabPanel>
+        // Verify with the server
+        axios
+          .get(getUserProfileRoute, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          })
+          .then((response) => {
+            // Optional: Update user data if server has newer info
+            if (response.data) {
+              setCurrentUser(response.data);
+              localStorage.setItem("user", JSON.stringify(response.data));
+              localStorage.setItem(
+                "chat-app-user",
+                JSON.stringify(response.data)
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error verifying authentication:", error);
+            // Only redirect if it's an auth error (401/403)
+            if (
+              error.response &&
+              (error.response.status === 401 || error.response.status === 403)
+            ) {
+              navigate("/login");
+            }
+          });
 
-//               {/* Landlords Panel */}
-//               <TabPanel className="flex flex-col p-2 gap-2 mt-5">
-//                 <ChatProfile />
-//               </TabPanel>
-//             </Tabs>
-//           </div>
-//         </div>
+        setIsLoaded(true);
+      } catch (error) {
+        console.error("Error processing user data:", error);
+        navigate("/login");
+      }
+    };
 
-//         {/* Right container (Chat area) */}
-//         <div className="w-2/3 p-10 bg-[#e0ebf3] h-screen">
-//           <div className="bg-[#3a85b3]/30 h-9/10 rounded-lg w-full mt-20 flex flex-col">
-//             {/* user details */}
-//             <div className="flex pt-5 pl-5 pb-2 border-b-1 border-gray-500">
-//               <figure className="w-[80px] h-[80px] rounded-full overflow-hidden">
-//                 <img
-//                   src="src/assets/perosn.jpg"
-//                   alt="person"
-//                   className="w-full h-full object-cover"
-//                 />
-//               </figure>
-//               <h1 className="text-2xl mt-5 font-bold ml-10">Knight rider</h1>
-//             </div>
+    checkAuthentication();
+  }, [navigate]);
 
-//             {/* chat */}
-//             <div></div>
+  // Set up socket connection once user is available
+  useEffect(() => {
+    if (currentUser && currentUser._id) {
+      socket.current = io(host, {
+        transports: ["polling"],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+      });
 
-//             {/* sending options */}
-//             <div className="h-4 bg-gray-600 flex">
-//               <input type="text" />
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
+      socket.current.on("connect", () => {
+        console.log("Socket connected successfully!");
+        socket.current.emit("add-user", currentUser._id);
+      });
 
-// export default Chat;
+      socket.current.on("connect_error", (err) => {
+        console.error("Socket connection error:", err);
+      });
+
+      socket.current.on("disconnect", (reason) => {
+        console.log("Socket disconnected:", reason);
+      });
+
+      socket.current.on("reconnect", (attemptNumber) => {
+        console.log("Socket reconnected after", attemptNumber, "attempts");
+        // Re-register user ID after reconnection
+        socket.current.emit("add-user", currentUser._id);
+      });
+    }
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [currentUser]);
+
+  // Fetch contacts once user is loaded
+  useEffect(() => {
+    const fetchContacts = async () => {
+      if (currentUser && currentUser._id) {
+        try {
+          const authToken = localStorage.getItem("authToken");
+          const response = await axios.get(
+            `${allUsersRoute}/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+
+          console.log("Contacts API response:", response.data);
+          setContacts(Array.isArray(response.data) ? response.data : []);
+        } catch (error) {
+          console.error("Error fetching contacts:", error);
+          // If unauthorized, but don't redirect immediately
+          if (error.response && error.response.status === 401) {
+            console.warn("Unauthorized when fetching contacts");
+          }
+          setContacts([]);
+        }
+      }
+    };
+
+    if (isLoaded && currentUser) {
+      fetchContacts();
+    }
+  }, [currentUser, isLoaded]);
+
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat);
+  };
+
+  // Draft message handlers
+  const handleDraftMessageChange = (chatId, message) => {
+    setDraftMessages((prev) => ({
+      ...prev,
+      [chatId]: message,
+    }));
+  };
+
+  const getDraftMessage = (chatId) => {
+    return draftMessages[chatId] || "";
+  };
+
+  // Show loading state instead of redirecting
+  if (!isLoaded) {
+    return (
+      <>
+        <Navbar />
+        <Container>
+          <div className="loading">Loading chat data...</div>
+        </Container>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Navbar />
+      <Container>
+        <div className="container">
+          <Contacts
+            contacts={contacts}
+            currentUser={currentUser}
+            changeChat={handleChatChange}
+          />
+          {currentChat ? (
+            <ChatContainer
+              currentChat={currentChat}
+              currentUser={currentUser}
+              socket={socket}
+              draftMessage={getDraftMessage(currentChat._id)}
+              onDraftMessageChange={(message) =>
+                handleDraftMessageChange(currentChat._id, message)
+              }
+            />
+          ) : (
+            <div className="welcome">
+              <h1>Welcome to RiVVe Chat!</h1>
+              <p>Select a chat to start messaging</p>
+            </div>
+          )}
+        </div>
+      </Container>
+    </>
+  );
+}
+
+const Container = styled.div`
+  margin-top: 25px;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  background-color: #131324;
+  overflow: hidden;
+
+  .container {
+    height: 85vh;
+    width: 85vw;
+    background-color: #00000076;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+
+    @media screen and (min-width: 720px) and (max-width: 1080px) {
+      grid-template-columns: 35% 65%;
+    }
+  }
+
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #0d0d30;
+    height: 100%;
+
+    h1 {
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #9186f3, #5643cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    p {
+      color: #ffffffb9;
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+  }
+`;
+
+export default Chat;

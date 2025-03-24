@@ -1,4 +1,3 @@
-import React from "react";
 import { PiStudent } from "react-icons/pi";
 import { LuHouse } from "react-icons/lu";
 import { motion } from "framer-motion";

@@ -108,7 +108,7 @@ function AdCard({ ad }: AdCardProps) {
 
   const handleBoostStatus = async (adId: string) => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${API_BASE_URL}/api/listing/boost-ad`,
         { adId },
         {

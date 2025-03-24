@@ -1,16 +1,13 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import Navbar from "./components/navbar/Navbar";
-
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import HostelDisplay from "./pages/HostelDisplay"; // Keep this if needed
-import HostelReviewPage from './pages/FeedbackPage';
+import HostelReviewPage from "./pages/FeedbackPage";
 import Signup1 from "./pages/Signup1";
 import Signup2 from "./pages/Signup2";
 import User from "./pages/User";
@@ -79,8 +76,10 @@ function App() {
 
           <Route path="/testd" element={<HostelDetails />} />
 
-          <Route path="/message" element={<Chat />} />
-
+          <Route
+            path="/message"
+            element={<ProtectedVerifies element={<Chat />} />}
+          />
 
           <Route
             path="/posting"
