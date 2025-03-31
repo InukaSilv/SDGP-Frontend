@@ -521,7 +521,7 @@ const About = () => {
       <SectionTransition />
 
       {/* Our Mission & Vision - Redesigned with cards */}
-      <section className="relative px-4 py-20 min-h-screen">
+      <section className="relative px-4 py-20 ">
         <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-[#CCDDEA] to-[#3a85b3] mb-16">
           Our Mission & Vision
         </h2>
