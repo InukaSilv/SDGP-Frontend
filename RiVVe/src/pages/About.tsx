@@ -665,7 +665,7 @@ const About = () => {
       <SectionTransition />
 
       {/* Why Choose RiVVE - with floating cards effect */}
-      <section className="px-4 py-20 relative overflow-hidden min-h-screen">
+      <section className="px-4 py-20 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 w-full h-full max-w-4xl -translate-x-1/2 -translate-y-1/2 bg-[#2772A0]/10 rounded-full filter blur-3xl animate-pulse"></div>
 
         <div className="relative max-w-6xl mx-auto">
