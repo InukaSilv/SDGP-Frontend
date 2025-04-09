@@ -13,14 +13,19 @@ function VerifyWaiting() {
   const [processing, setProessing] = useState<boolean>(false);
   const [errorMessage, setErrorMessge] = useState<string>("");
 
+  /**
+   * Check if the form data is found
+   */
   useEffect(() => {
-    console.log("Received formData in VerifyWaiting:", formData);
     if (!formData) {
       console.error("No form data found. Redirecting...");
       navigate("/");
       return;
     }
 
+    /**
+     * Check if the user is verified
+     */
     const checkVerification = setInterval(async () => {
       await auth.currentUser?.reload();
       if (auth.currentUser?.emailVerified) {
@@ -59,6 +64,10 @@ function VerifyWaiting() {
 
     return () => clearInterval(checkVerification);
   }, [navigate, formData]);
+
+  /**
+   * Handle the resend email
+   */
 
   const HandleResend = async () => {
     if (resendCount >= 2) {

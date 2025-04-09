@@ -17,6 +17,11 @@ function PremiumWishList() {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const user = localStorage.getItem("user");
   const juser = user ? JSON.parse(user) : null;
+  const authToken = localStorage.getItem("authToken");
+
+  /**
+   * Get the wishlist items for the user
+   */
   const getWishList = async () => {
     if (!juser || !juser._id) {
       console.error("User not found or ID missing");
@@ -29,7 +34,7 @@ function PremiumWishList() {
         {
           params: { id: juser._id },
           headers: {
-            Authorization: `Bearer ${juser.token}`,
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
@@ -45,12 +50,15 @@ function PremiumWishList() {
     }
   }, [juser]);
 
+  /**
+   * Delete an item and call the getwishlist again for refresh
+   */
   const toggleWishlist = async (adId: string) => {
     try {
       console.log(adId);
       await axios.delete(`${API_BASE_URL}/api/wishlist/deletewishlist`, {
         headers: {
-          Authorization: `Bearer ${juser.token}`,
+          Authorization: `Bearer ${authToken}`,
         },
         params: { userId: juser._id, adId },
       });
@@ -67,6 +75,7 @@ function PremiumWishList() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">My Wishlist</h1>
 
+        {/* If the wishlist is empty */}
         {wishlistItems.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Your wishlist is empty</p>
@@ -86,8 +95,12 @@ function PremiumWishList() {
                       className="w-full h-full object-cover"
                     />
                     <button
-                      onClick={() => toggleWishlist(ad._id)}
-                      className="absolute z-10 top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        toggleWishlist(ad._id);
+                      }}
+                      className="absolute z-100 top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
                     >
                       <Trash2 className="w-5 h-5 text-red-500" />
                     </button>

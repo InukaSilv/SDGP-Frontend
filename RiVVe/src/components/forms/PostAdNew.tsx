@@ -59,6 +59,9 @@ function PostAdNew() {
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  /**
+   * Toggle the room type
+   */
   const toggleRoomType = (type: string) => {
     setFormData((prevType) => {
       const newRoomTypes = prevType.roomType.includes(type)
@@ -75,6 +78,9 @@ function PostAdNew() {
     });
   };
 
+  /**
+   * Get the current position
+   */
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -112,6 +118,10 @@ function PostAdNew() {
     }
   };
 
+  /**
+   * Geocode the address
+   * https://developers.google.com/maps/documentation/javascript/geocoding
+   */
   const geocodeAddress = (address: string) => {
     if (typeof google !== "undefined" && google.maps) {
       const geocoder = new google.maps.Geocoder();
@@ -159,6 +169,9 @@ function PostAdNew() {
     }));
   };
 
+  /**
+   * Handle the facility
+   */
   const handlefacility = (fac: string) => {
     setFormData((prev) => {
       const uptfacility = prev.facilities.includes(fac)
@@ -171,6 +184,9 @@ function PostAdNew() {
     });
   };
 
+  /**
+   * Handle the image upload
+   */
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -201,10 +217,16 @@ function PostAdNew() {
     }
   };
 
+  /**
+   * Remove the image
+   */
   const removeImage = (img: string) => {
     setPreviewImages((images) => images.filter((image) => image !== img));
   };
 
+  /**
+   * Handle the image drop
+   */
   const handleImageDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();

@@ -35,12 +35,17 @@ function Login() {
     localStorage.setItem("chat-app-user", JSON.stringify(userData));
   };
 
+  /**
+   * Handle the input change
+   */
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((record) => ({ ...record, [id]: value }));
   };
 
-  // normal email password handler
+  /**
+   * Handle the email login
+   */
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -57,13 +62,10 @@ function Login() {
       const user = userCredential.user;
       const token = await user.getIdToken();
 
-      console.log("Token from firebase", token);
-
       const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         idToken: token,
       });
       const data = response.data;
-      console.log("Backend response", data);
       if (data.success) {
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("user", JSON.stringify(data.data));
@@ -71,7 +73,6 @@ function Login() {
       } else {
         alert(data.message);
       }
-      console.log(token);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.log("loggin error");
@@ -80,9 +81,10 @@ function Login() {
       setIsLoading(false);
     }
   };
-  
 
-  // google Login handler
+  /**
+   * Handle the google login
+   */
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     try {

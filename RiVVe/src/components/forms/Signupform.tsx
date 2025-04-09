@@ -53,6 +53,10 @@ function Signupform({
   const [emailError, setEmailError] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [existingError, setExistingError] = useState<string>("");
+
+  /**
+   * Set the payment type
+   */
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, paymentType: selectedPlan }));
   }, [selectedPlan]);
@@ -93,6 +97,7 @@ function Signupform({
   };
 
   // direct to verify waiting page
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordMismatch || passwordError) return;

@@ -20,6 +20,9 @@ function StudentReview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Fetch the student reviews for the user
+   */
   useEffect(() => {
     const fetchStudentReviews = async () => {
       const authToken = localStorage.getItem("authToken");
@@ -57,6 +60,9 @@ function StudentReview() {
     fetchStudentReviews();
   }, [navigate]);
 
+  /**
+   * If the loading is true, return a loading spinner
+   */
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -65,6 +71,9 @@ function StudentReview() {
     );
   }
 
+  /**
+   * If the error is true, return an error message
+   */
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

@@ -11,10 +11,16 @@ function ForgotPasswordEmail() {
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
+  /**
+   * Handle the email change
+   */
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
+  /**
+   * Handle the submit
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");

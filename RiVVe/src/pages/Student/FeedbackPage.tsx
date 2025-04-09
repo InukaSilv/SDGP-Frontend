@@ -28,6 +28,9 @@ function FeedbackPage() {
     "idle" | "success" | "error"
   >("idle");
 
+  /**
+   * Fetch the owner details for the property from the database
+   */
   useEffect(() => {
     const fetchOwnerDetail = async () => {
       try {
@@ -45,6 +48,9 @@ function FeedbackPage() {
     fetchOwnerDetail();
   }, [property?._id]);
 
+  /**
+   * If the property is not found, return a message
+   */
   if (!property) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -60,6 +66,9 @@ function FeedbackPage() {
     );
   }
 
+  /**
+   * Handle the rating change
+   */
   const handleRatingChange = (value: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -67,6 +76,9 @@ function FeedbackPage() {
     }));
   };
 
+  /**
+   * Handle the recommendation change
+   */
   const handleRecommendChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -74,6 +86,9 @@ function FeedbackPage() {
     }));
   };
 
+  /**
+   * Handle the submit
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -128,6 +143,7 @@ function FeedbackPage() {
               </div>
             </div>
 
+            {/* Current Rating */}
             <div className="md:w-1/2 p-6 space-y-4">
               <div className="flex items-center space-x-2 text-lg">
                 <span className="font-semibold">Current Rating:</span>
@@ -139,6 +155,7 @@ function FeedbackPage() {
                 </div>
               </div>
 
+              {/* Owner Details */}
               <div className="space-y-2">
                 <p className="text-xl font-semibold">
                   Owner: {ownerDetail?.firstName || "N/A"}{" "}
@@ -221,8 +238,8 @@ function FeedbackPage() {
               <button
                 type="button"
                 onClick={() => handleRecommendChange("yes")}
-                className={`flex items-center justify-between p-4 rounded-lg border-2 
-                          transition-all duration-300 
+                className={`flex items-center justify-between p-4 rounded-lg border-2
+                          transition-all duration-300
                           ${
                             formData.recommend === "yes"
                               ? "border-green-500 bg-green-50"
@@ -273,7 +290,7 @@ function FeedbackPage() {
                 !formData.recommend
               }
               className={`relative w-full md:w-auto px-12 py-4 text-lg font-semibold text-white
-                        rounded-full transition-all duration-300 
+                        rounded-full transition-all duration-300
                         ${
                           isSubmitting ||
                           formData.rating === 0 ||
