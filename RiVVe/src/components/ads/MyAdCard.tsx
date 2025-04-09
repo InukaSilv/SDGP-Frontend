@@ -14,7 +14,7 @@ interface AdCardProps {
       singleRoom: number;
       doubleRoom: number;
     };
-    residents: number;
+    currentResidents: number;
     price: string;
     images: string[];
     boostStatus: boolean;
@@ -23,7 +23,7 @@ interface AdCardProps {
 
 function AdCard({ ad }: AdCardProps) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const [slots, setSlots] = useState(ad.residents);
+  const [slots, setSlots] = useState(ad.currentResidents);
   const navigate = useNavigate();
   const [addStudent, setAddStudent] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");

@@ -387,7 +387,6 @@ function PostAdNew() {
                     name="price"
                     onChange={handleChange}
                     min="0"
-                    step="1000"
                     required
                   />
                 </div>
