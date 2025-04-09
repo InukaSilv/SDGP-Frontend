@@ -64,7 +64,7 @@ function Chatbot() {
     try {
       // Configure axios with proper headers for CORS
 
-      const response = await axios.post('http://localhost:5001/chat', {
+      const response = await axios.post('https://chatbot-service-590336222818.us-central1.run.app', {
         user_id: userId,
         message: sentMessage,
         conversation_id: conversationId
